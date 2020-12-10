@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 
 import { CreateServiceOptions, ServiceWithContext } from "./ServiceWithContext";
 
-type GoogleSearchResponse = {};
+type GoogleSearchResponse = unknown;
 
 export class GoogleService extends ServiceWithContext {
   protected googleSearchApi: AxiosInstance;
