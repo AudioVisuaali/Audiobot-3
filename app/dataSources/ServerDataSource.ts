@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { DataSourceWithContext } from "./DataSourceWithContext";
 
-import { Table, ServerTableRaw } from "~/database/types";
+import { Table, GuildTableRaw } from "~/database/types";
 
 export type ServerTable = {
   id: number;
@@ -15,7 +15,7 @@ export type ServerTable = {
 };
 
 export class ServerDataSource extends DataSourceWithContext {
-  private formatRow(row: ServerTableRaw): ServerTable {
+  private formatRow(row: GuildTableRaw): ServerTable {
     return {
       id: row.id,
       uuid: row.uuid,
@@ -27,7 +27,7 @@ export class ServerDataSource extends DataSourceWithContext {
   }
 
   public async getServer(opts: { serverDiscordId: string }) {
-    const server = await this.knex<ServerTableRaw>(Table.GUILDS)
+    const server = await this.knex<GuildTableRaw>(Table.GUILDS)
       .where({ discordId: opts.serverDiscordId })
       .first();
 
@@ -35,7 +35,7 @@ export class ServerDataSource extends DataSourceWithContext {
   }
 
   public async createServer(opts: { serverDiscordId: string }) {
-    const insertedServers = await this.knex<ServerTableRaw>(Table.GUILDS)
+    const insertedServers = await this.knex<GuildTableRaw>(Table.GUILDS)
       .insert({
         uuid: uuidv4(),
         discordId: opts.serverDiscordId,
