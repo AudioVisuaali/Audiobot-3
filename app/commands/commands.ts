@@ -12,6 +12,7 @@ import { eightBallCommand } from "./eightBallCommand";
 import { genderCommand } from "./genderCommand";
 import { helpCommand } from "./helpCommand";
 import { ipCommand } from "./ipCommand";
+import { lennyfaceCommand } from "./lennyfaceCommand";
 import { numberfactCommand } from "./numberfactCommand";
 import { pingCommand } from "./pingCommand";
 import { punCommand } from "./punCommand";
@@ -41,6 +42,7 @@ const modules = [
   reverseCommand,
   spongebobCommand,
   urbanCommand,
+  lennyfaceCommand,
   pingCommand,
 ];
 
