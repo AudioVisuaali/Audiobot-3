@@ -12,6 +12,10 @@ export type UserTableRaw = Readonly<{
   id: number;
   uuid: string;
   discordId: string;
+  points: number;
+  bank: number;
+  xp: number;
+  tokens: number;
   createdAt: Date;
   updatedAt: Date | null;
 }>;

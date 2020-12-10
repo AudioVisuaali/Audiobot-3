@@ -14,7 +14,7 @@ export class PrefixDataLoader extends DataLoader<string, string> {
       const persons = personRows.reduce<{ [key: string]: string }>(
         (prev, current) => ({
           ...prev,
-          [current.uuid.toString()]: current.prefix,
+          [current.discordId]: current.prefix,
         }),
         {},
       );

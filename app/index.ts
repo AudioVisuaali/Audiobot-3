@@ -3,10 +3,4 @@ import { createServer } from "~/server";
 
 const config = getConfigFromEnv();
 
-const client = createServer({ config });
-
-process.on("SIGINT", () => {
-  client.destroy();
-});
-
-client.login(config.discordAPIKey);
+createServer({ config }).login(config.discordAPIKey);

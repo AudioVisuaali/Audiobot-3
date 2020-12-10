@@ -9,6 +9,10 @@ export type UserTable = {
   id: number;
   UUID: string;
   discordId: string;
+  points: number;
+  bank: number;
+  xp: number;
+  tokens: number;
   createdAt: DateTime;
   updatedAt: DateTime | null;
 };
@@ -19,6 +23,10 @@ export class CommandDataSource extends DataSourceWithContext {
       id: row.id,
       UUID: row.uuid,
       discordId: row.discordId,
+      points: row.points,
+      bank: row.bank,
+      xp: row.xp,
+      tokens: row.tokens,
       createdAt: DateTime.fromJSDate(row.createdAt),
       updatedAt: row.updatedAt ? DateTime.fromJSDate(row.updatedAt) : null,
     };

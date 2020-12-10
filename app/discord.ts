@@ -8,16 +8,6 @@ export type HandleMessage = (
 ) => (message: Message) => Promise<void>;
 
 export const handleMessage: HandleMessage = (context) => async (message) => {
-  context.logger.info("User sent message", {
-    authorId: message.author.id,
-    authorName: message.author.username,
-    message: message.content,
-  });
-
-  if (message.channel.type === "dm") {
-    return;
-  }
-
   if (!message.guild) {
     return;
   }
@@ -25,6 +15,17 @@ export const handleMessage: HandleMessage = (context) => async (message) => {
   if (message.author.bot) {
     return;
   }
+
+  if (message.channel.type === "dm") {
+    return;
+  }
+
+  context.logger.info("User sent message", {
+    authorId: message.author.id,
+    authorName: message.author.username,
+    authorDiscriminator: message.author.discriminator,
+    message: message.content,
+  });
 
   const isUserTimedOut = context.services.timeoutService.isUserTimedOut({
     userDiscordId: message.author.id,

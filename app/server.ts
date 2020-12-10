@@ -40,10 +40,14 @@ export const createServer = ({ config }: { config: Config }) => {
     }
 
     logger.info(`Logged in as: ${user.tag}!`);
-    logger.info(`Client ID:: ${user.id}!`);
+    logger.info(`Client ID: ${user.id}!`);
     logger.info("Listening to the chat!");
 
     statusWorker({ client, utils });
+  });
+
+  client.on("error", (error) => {
+    logger.error(error);
   });
 
   // eslint-disable-next-line max-statements
