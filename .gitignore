@@ -1,0 +1,7 @@
+node_modules
+yarn-error.log
+.DS_Stores
+.DS_Store
+dist
+dist/*
+.bin

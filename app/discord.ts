@@ -1,0 +1,71 @@
+import { Message } from "discord.js";
+
+import { invokeCommand } from "./commands/commands";
+import { Context } from "./context";
+
+export type HandleMessage = (
+  context: Context,
+) => (message: Message) => Promise<void>;
+
+export const handleMessage: HandleMessage = (context) => async (message) => {
+  context.logger.info("User sent message", {
+    authorId: message.author.id,
+    authorName: message.author.username,
+    message: message.content,
+  });
+
+  if (message.channel.type === "dm") {
+    return;
+  }
+
+  if (!message.guild) {
+    return;
+  }
+
+  if (message.author.bot) {
+    return;
+  }
+
+  const isUserTimedOut = context.services.timeoutService.isUserTimedOut({
+    userDiscordId: message.author.id,
+  });
+
+  if (isUserTimedOut) {
+    return;
+  }
+
+  const guildId = message.guild.id;
+  const prefix = await getServerPrefixWithCreate({
+    context,
+    guildId,
+  });
+
+  if (!message.content.startsWith(prefix)) {
+    return;
+  }
+
+  invokeCommand({
+    message,
+    prefix,
+    context: context,
+  });
+};
+
+const getServerPrefixWithCreate = async (opts: {
+  context: Context;
+  guildId: string;
+}) => {
+  const cachePrefix = await opts.context.dataLoaders.prefixDL.load(
+    opts.guildId,
+  );
+
+  if (cachePrefix) {
+    return cachePrefix;
+  }
+
+  const server = await opts.context.dataSources.serverDS.verifyServer({
+    serverDiscordId: opts.guildId,
+  });
+
+  return server.prefix;
+};
