@@ -17,6 +17,7 @@ import { numberfactCommand } from "./numberfactCommand";
 import { pingCommand } from "./pingCommand";
 import { punCommand } from "./punCommand";
 import { reverseCommand } from "./reverseCommand";
+import { rollCommand } from "./rollCommand";
 import { spongebobCommand } from "./spongebobCommand";
 import { urbanCommand } from "./urbanCommand";
 import { yoMamaCommand } from "./yoMamaCommand";
@@ -43,6 +44,7 @@ const modules = [
   spongebobCommand,
   urbanCommand,
   lennyfaceCommand,
+  rollCommand,
   pingCommand,
 ];
 
