@@ -8,7 +8,8 @@
     "node": "15.x"
   },
   "scripts": {
-    "dev": "DEBUG=knex:query nodemon --ext ts,json,graphql --exec babel-node --extensions '.ts' -r dotenv/config app/index.ts | ./node_modules/.bin/bunyan",
+    "dev": "nodemon --ext ts,json,graphql --exec babel-node --extensions '.ts' -r dotenv/config app/index.ts | ./node_modules/.bin/bunyan",
+    "dev:debug": "DEBUG=knex:query nodemon --ext ts,json,graphql --exec babel-node --extensions '.ts' -r dotenv/config app/index.ts | ./node_modules/.bin/bunyan",
     "codegen": "graphql-codegen",
     "lint": "eslint . --ext ts,js",
     "database:migrate:latest": "knex migrate:latest",
