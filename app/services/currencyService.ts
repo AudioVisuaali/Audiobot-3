@@ -6,8 +6,14 @@ import { CreateServiceOptions, ServiceWithContext } from "./ServiceWithContext";
 // import jokes from "../maps/jokes.json";
 // import lennyFaces from "../maps/lennyFaces.json";
 
-type BPICurrency = {
-  code: string;
+export enum BPICurrencyType {
+  EUR = "EUR",
+  GBP = "GBP",
+  USD = "USD",
+}
+
+export type BPICurrency = {
+  code: BPICurrencyType;
   description: string;
   rate: string;
   // eslint-disable-next-line camelcase

@@ -1,7 +1,27 @@
 import { Command, MessageEmbed } from "discord.js";
 
+import { BPICurrency, BPICurrencyType } from "~/services/currencyService";
+
 const btcLogoUrl =
   "http://icons.iconarchive.com/icons/froyoshark/enkel/256/Bitcoin-icon.png";
+
+const getPrice = (bpi: BPICurrency) => {
+  const rate = bpi.rate_float.toFixed(2);
+
+  switch (bpi.code) {
+    case BPICurrencyType.USD:
+      return `$${rate}`;
+
+    case BPICurrencyType.EUR:
+      return `${rate}€`;
+
+    case BPICurrencyType.GBP:
+      return `${rate}£`;
+
+    default:
+      return rate;
+  }
+};
 
 export const bitcoinCommand: Command = {
   name: "Bitcoin",
@@ -12,29 +32,17 @@ export const bitcoinCommand: Command = {
   async execute(message, _, { services }) {
     const bitcoinData = await services.currencyService.getBitcoinData();
 
-    const { EUR, USD, GBP } = bitcoinData.bpi;
+    const bpis = Object.values(bitcoinData.bpi).map((bpi) => ({
+      name: `${bpi.code}`,
+      value: getPrice(bpi),
+      inline: true,
+    }));
 
     const embed = new MessageEmbed()
       .setColor("#f99e1a")
       .setTitle("Bitcoin is worth")
       .setThumbnail(btcLogoUrl)
-      .addFields(
-        {
-          name: `${USD.code} $`,
-          value: `$${USD.rate_float.toFixed(2)}`,
-          inline: true,
-        },
-        {
-          name: `${EUR.code} €`,
-          value: `${EUR.rate_float.toFixed(2)}€`,
-          inline: true,
-        },
-        {
-          name: `${GBP.code} £`,
-          value: `${GBP.rate_float.toFixed(2)}£`,
-          inline: true,
-        },
-      )
+      .addFields(...bpis)
       .setFooter(
         new Date(bitcoinData.time.updatedISO).toUTCString(),
         btcLogoUrl,
