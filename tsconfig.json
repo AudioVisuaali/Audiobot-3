@@ -19,6 +19,6 @@
       "~/*": ["app/*"]
     }
   },
-  "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.json", "*.graphql"]
+  "exclude": ["node_modules", "dist"],
+  "include": ["**/*.ts", "*.graphql"]
 }
