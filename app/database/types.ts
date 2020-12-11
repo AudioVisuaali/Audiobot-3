@@ -16,6 +16,7 @@ export type UserTableRaw = Readonly<{
   bank: number;
   xp: number;
   tokens: number;
+  dailyRetrieved: Date | null;
   createdAt: Date;
   updatedAt: Date | null;
 }>;

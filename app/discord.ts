@@ -45,6 +45,10 @@ export const handleMessage: HandleMessage = (context) => async (message) => {
     return;
   }
 
+  await context.dataSources.userDS.verifyUser({
+    userDiscordId: message.author.id,
+  });
+
   invokeCommand({
     message,
     prefix,

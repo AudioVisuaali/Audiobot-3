@@ -5,6 +5,7 @@ import { catFactCommand } from "./catFactCommand";
 import { catPictureCommand } from "./catPictureCommand";
 import { chuckNorrisCommand } from "./chuckNorrisCommand";
 import { dadJokeCommand } from "./dadJokeCommand";
+import { dailyCommand } from "./dailyCommand";
 import { diceCommand } from "./diceCommand";
 import { dogFactCommand } from "./dogFactCommand";
 import { dogPictureCommand } from "./dogPictureCommand";
@@ -45,6 +46,7 @@ const modules = [
   urbanCommand,
   lennyfaceCommand,
   rollCommand,
+  dailyCommand,
   pingCommand,
 ];
 
@@ -76,7 +78,7 @@ export const invokeCommand = (opts: {
   try {
     commandModule.execute(opts.message, args, opts.context);
   } catch (error) {
-    opts.context.logger.warn(
+    opts.context.logger.error(
       "there was an error trying to execute that command",
       { commandName },
       error,

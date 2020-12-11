@@ -11,6 +11,7 @@ export async function up(knex: Knex): Promise<void> {
       table.integer("bank").notNullable().defaultTo(0);
       table.integer("xp").notNullable().defaultTo(0);
       table.integer("tokens").notNullable().defaultTo(0);
+      table.timestamp("dailyRetrieved").nullable();
       table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
       table.timestamp("updatedAt").nullable();
     })
@@ -38,8 +39,8 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   return knex.schema
+    .dropTableIfExists("commands")
     .dropTableIfExists("users")
     .dropTableIfExists("guilds")
-    .dropTableIfExists("commands")
     .raw("DROP EXTENSION IF EXISTS btree_gist;");
 }
