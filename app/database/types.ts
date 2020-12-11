@@ -13,7 +13,8 @@ export type UserTableRaw = Readonly<{
   uuid: string;
   discordId: string;
   points: number;
-  bank: number;
+  stock: number;
+  stockMinCompoundAmount: number;
   xp: number;
   tokens: number;
   dailyRetrieved: Date | null;

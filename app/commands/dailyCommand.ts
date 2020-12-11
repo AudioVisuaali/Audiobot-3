@@ -1,4 +1,5 @@
 import { MessageEmbed, Command } from "discord.js";
+import { DateTime } from "luxon";
 
 const getDailyFix = (number: number) => {
   if (number < 1) {
@@ -37,7 +38,18 @@ export const dailyCommand: Command = {
     });
 
     if (user.dailyRetrieved) {
-      // 24H Logic here
+      const dailyAvailableTime = user.dailyRetrieved.plus({ day: 1 });
+      const currentTime = DateTime.utc();
+
+      if (dailyAvailableTime.valueOf() > currentTime.valueOf()) {
+        const embed = new MessageEmbed()
+          .setColor("#f99e1a")
+          .setTitle("You are on cooldown")
+          .setDescription(`Try again ${dailyAvailableTime.toRelative()}`)
+          .setTimestamp();
+
+        return message.channel.send(embed);
+      }
     }
 
     const dailyAmountBase = context.utils.mathUtils.getRandomArbitrary(
@@ -52,9 +64,10 @@ export const dailyCommand: Command = {
     const { multiplier, explainer } = getDailyFix(luckinessProbability);
 
     const dailyAmount = dailyAmountBase * multiplier;
-    const userUpdated = await context.dataSources.userDS.tryAddMemes({
+    const userUpdated = await context.dataSources.userDS.tryModifyMemes({
       userDiscordId: message.author.id,
-      addMemesCount: dailyAmount,
+      modifyMemeCount: dailyAmount,
+      updateDailyClaimed: true,
     });
 
     const extra = explainer ? `, __${explainer}__` : "";

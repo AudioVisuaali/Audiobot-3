@@ -74,8 +74,8 @@ module.exports = {
       },
     ],
     "max-depth": ["error", 5],
-    complexity: ["error", 10],
-    "max-statements": ["error", 20],
+    complexity: ["error", 15],
+    "max-statements": ["error", 25],
     "max-params": ["error", 3],
     "lines-between-class-members": [
       "error",

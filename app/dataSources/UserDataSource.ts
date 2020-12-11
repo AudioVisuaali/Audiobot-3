@@ -10,7 +10,8 @@ export type UserTable = {
   UUID: string;
   discordId: string;
   points: number;
-  bank: number;
+  stock: number;
+  stockMinCompoundAmount: number;
   xp: number;
   tokens: number;
   dailyRetrieved: DateTime | null;
@@ -23,10 +24,10 @@ export class UserDataSource extends DataSourceWithContext {
     return {
       id: row.id,
       UUID: row.uuid,
-
       discordId: row.discordId,
       points: row.points,
-      bank: row.bank,
+      stock: row.stock,
+      stockMinCompoundAmount: row.stockMinCompoundAmount,
       xp: row.xp,
       tokens: row.tokens,
       dailyRetrieved: row.dailyRetrieved
@@ -57,9 +58,9 @@ export class UserDataSource extends DataSourceWithContext {
     return this.formatRow(user);
   }
 
-  public async tryAddMemes(opts: {
+  public async tryModifyMemes(opts: {
     userDiscordId: string;
-    addMemesCount: number;
+    modifyMemeCount: number;
     updateDailyClaimed?: boolean;
   }) {
     const user = await this.tryGetUser({ userDiscordId: opts.userDiscordId });
@@ -67,7 +68,9 @@ export class UserDataSource extends DataSourceWithContext {
     const updatedUsers = await this.knex<UserTableRaw>(Table.USERS)
       .where({ discordId: opts.userDiscordId })
       .update({
-        points: user.tokens + opts.addMemesCount,
+        points: user.points + opts.modifyMemeCount,
+        updatedAt: new Date(),
+        ...(opts.updateDailyClaimed ? { dailyRetrieved: new Date() } : {}),
       })
       .returning("*");
 

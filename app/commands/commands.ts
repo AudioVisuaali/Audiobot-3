@@ -16,16 +16,19 @@ import { ipCommand } from "./ipCommand";
 import { lennyfaceCommand } from "./lennyfaceCommand";
 import { numberfactCommand } from "./numberfactCommand";
 import { pingCommand } from "./pingCommand";
+import { pointsCommand } from "./pointsCommand";
 import { punCommand } from "./punCommand";
 import { reverseCommand } from "./reverseCommand";
 import { rollCommand } from "./rollCommand";
+import { rouletteCommand } from "./rouletteCommand";
 import { spongebobCommand } from "./spongebobCommand";
+import { tokensCommand } from "./tokensCommand";
 import { urbanCommand } from "./urbanCommand";
 import { yoMamaCommand } from "./yoMamaCommand";
 
 import { Context } from "~/context";
 
-const modules = [
+export const modules = [
   helpCommand,
   bitcoinCommand,
   yoMamaCommand,
@@ -47,6 +50,9 @@ const modules = [
   lennyfaceCommand,
   rollCommand,
   dailyCommand,
+  rouletteCommand,
+  pointsCommand,
+  tokensCommand,
   pingCommand,
 ];
 

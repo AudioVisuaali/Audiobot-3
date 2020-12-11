@@ -16,10 +16,8 @@ export class StatusUtils {
     let usersCount = 0;
 
     opts.client.guilds.cache.forEach((guild) => {
-      serversCount = serversCount + 1;
-      guild.members.cache.forEach(() => {
-        usersCount = usersCount + 1;
-      });
+      serversCount += 1;
+      usersCount += guild.memberCount;
     });
 
     return { serversCount, usersCount };

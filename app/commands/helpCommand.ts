@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { modules } from "./commands";
+
 export const helpCommand: Command = {
   name: "Help",
   command: "help",
@@ -7,6 +9,8 @@ export const helpCommand: Command = {
   description: "Help menu",
 
   execute(message) {
-    message.channel.send("Help");
+    const commands = modules.map((command) => command.command);
+
+    message.channel.send(commands);
   },
 };
