@@ -5,20 +5,18 @@ export const eightBallCommand: Command = {
   command: "eightball",
   aliases: ["8ball"],
   description: "() ball responses)",
-  execute(message, args, context) {
+  execute(message, args, { utils }) {
     const question = args.join(" ");
 
     if (question.length < 8) {
       return;
     }
 
-    const randomIndex = context.utils.mathUtils.getRandomArbitrary(
+    const randomIndex = utils.math.getRandomArbitrary(
       0,
-      context.utils.eightBallUtils.length - 1,
+      utils.eightBall.length - 1,
     );
 
-    message.channel.send(
-      `:8ball: **| ${context.utils.eightBallUtils[randomIndex]}**`,
-    );
+    message.channel.send(`:8ball: **| ${utils.eightBall[randomIndex]}**`);
   },
 };

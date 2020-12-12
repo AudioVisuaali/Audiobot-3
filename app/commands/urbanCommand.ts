@@ -9,10 +9,10 @@ export const urbanCommand: Command = {
   aliases: ["urbandictionary", "dictionary"],
   description: "Search on Urban dictionary",
 
-  async execute(message, args, context) {
+  async execute(message, args, { services }) {
     const query = args.join(" ");
 
-    const urbanData = await context.services.statsService.getUrbanResult({
+    const urbanData = await services.stats.getUrbanResult({
       search: query,
     });
 

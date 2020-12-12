@@ -7,7 +7,7 @@ export const yoMamaCommand: Command = {
   description: "Yo mama so fat",
 
   async execute(message, _, { services }) {
-    const joke = await services.jokesServices.getYoMamaJoke();
+    const joke = await services.jokes.getYoMamaJoke();
     message.channel.send(joke);
   },
 };

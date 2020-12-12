@@ -27,7 +27,7 @@ export const handleMessage: HandleMessage = (context) => async (message) => {
     message: message.content,
   });
 
-  const isUserTimedOut = context.services.timeoutService.isUserTimedOut({
+  const isUserTimedOut = context.services.timeout.isUserTimedOut({
     userDiscordId: message.author.id,
   });
 

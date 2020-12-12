@@ -6,18 +6,18 @@ export const numberfactCommand: Command = {
   aliases: ["number"],
   description: "Get facts for numbers",
 
-  async execute(message, args, context) {
+  async execute(message, args, { utils, services }) {
     if (args.length === 0) {
       return message.channel.send("No number was provided");
     }
 
-    const number = context.utils.mathUtils.parseStringToNumber(args[0]);
+    const number = utils.math.parseStringToNumber(args[0]);
 
     if (number === null) {
       return message.channel.send("Invalid number");
     }
 
-    const fact = await context.services.statsService.getNumerFact({ number });
+    const fact = await services.stats.getNumerFact({ number });
 
     const embed = new MessageEmbed()
       .setColor("#f99e1a")

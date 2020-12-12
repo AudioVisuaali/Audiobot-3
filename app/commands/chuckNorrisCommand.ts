@@ -6,8 +6,8 @@ export const chuckNorrisCommand: Command = {
   aliases: ["chuck", "norris", "cn"],
   description: "Get a random Chuck Norris joke",
 
-  async execute(message, _, context) {
-    const chuckNorris = await context.services.jokesServices.getChuckNorrisJoke();
+  async execute(message, _, { services }) {
+    const chuckNorris = await services.jokes.getChuckNorrisJoke();
 
     const embed = new MessageEmbed()
       .setColor("#f99e1a")

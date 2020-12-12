@@ -6,8 +6,8 @@ export const tokensCommand: Command = {
   aliases: [],
   description: "Your tokens currently",
 
-  async execute(message, _, context) {
-    const user = await context.dataSources.userDS.tryGetUser({
+  async execute(message, _, { dataSources }) {
+    const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
     });
 

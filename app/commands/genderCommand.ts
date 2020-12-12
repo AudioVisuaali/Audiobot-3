@@ -6,12 +6,12 @@ export const genderCommand: Command = {
   aliases: [],
   description: "Get persons Gender",
 
-  async execute(message, args, context) {
+  async execute(message, args, { services }) {
     if (args.length === 0) {
       return;
     }
 
-    const genderResponse = await context.services.statsService.getGenderOfName({
+    const genderResponse = await services.stats.getGenderOfName({
       name: args[0],
     });
 

@@ -7,7 +7,7 @@ const sleep = (time: number) =>
 
 export const statusWorker = async (opts: { client: Client; utils: Utils }) => {
   while (true) {
-    const { usersCount } = opts.utils.statusUtils.getTotalServersAndUsers({
+    const { usersCount } = opts.utils.status.getTotalServersAndUsers({
       client: opts.client,
     });
 

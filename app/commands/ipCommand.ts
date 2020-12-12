@@ -6,8 +6,8 @@ export const ipCommand: Command = {
   aliases: [],
   description: "Ip related information",
 
-  async execute(message, args, context) {
-    const ipData = await context.services.ipService.getIpData({ ip: args[0] });
+  async execute(message, args, { services }) {
+    const ipData = await services.ip.getIpData({ ip: args[0] });
 
     const embed = new MessageEmbed()
       .setColor("#f99e1a")

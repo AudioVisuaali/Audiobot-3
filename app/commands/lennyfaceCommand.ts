@@ -6,12 +6,12 @@ export const lennyfaceCommand: Command = {
   aliases: ["lenny"],
   description: "Get a random lenny face",
 
-  async execute(message, _, context) {
-    const randomPosition = context.utils.mathUtils.getRandomArbitrary(
+  async execute(message, _, { utils }) {
+    const randomPosition = utils.math.getRandomArbitrary(
       0,
-      context.utils.lennyFacesUtils.length - 1,
+      utils.lennyFaces.length - 1,
     );
 
-    message.channel.send(context.utils.lennyFacesUtils[randomPosition]);
+    message.channel.send(utils.lennyFaces[randomPosition]);
   },
 };

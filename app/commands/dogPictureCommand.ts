@@ -2,9 +2,9 @@ import { MessageEmbed, Command } from "discord.js";
 
 import { Context } from "~/context";
 
-const getDogPicture = async (context: Context) => {
+const getDogPicture = async ({ services }: Context) => {
   for (let i = 0; i < 5; i++) {
-    const dogPicture = await context.services.animalService.getDogPicture();
+    const dogPicture = await services.animal.getDogPicture();
 
     if (!dogPicture.url.includes(".mp4")) {
       return dogPicture;

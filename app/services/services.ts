@@ -8,31 +8,21 @@ import { StatsService } from "./statsService";
 import { TimeoutService } from "./timeoutServices";
 
 export type Services = {
-  timeoutService: TimeoutService;
-  jokesServices: JokesService;
-  currencyService: CurrencyService;
-  animalService: AnimalService;
-  statsService: StatsService;
-  googleService: GoogleService;
-  ipService: IPService;
+  timeout: TimeoutService;
+  jokes: JokesService;
+  currency: CurrencyService;
+  animal: AnimalService;
+  stats: StatsService;
+  google: GoogleService;
+  ip: IPService;
 };
 
-export const createServices = (opts: CreateServiceOptions): Services => {
-  const timeoutService = new TimeoutService();
-  const jokesServices = new JokesService(opts);
-  const currencyService = new CurrencyService(opts);
-  const animalService = new AnimalService(opts);
-  const statsService = new StatsService(opts);
-  const googleService = new GoogleService(opts);
-  const ipService = new IPService(opts);
-
-  return {
-    timeoutService,
-    jokesServices,
-    currencyService,
-    animalService,
-    statsService,
-    googleService,
-    ipService,
-  };
-};
+export const createServices = (opts: CreateServiceOptions): Services => ({
+  timeout: new TimeoutService(),
+  jokes: new JokesService(opts),
+  currency: new CurrencyService(opts),
+  animal: new AnimalService(opts),
+  stats: new StatsService(opts),
+  google: new GoogleService(opts),
+  ip: new IPService(opts),
+});

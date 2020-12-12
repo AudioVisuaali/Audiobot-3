@@ -28,12 +28,12 @@ export const dailyCommand: Command = {
   aliases: ["kela"],
   description: "Get your daily fix",
 
-  async execute(message, args, context) {
+  async execute(message, args, { dataSources, utils }) {
     if (args.length !== 0) {
       return message.channel.send("Invalid parameters");
     }
 
-    const user = await context.dataSources.userDS.tryGetUser({
+    const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
     });
 
@@ -52,19 +52,13 @@ export const dailyCommand: Command = {
       }
     }
 
-    const dailyAmountBase = context.utils.mathUtils.getRandomArbitrary(
-      380,
-      420,
-    );
-    const luckinessProbability = context.utils.mathUtils.getRandomArbitrary(
-      0,
-      99,
-    );
+    const dailyAmountBase = utils.math.getRandomArbitrary(380, 420);
+    const luckinessProbability = utils.math.getRandomArbitrary(0, 99);
 
     const { multiplier, explainer } = getDailyFix(luckinessProbability);
 
     const dailyAmount = dailyAmountBase * multiplier;
-    const userUpdated = await context.dataSources.userDS.tryModifyMemes({
+    const userUpdated = await dataSources.userDS.tryModifyMemes({
       userDiscordId: message.author.id,
       modifyMemeCount: dailyAmount,
       updateDailyClaimed: true,

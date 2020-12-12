@@ -6,8 +6,8 @@ export const catPictureCommand: Command = {
   aliases: ["catpicture"],
   description: "Get a random cat picture",
 
-  async execute(message, _, context) {
-    const catpicture = await context.services.animalService.getCatPicture();
+  async execute(message, _, { services }) {
+    const catpicture = await services.animal.getCatPicture();
 
     const embed = new MessageEmbed()
       .setColor("#f99e1a")

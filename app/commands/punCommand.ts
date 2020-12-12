@@ -6,8 +6,8 @@ export const punCommand: Command = {
   aliases: [],
   description: "Get a random pun",
 
-  async execute(message, _, context) {
-    const pun = await context.services.jokesServices.getPun();
+  async execute(message, _, { services }) {
+    const pun = await services.jokes.getPun();
 
     const embed = new MessageEmbed()
       .setColor("#f99e1a")

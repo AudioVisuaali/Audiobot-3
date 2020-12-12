@@ -6,8 +6,8 @@ export const dogFactCommand: Command = {
   aliases: ["dogf"],
   description: "Get a random dog fact",
 
-  async execute(message, _, context) {
-    const dogfact = await context.services.animalService.getDogFact();
+  async execute(message, _, { services }) {
+    const dogfact = await services.animal.getDogFact();
 
     const embed = new MessageEmbed()
       .setColor("#f99e1a")

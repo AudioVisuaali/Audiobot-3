@@ -6,8 +6,8 @@ export const catFactCommand: Command = {
   aliases: ["catf"],
   description: "Get a random catfact",
 
-  async execute(message, _, context) {
-    const catfact = await context.services.animalService.getCatFact();
+  async execute(message, _, { services }) {
+    const catfact = await services.animal.getCatFact();
 
     const embed = new MessageEmbed()
       .setColor("#f99e1a")

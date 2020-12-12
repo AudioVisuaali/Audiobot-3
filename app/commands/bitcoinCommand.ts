@@ -30,7 +30,7 @@ export const bitcoinCommand: Command = {
   description: "Bitcoin's current value",
 
   async execute(message, _, { services }) {
-    const bitcoinData = await services.currencyService.getBitcoinData();
+    const bitcoinData = await services.currency.getBitcoinData();
 
     const bpis = Object.values(bitcoinData.bpi).map((bpi) => ({
       name: `${bpi.code}`,

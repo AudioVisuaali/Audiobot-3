@@ -6,9 +6,9 @@ export const rollCommand: Command = {
   aliases: [],
   description: "Roll a random number",
 
-  async execute(message, args, context) {
+  async execute(message, args, { utils }) {
     const numbers = args.map((arg) => {
-      const number = context.utils.mathUtils.parseStringToNumber(arg);
+      const number = utils.math.parseStringToNumber(arg);
 
       if (number === null) {
         throw new Error("invalid number");
@@ -20,20 +20,17 @@ export const rollCommand: Command = {
     switch (numbers.length) {
       case 0:
         return message.channel.send(
-          `**:game_die: ${context.utils.mathUtils.getRandomArbitrary(0, 99)}**`,
+          `**:game_die: ${utils.math.getRandomArbitrary(0, 99)}**`,
         );
 
       case 1:
         return message.channel.send(
-          `**:game_die: ${context.utils.mathUtils.getRandomArbitrary(
-            0,
-            numbers[0],
-          )}**`,
+          `**:game_die: ${utils.math.getRandomArbitrary(0, numbers[0])}**`,
         );
 
       case 2:
         return message.channel.send(
-          `**:game_die: ${context.utils.mathUtils.getRandomArbitrary(
+          `**:game_die: ${utils.math.getRandomArbitrary(
             numbers[0],
             numbers[1],
           )}**`,

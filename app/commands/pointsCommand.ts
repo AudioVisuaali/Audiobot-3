@@ -6,8 +6,8 @@ export const pointsCommand: Command = {
   aliases: ["memes"],
   description: "Your current financial status",
 
-  async execute(message, _, context) {
-    const user = await context.dataSources.userDS.tryGetUser({
+  async execute(message, _, { dataSources }) {
+    const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
     });
 

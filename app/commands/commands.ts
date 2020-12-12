@@ -21,6 +21,7 @@ import { punCommand } from "./punCommand";
 import { reverseCommand } from "./reverseCommand";
 import { rollCommand } from "./rollCommand";
 import { rouletteCommand } from "./rouletteCommand";
+import { slotsCommand } from "./slotsCommand";
 import { spongebobCommand } from "./spongebobCommand";
 import { tokensCommand } from "./tokensCommand";
 import { urbanCommand } from "./urbanCommand";
@@ -53,6 +54,7 @@ export const modules = [
   rouletteCommand,
   pointsCommand,
   tokensCommand,
+  slotsCommand,
   pingCommand,
 ];
 
