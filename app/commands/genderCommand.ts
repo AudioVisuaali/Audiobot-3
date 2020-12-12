@@ -4,6 +4,9 @@ export const genderCommand: Command = {
   name: "Gender",
   command: "gender",
   aliases: [],
+  syntax: "<name>",
+  examples: ["Alex", "Emma"],
+  isAdmin: false,
   description: "Get persons Gender",
 
   async execute(message, args, { services, utils }) {

@@ -1,9 +1,12 @@
 import { Command } from "discord.js";
 
 export const reverseCommand: Command = {
-  name: "Reverse!",
+  name: "Reverse",
   command: "reverse",
   aliases: [],
+  syntax: "<sentence>",
+  examples: ["anything goes here"],
+  isAdmin: false,
   description: "Reverse anything",
 
   async execute(message, args, { utils }) {

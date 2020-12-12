@@ -26,6 +26,9 @@ export const dailyCommand: Command = {
   name: "Daily",
   command: "daily",
   aliases: ["kela"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Get your daily fix",
 
   async execute(message, args, { dataSources, utils }) {

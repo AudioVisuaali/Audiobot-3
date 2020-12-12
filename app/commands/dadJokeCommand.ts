@@ -1,9 +1,12 @@
 import { Command } from "discord.js";
 
 export const dadJokeCommand: Command = {
-  name: "Dad joke!",
+  name: "Dad Joke",
   command: "dadjoke",
   aliases: ["dad"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Get a random dad joke",
 
   async execute(message, _, { services, utils }) {

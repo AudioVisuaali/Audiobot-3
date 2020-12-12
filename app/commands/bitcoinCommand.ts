@@ -27,6 +27,9 @@ export const bitcoinCommand: Command = {
   name: "Bitcoin",
   command: "bitcoin",
   aliases: ["btc"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Bitcoin's current value",
 
   async execute(message, _, { services, utils }) {

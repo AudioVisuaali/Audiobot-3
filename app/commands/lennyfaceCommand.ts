@@ -4,6 +4,9 @@ export const lennyfaceCommand: Command = {
   name: "Lennyfaces",
   command: "lennyface",
   aliases: ["lenny"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Get a random lenny face",
 
   async execute(message, _, { utils }) {

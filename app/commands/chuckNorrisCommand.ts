@@ -1,9 +1,12 @@
 import { Command } from "discord.js";
 
 export const chuckNorrisCommand: Command = {
-  name: "Chuck Norris!",
+  name: "Chuck Norris",
   command: "chucknorris",
   aliases: ["chuck", "norris", "cn"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Get a random Chuck Norris joke",
 
   async execute(message, _, { services, utils }) {

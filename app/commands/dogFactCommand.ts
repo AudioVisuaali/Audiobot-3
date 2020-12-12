@@ -1,9 +1,12 @@
 import { Command } from "discord.js";
 
 export const dogFactCommand: Command = {
-  name: "Dog facts!",
+  name: "Dog Fact",
   command: "dogfact",
   aliases: ["dogf"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Get a random dog fact",
 
   async execute(message, _, { services, utils }) {

@@ -4,6 +4,9 @@ export const pointsCommand: Command = {
   name: "Points",
   command: "points",
   aliases: ["memes"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Your current financial status",
 
   async execute(message, _, { dataSources, utils }) {

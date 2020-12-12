@@ -1,9 +1,12 @@
 import { Command } from "discord.js";
 
 export const punCommand: Command = {
-  name: "Puns!",
+  name: "Puns",
   command: "pun",
   aliases: [],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Get a random pun",
 
   async execute(message, _, { services, utils }) {

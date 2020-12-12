@@ -1,9 +1,12 @@
 import { Command } from "discord.js";
 
 export const yoMamaCommand: Command = {
-  name: "Yo mama!",
+  name: "Yo mama",
   command: "yomama",
   aliases: ["mama"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Yo mama so fat",
 
   async execute(message, _, { services, utils }) {

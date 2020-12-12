@@ -1,16 +1,85 @@
 import { Command } from "discord.js";
 
-import { modules } from "./commands";
+import { modules, sortedModules } from "./commands";
 
 export const helpCommand: Command = {
   name: "Help",
   command: "help",
   aliases: ["heelp"],
+  syntax: "<command?>",
+  examples: ["", "help"],
+  isAdmin: false,
   description: "Help menu",
 
-  execute(message) {
-    const commands = modules.map((command) => command.command);
+  async execute(message, args, { utils, dataLoaders }) {
+    if (!message.guild) {
+      return;
+    }
 
-    message.channel.send(commands);
+    const prefix = await dataLoaders.prefixDL.load(message.guild.id);
+
+    if (args.length === 0) {
+      const embed = utils.response
+        .positive({ discordUser: message.author })
+        .setTitle("Help")
+        .setDescription(
+          `You can get more info by doing ${prefix}help <command>`,
+        );
+
+      for (const command of sortedModules.commands) {
+        embed.addField(command.name, `${prefix}help ${command.command}`, true);
+      }
+
+      // TODO List cutsout at 25 embed.field limit
+      if (message.guild.ownerID === message.author.id) {
+        // embed.addField("Admin commands", "a", false);
+
+        for (const command of sortedModules.adminCommands) {
+          embed.addField(
+            command.name,
+            `${prefix}help ${command.command}`,
+            true,
+          );
+        }
+      }
+
+      return message.channel.send(embed);
+    }
+
+    const [moduleName] = args;
+
+    const command = modules.find(
+      (command) =>
+        command.command === moduleName ||
+        command.aliases.find((alias) => alias === moduleName),
+    );
+
+    if (!command) {
+      const embed = utils.response
+        .negative({ discordUser: message.author })
+        .setTitle(`Help => ${moduleName}`)
+        .setDescription(`Could not find module: ${args[0]}`);
+
+      return message.channel.send(embed);
+    }
+
+    const examples = command.examples.length
+      ? command.examples
+          .map((example) => `${prefix}${command.command} ${example}`)
+          .join("\n")
+      : `${prefix}${command.command}`;
+
+    const embed = utils.response
+      .positive({ discordUser: message.author })
+      .setTitle(`Help => ${command.name}`)
+      .setDescription(command.description)
+      .addField("Syntax", `${prefix}${command.command} ${command.syntax}`, true)
+      .addField("Examples", examples, true);
+
+    if (command.aliases.length) {
+      embed.addField("Aliases", command.aliases.join("\n"));
+    }
+
+    message.channel.send(embed);
   },
 };

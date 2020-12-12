@@ -1,16 +1,16 @@
 import { CreateDataSourceOptions } from "./DataSourceWithContext";
-import { ServerDataSource } from "./ServerDataSource";
+import { GuildDataSource } from "./GuildDataSource";
 
 import { UserDataSource } from "~/dataSources/UserDataSource";
 
 export type DataSources = {
   userDS: UserDataSource;
-  serverDS: ServerDataSource;
+  guildDS: GuildDataSource;
 };
 
 export const createDataSources = (
   opts: CreateDataSourceOptions,
 ): DataSources => ({
   userDS: new UserDataSource(opts),
-  serverDS: new ServerDataSource(opts),
+  guildDS: new GuildDataSource(opts),
 });

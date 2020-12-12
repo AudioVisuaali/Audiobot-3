@@ -4,7 +4,10 @@ export const eightBallCommand: Command = {
   name: "8 Ball",
   command: "eightball",
   aliases: ["8ball"],
-  description: "() ball responses)",
+  syntax: "<question>",
+  examples: ["Am I going to succeed"],
+  isAdmin: false,
+  description: "8 ball responses your question",
 
   execute(message, args, { utils }) {
     const question = args.join(" ");

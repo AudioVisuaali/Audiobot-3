@@ -68,8 +68,8 @@ const getServerPrefixWithCreate = async (opts: {
     return cachePrefix;
   }
 
-  const server = await opts.context.dataSources.serverDS.verifyServer({
-    serverDiscordId: opts.guildId,
+  const server = await opts.context.dataSources.guildDS.verifyGuild({
+    guildDiscordId: opts.guildId,
   });
 
   return server.prefix;

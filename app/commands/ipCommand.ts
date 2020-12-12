@@ -4,6 +4,9 @@ export const ipCommand: Command = {
   name: "IP info",
   command: "ip",
   aliases: [],
+  syntax: "<ip>",
+  examples: ["8.8.8.8"],
+  isAdmin: false,
   description: "Ip related information",
 
   async execute(message, args, { services, utils }) {

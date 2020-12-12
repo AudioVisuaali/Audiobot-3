@@ -6,6 +6,9 @@ export const rouletteCommand: Command = {
   name: "Roulette",
   command: "roulette",
   aliases: [],
+  syntax: "<amount>",
+  examples: ["50"],
+  isAdmin: false,
   description: "Gamble your money in roulette",
 
   async execute(message, args, { utils, dataSources }) {

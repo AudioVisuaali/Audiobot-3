@@ -1,9 +1,12 @@
 import { Command } from "discord.js";
 
 export const catPictureCommand: Command = {
-  name: "Cat pictures!!",
+  name: "Cat Picture",
   command: "cat",
   aliases: ["catpicture"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Get a random cat picture",
 
   async execute(message, _, { services, utils }) {

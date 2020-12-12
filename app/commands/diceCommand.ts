@@ -4,6 +4,9 @@ export const diceCommand: Command = {
   name: "Dice",
   command: "dice",
   aliases: [],
+  syntax: "<maxValue?>",
+  examples: ["", "10"],
+  isAdmin: false,
   description: "Roll the dice",
 
   execute(message, args, { utils }) {

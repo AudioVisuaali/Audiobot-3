@@ -4,6 +4,9 @@ export const rollCommand: Command = {
   name: "Roll",
   command: "roll",
   aliases: [],
+  syntax: "<numberMax> | <numberMin> <numberMax>",
+  examples: ["42", "44 880"],
+  isAdmin: false,
   description: "Roll a random number",
 
   async execute(message, args, { utils }) {

@@ -13,9 +13,12 @@ const getDogPicture = async ({ services }: Context) => {
 };
 
 export const dogPictureCommand: Command = {
-  name: "Dog pictures!!",
+  name: "Dog Picture",
   command: "dog",
   aliases: ["dogpicture"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
   description: "Get a random dog picture",
 
   async execute(message, _, context) {

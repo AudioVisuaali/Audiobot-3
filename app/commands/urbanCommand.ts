@@ -7,6 +7,9 @@ export const urbanCommand: Command = {
   name: "Urban",
   command: "urban",
   aliases: ["urbandictionary", "dictionary"],
+  syntax: "<query>",
+  examples: ["car"],
+  isAdmin: false,
   description: "Search on Urban dictionary",
 
   async execute(message, args, { services, utils }) {

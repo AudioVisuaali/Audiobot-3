@@ -4,6 +4,9 @@ export const numberfactCommand: Command = {
   name: "NumberFact",
   command: "numberfact",
   aliases: ["number"],
+  syntax: "<number>",
+  examples: ["69"],
+  isAdmin: false,
   description: "Get facts for numbers",
 
   async execute(message, args, { utils, services }) {

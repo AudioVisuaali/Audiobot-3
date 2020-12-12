@@ -35,11 +35,38 @@ type UrbanResult = {
   }[];
 };
 
+type WikipediaResult = {
+  ns: number;
+  pageid: number;
+  size: number;
+  snippet: string;
+  timestamp: string;
+  title: string;
+  wordcount: number;
+};
+
+type WikipediaResponse = {
+  batchcomplete: string;
+  continue: {
+    continue: string;
+    offset: number;
+  };
+  query: {
+    search: WikipediaResult[];
+    searchinfo: {
+      suggestion: string;
+      suggestionsnippet: string;
+      totalhits: number;
+    };
+  };
+};
+
 export class StatsService extends ServiceWithContext {
   protected genderApi: AxiosInstance;
   protected numberFactApi: AxiosInstance;
   protected osuApi: AxiosInstance;
   protected urbanApi: AxiosInstance;
+  protected wikipediaApi: AxiosInstance;
 
   constructor(opts: CreateServiceOptions) {
     super(opts);
@@ -51,6 +78,15 @@ export class StatsService extends ServiceWithContext {
     });
     this.urbanApi = axios.create({
       baseURL: "http://api.urbandictionary.com/",
+    });
+    this.wikipediaApi = axios.create({
+      baseURL: "https://en.wikipedia.org/w/api.php",
+      params: {
+        action: "query",
+        list: "search",
+        utf8: "",
+        format: "json",
+      },
     });
   }
 
@@ -85,6 +121,14 @@ export class StatsService extends ServiceWithContext {
   public async getUrbanResult(opts: { search: string }) {
     const { data } = await this.urbanApi.get<UrbanResult>("/v0/define", {
       params: { term: opts.search },
+    });
+
+    return data;
+  }
+
+  public async getWikipediaSearch(opts: { query: string }) {
+    const { data } = await this.wikipediaApi.get<WikipediaResponse>("/", {
+      params: { srsearch: opts.query },
     });
 
     return data;

@@ -1,8 +1,9 @@
-import { Message, Client } from "discord.js";
+import { Message, Client, Command } from "discord.js";
 
 import { bitcoinCommand } from "./bitcoinCommand";
 import { catFactCommand } from "./catFactCommand";
 import { catPictureCommand } from "./catPictureCommand";
+import { chooseCommand } from "./chooseCommand";
 import { chuckNorrisCommand } from "./chuckNorrisCommand";
 import { dadJokeCommand } from "./dadJokeCommand";
 import { dailyCommand } from "./dailyCommand";
@@ -17,14 +18,17 @@ import { lennyfaceCommand } from "./lennyfaceCommand";
 import { numberfactCommand } from "./numberfactCommand";
 import { pingCommand } from "./pingCommand";
 import { pointsCommand } from "./pointsCommand";
+import { prefixCommand } from "./prefixCommand";
 import { punCommand } from "./punCommand";
 import { reverseCommand } from "./reverseCommand";
 import { rollCommand } from "./rollCommand";
 import { rouletteCommand } from "./rouletteCommand";
+import { serverCommand } from "./serverCommand";
 import { slotsCommand } from "./slotsCommand";
 import { spongebobCommand } from "./spongebobCommand";
 import { tokensCommand } from "./tokensCommand";
 import { urbanCommand } from "./urbanCommand";
+import { wikipediaCommand } from "./wikipediaCommand";
 import { yoMamaCommand } from "./yoMamaCommand";
 
 import { Context } from "~/context";
@@ -55,8 +59,27 @@ export const modules = [
   pointsCommand,
   tokensCommand,
   slotsCommand,
+  wikipediaCommand,
+  serverCommand,
+  chooseCommand,
+  prefixCommand,
   pingCommand,
 ];
+
+type SortedModules = {
+  commands: Command[];
+  adminCommands: Command[];
+};
+
+export const sortedModules = modules.reduce<SortedModules>(
+  (prev, curr) => ({
+    commands: curr.isAdmin ? prev.commands : [...prev.commands, curr],
+    adminCommands: curr.isAdmin
+      ? [...prev.adminCommands, curr]
+      : prev.adminCommands,
+  }),
+  { commands: [], adminCommands: [] },
+);
 
 export const setClientModules = (opts: { client: Client }) => {
   for (const command of modules) {

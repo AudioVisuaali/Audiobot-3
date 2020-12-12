@@ -48,6 +48,9 @@ export const slotsCommand: Command = {
   name: "Slots",
   command: "slotmachine",
   aliases: ["slots"],
+  syntax: "<amount>",
+  examples: ["50"],
+  isAdmin: false,
   description: "Gamble your money with slots",
 
   async execute(message, args, { utils }) {

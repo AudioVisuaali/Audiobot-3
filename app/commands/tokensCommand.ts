@@ -4,6 +4,9 @@ export const tokensCommand: Command = {
   name: "Tokens",
   command: "tokens",
   aliases: [],
+  syntax: "<query>",
+  examples: ["book"],
+  isAdmin: false,
   description: "Your tokens currently",
 
   async execute(message, _, { dataSources, utils }) {
