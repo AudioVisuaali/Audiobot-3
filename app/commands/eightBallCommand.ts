@@ -1,5 +1,9 @@
 import { Command } from "discord.js";
 
+import { eightBallUtils } from "~/utils/eightBallUtils";
+import { mathUtils } from "~/utils/mathUtil";
+import { responseUtils } from "~/utils/responseUtils";
+
 export const eightBallCommand: Command = {
   name: "8 Ball",
   command: "eightball",
@@ -9,21 +13,21 @@ export const eightBallCommand: Command = {
   isAdmin: false,
   description: "8 ball responses your question",
 
-  execute(message, args, { utils }) {
+  execute(message, args) {
     const question = args.join(" ");
 
     if (question.length < 8) {
       return;
     }
 
-    const randomIndex = utils.math.getRandomArbitrary(
+    const randomIndex = mathUtils.getRandomArbitrary(
       0,
-      utils.eightBall.length - 1,
+      eightBallUtils.length - 1,
     );
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setDescription(`:8ball: ${utils.eightBall[randomIndex]}`);
+      .setDescription(`:8ball: ${eightBallUtils[randomIndex]}`);
 
     message.channel.send(embed);
   },

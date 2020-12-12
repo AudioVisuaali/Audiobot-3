@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 const spongebob =
   "https://en.meming.world/images/en/thumb/e/e0/Mocking_SpongeBob.jpg/300px-Mocking_SpongeBob.jpg";
 
@@ -12,7 +14,7 @@ export const spongebobCommand: Command = {
   isAdmin: false,
   description: "Spongebob styled text",
 
-  async execute(message, args, { utils }) {
+  async execute(message, args) {
     const letter = args
       .join(" ")
       .split("")
@@ -23,7 +25,7 @@ export const spongebobCommand: Command = {
       )
       .join("");
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setThumbnail(spongebob)
       .setDescription(letter);

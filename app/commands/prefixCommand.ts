@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 const PREFIX_MAX_LENGTH = 15;
 
 export const prefixCommand: Command = {
@@ -11,7 +13,7 @@ export const prefixCommand: Command = {
   isAdmin: true,
   description: "Chang the prefix of your server",
 
-  async execute(message, args, { dataSources, dataLoaders, utils }) {
+  async execute(message, args, { dataSources, dataLoaders }) {
     if (!message.guild) {
       return;
     }
@@ -23,7 +25,7 @@ export const prefixCommand: Command = {
     const prefix = await dataLoaders.prefixDL.load(message.guild.id);
 
     if (args.length === 0) {
-      const embed = utils.response
+      const embed = responseUtils
         .positive({ discordUser: message.author })
         .setTitle("Prefix")
         .addField("Change your prefix by", `${prefix}prefix <value>`);
@@ -34,7 +36,7 @@ export const prefixCommand: Command = {
     const newPrefix = args.join(" ");
 
     if (newPrefix.length > PREFIX_MAX_LENGTH) {
-      const embed = utils.response
+      const embed = responseUtils
         .negative({ discordUser: message.author })
         .setTitle("Prefix error")
         .setDescription(
@@ -54,7 +56,7 @@ export const prefixCommand: Command = {
       .clear(guild.discordId)
       .prime(guild.discordId, guild.prefix);
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle("Prefix updated")
       .addField("Your new prefix", newPrefix)

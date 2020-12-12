@@ -1,5 +1,8 @@
 import { Command } from "discord.js";
 
+import { mathUtils } from "~/utils/mathUtil";
+import { responseUtils } from "~/utils/responseUtils";
+
 export const ROULETTER_MIN_POT = 10;
 
 export const rouletteCommand: Command = {
@@ -11,14 +14,14 @@ export const rouletteCommand: Command = {
   isAdmin: false,
   description: "Gamble your money in roulette",
 
-  async execute(message, args, { utils, dataSources }) {
+  async execute(message, args, { dataSources }) {
     const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
     });
 
     // MIN 10 POINTS
     if (args.length === 0) {
-      const embed = utils.response
+      const embed = responseUtils
         .invalidCurrency({ discordUser: message.author })
         .setDescription("You need to specify the amount you want to roulette");
 
@@ -26,9 +29,9 @@ export const rouletteCommand: Command = {
     }
 
     // INVALID INPUT
-    const gambleAmount = utils.math.parseStringToNumber(args[0]);
+    const gambleAmount = mathUtils.parseStringToNumber(args[0]);
     if (!gambleAmount) {
-      const embed = utils.response
+      const embed = responseUtils
         .invalidCurrency({ discordUser: message.author })
         .setDescription("The amount you gave is not valid");
 
@@ -37,7 +40,7 @@ export const rouletteCommand: Command = {
 
     // VALUE TOO LOW
     if (user.points < ROULETTER_MIN_POT) {
-      const embed = utils.response
+      const embed = responseUtils
         .insufficientFunds({ discordUser: message.author })
         .setDescription(
           `You need atleast **${ROULETTER_MIN_POT}** points to roulette. You currently have **${user.points}** points.`,
@@ -48,7 +51,7 @@ export const rouletteCommand: Command = {
 
     // NOT ENOUGH MONEY
     if (user.points < gambleAmount) {
-      const embed = utils.response
+      const embed = responseUtils
         .insufficientFunds({ discordUser: message.author })
         .setTitle("Insufficient funds")
         .setDescription(
@@ -58,7 +61,7 @@ export const rouletteCommand: Command = {
       return message.channel.send(embed);
     }
 
-    const hasWon = !!utils.math.getRandomArbitrary(0, 1);
+    const hasWon = !!mathUtils.getRandomArbitrary(0, 1);
 
     const userWon = await dataSources.userDS.tryModifyMemes({
       userDiscordId: message.author.id,
@@ -66,7 +69,7 @@ export const rouletteCommand: Command = {
     });
 
     if (hasWon) {
-      const embed = utils.response
+      const embed = responseUtils
         .positive({ discordUser: message.author })
         .setTitle(`+ ${gambleAmount} points`)
         .setDescription(
@@ -76,7 +79,7 @@ export const rouletteCommand: Command = {
       return message.channel.send(embed);
     }
 
-    const embed = utils.response
+    const embed = responseUtils
       .negative({ discordUser: message.author })
       .setTitle(`- ${gambleAmount} points`)
       .setDescription(

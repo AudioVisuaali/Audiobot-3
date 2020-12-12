@@ -41,5 +41,3 @@ export const emojiUtils = {
   "!": "❗",
   "?": "❓",
 };
-
-export type EmojiUtils = typeof emojiUtils;

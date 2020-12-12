@@ -20,5 +20,3 @@ export const eightBallUtils = [
   "Outlook not so good",
   "Very doubtful",
 ];
-
-export type EightBallUtils = typeof eightBallUtils;

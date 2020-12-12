@@ -10,12 +10,10 @@ import { handleMessage } from "./discord";
 import { createLogger } from "./logger";
 import { createServices } from "./services/services";
 import { statusWorker } from "./statusWorker";
-import { createUtils } from "./utils/utils";
 
 export const createServer = ({ config }: { config: Config }) => {
   const logger = createLogger({ config });
   const knex = createKnex({ config });
-  const utils = createUtils();
   const services = createServices({ config, logger });
   const dataSources = createDataSources({ config, logger, knex });
   const dataLoaders = createDataLoaders({ knex });
@@ -24,7 +22,6 @@ export const createServer = ({ config }: { config: Config }) => {
     services,
     dataSources,
     dataLoaders,
-    utils,
   });
 
   const client = new Discord.Client();
@@ -43,7 +40,7 @@ export const createServer = ({ config }: { config: Config }) => {
     logger.info(`Client ID: ${user.id}!`);
     logger.info("Listening to the chat!");
 
-    statusWorker({ client, utils });
+    statusWorker({ client });
   });
 
   client.on("error", (error) => {

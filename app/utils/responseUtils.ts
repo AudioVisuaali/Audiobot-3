@@ -1,12 +1,13 @@
 import { User, MessageEmbed } from "discord.js";
 import { DateTime } from "luxon";
 
-export class ResponseUtils {
+class ResponseUtils {
   private colors = {
     error: "#ff0000",
     warning: "#ff9100",
     success: "#00e676",
-    neutral: "#0051ff",
+    cooldown: "#0051ff",
+    neutral: "#000000",
   };
 
   private createFooter(opts: { user: User }) {
@@ -48,9 +49,17 @@ export class ResponseUtils {
     );
   }
 
+  neutral(opts: { discordUser: User }) {
+    return this.createFooter({ user: opts.discordUser }).setColor(
+      this.colors.neutral,
+    );
+  }
+
   positive(opts: { discordUser: User }) {
     return this.createFooter({ user: opts.discordUser }).setColor(
       this.colors.success,
     );
   }
 }
+
+export const responseUtils = new ResponseUtils();

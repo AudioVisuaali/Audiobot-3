@@ -2,6 +2,8 @@ import { Command } from "discord.js";
 
 import { modules, sortedModules } from "./commands";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const helpCommand: Command = {
   name: "Help",
   command: "help",
@@ -11,7 +13,7 @@ export const helpCommand: Command = {
   isAdmin: false,
   description: "Help menu",
 
-  async execute(message, args, { utils, dataLoaders }) {
+  async execute(message, args, { dataLoaders }) {
     if (!message.guild) {
       return;
     }
@@ -19,7 +21,7 @@ export const helpCommand: Command = {
     const prefix = await dataLoaders.prefixDL.load(message.guild.id);
 
     if (args.length === 0) {
-      const embed = utils.response
+      const embed = responseUtils
         .positive({ discordUser: message.author })
         .setTitle("Help")
         .setDescription(
@@ -55,7 +57,7 @@ export const helpCommand: Command = {
     );
 
     if (!command) {
-      const embed = utils.response
+      const embed = responseUtils
         .negative({ discordUser: message.author })
         .setTitle(`Help => ${moduleName}`)
         .setDescription(`Could not find module: ${args[0]}`);
@@ -69,7 +71,7 @@ export const helpCommand: Command = {
           .join("\n")
       : `${prefix}${command.command}`;
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle(`Help => ${command.name}`)
       .setDescription(command.description)

@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 const urbanLogo =
   "https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-01-11/297387706245_85899a44216ce1604c93_512.jpg";
 
@@ -12,7 +14,7 @@ export const urbanCommand: Command = {
   isAdmin: false,
   description: "Search on Urban dictionary",
 
-  async execute(message, args, { services, utils }) {
+  async execute(message, args, { services }) {
     const query = args.join(" ");
 
     const urbanData = await services.stats.getUrbanResult({
@@ -21,7 +23,7 @@ export const urbanCommand: Command = {
 
     const [first] = urbanData.list;
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle(query)
       .setAuthor(query, urbanLogo, first.permalink)

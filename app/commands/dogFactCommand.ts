@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const dogFactCommand: Command = {
   name: "Dog Fact",
   command: "dogfact",
@@ -9,10 +11,10 @@ export const dogFactCommand: Command = {
   isAdmin: false,
   description: "Get a random dog fact",
 
-  async execute(message, _, { services, utils }) {
+  async execute(message, _, { services }) {
     const dogfact = await services.animal.getDogFact();
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle("Random dog fact!")
       .setDescription(dogfact.facts[0]);

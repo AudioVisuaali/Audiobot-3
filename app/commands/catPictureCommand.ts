@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const catPictureCommand: Command = {
   name: "Cat Picture",
   command: "cat",
@@ -9,10 +11,10 @@ export const catPictureCommand: Command = {
   isAdmin: false,
   description: "Get a random cat picture",
 
-  async execute(message, _, { services, utils }) {
+  async execute(message, _, { services }) {
     const catpicture = await services.animal.getCatPicture();
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle("A wild cat appears!")
       .setImage(catpicture.file);

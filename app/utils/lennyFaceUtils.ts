@@ -71,5 +71,3 @@ export const lennyFacesUtils = [
   "( ͡° ͜つ ͡°)╭∩╮",
   "(▀̿̿Ĺ̯̿̿▀̿ ̿)ﾉ ︵ ┻━┻'",
 ];
-
-export type LennyFacesUtils = typeof lennyFacesUtils;

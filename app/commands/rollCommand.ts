@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { mathUtils } from "~/utils/mathUtil";
+
 export const rollCommand: Command = {
   name: "Roll",
   command: "roll",
@@ -9,9 +11,9 @@ export const rollCommand: Command = {
   isAdmin: false,
   description: "Roll a random number",
 
-  async execute(message, args, { utils }) {
+  async execute(message, args) {
     const numbers = args.map((arg) => {
-      const number = utils.math.parseStringToNumber(arg);
+      const number = mathUtils.parseStringToNumber(arg);
 
       if (number === null) {
         throw new Error("invalid number");
@@ -23,17 +25,17 @@ export const rollCommand: Command = {
     switch (numbers.length) {
       case 0:
         return message.channel.send(
-          `**:game_die: ${utils.math.getRandomArbitrary(0, 99)}**`,
+          `**:game_die: ${mathUtils.getRandomArbitrary(0, 99)}**`,
         );
 
       case 1:
         return message.channel.send(
-          `**:game_die: ${utils.math.getRandomArbitrary(0, numbers[0])}**`,
+          `**:game_die: ${mathUtils.getRandomArbitrary(0, numbers[0])}**`,
         );
 
       case 2:
         return message.channel.send(
-          `**:game_die: ${utils.math.getRandomArbitrary(
+          `**:game_die: ${mathUtils.getRandomArbitrary(
             numbers[0],
             numbers[1],
           )}**`,

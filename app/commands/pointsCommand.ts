@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const pointsCommand: Command = {
   name: "Points",
   command: "points",
@@ -9,12 +11,12 @@ export const pointsCommand: Command = {
   isAdmin: false,
   description: "Your current financial status",
 
-  async execute(message, _, { dataSources, utils }) {
+  async execute(message, _, { dataSources }) {
     const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
     });
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle(`${user.points + user.stock} points`)
       .setDescription(

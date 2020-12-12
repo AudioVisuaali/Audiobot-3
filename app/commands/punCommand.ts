@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const punCommand: Command = {
   name: "Puns",
   command: "pun",
@@ -9,10 +11,10 @@ export const punCommand: Command = {
   isAdmin: false,
   description: "Get a random pun",
 
-  async execute(message, _, { services, utils }) {
+  async execute(message, _, { services }) {
     const pun = await services.jokes.getPun();
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setDescription(pun.Pun);
 

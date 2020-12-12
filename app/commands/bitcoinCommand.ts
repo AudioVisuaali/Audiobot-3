@@ -1,6 +1,7 @@
 import { Command } from "discord.js";
 
 import { BPICurrency, BPICurrencyType } from "~/services/currencyService";
+import { responseUtils } from "~/utils/responseUtils";
 
 const btcLogoUrl =
   "http://icons.iconarchive.com/icons/froyoshark/enkel/256/Bitcoin-icon.png";
@@ -32,7 +33,7 @@ export const bitcoinCommand: Command = {
   isAdmin: false,
   description: "Bitcoin's current value",
 
-  async execute(message, _, { services, utils }) {
+  async execute(message, _, { services }) {
     const bitcoinData = await services.currency.getBitcoinData();
 
     const bpis = Object.values(bitcoinData.bpi).map((bpi) => ({
@@ -41,7 +42,7 @@ export const bitcoinCommand: Command = {
       inline: true,
     }));
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setColor("#f99e1a")
       .setTitle("Bitcoin is worth")

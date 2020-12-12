@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const dadJokeCommand: Command = {
   name: "Dad Joke",
   command: "dadjoke",
@@ -9,10 +11,10 @@ export const dadJokeCommand: Command = {
   isAdmin: false,
   description: "Get a random dad joke",
 
-  async execute(message, _, { services, utils }) {
+  async execute(message, _, { services }) {
     const dadJoke = await services.jokes.getDadJoke();
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle("Dad joke!")
       .setDescription(dadJoke.attachments[0].text);

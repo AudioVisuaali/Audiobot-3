@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const genderCommand: Command = {
   name: "Gender",
   command: "gender",
@@ -9,7 +11,7 @@ export const genderCommand: Command = {
   isAdmin: false,
   description: "Get persons Gender",
 
-  async execute(message, args, { services, utils }) {
+  async execute(message, args, { services }) {
     if (args.length === 0) {
       return;
     }
@@ -24,7 +26,7 @@ export const genderCommand: Command = {
       );
     }
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle(`Gender of ${genderResponse.name}`)
       .setDescription(

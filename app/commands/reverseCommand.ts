@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const reverseCommand: Command = {
   name: "Reverse",
   command: "reverse",
@@ -9,10 +11,10 @@ export const reverseCommand: Command = {
   isAdmin: false,
   description: "Reverse anything",
 
-  async execute(message, args, { utils }) {
+  async execute(message, args) {
     const letter = args.join(" ").split("").reverse().join("");
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setDescription(letter);
 

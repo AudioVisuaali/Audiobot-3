@@ -1,5 +1,8 @@
 import { Command } from "discord.js";
 
+import { mathUtils } from "~/utils/mathUtil";
+import { responseUtils } from "~/utils/responseUtils";
+
 export const diceCommand: Command = {
   name: "Dice",
   command: "dice",
@@ -9,26 +12,26 @@ export const diceCommand: Command = {
   isAdmin: false,
   description: "Roll the dice",
 
-  execute(message, args, { utils }) {
+  execute(message, args) {
     if (args.length === 0) {
-      const rolled = utils.math.getRandomArbitrary(1, 6);
+      const rolled = mathUtils.getRandomArbitrary(1, 6);
 
-      const embed = utils.response
+      const embed = responseUtils
         .positive({ discordUser: message.author })
         .setDescription(`:game_die: Dice rolled ${rolled}`);
 
       return message.channel.send(embed);
     }
 
-    const maxValue = utils.math.parseStringToNumber(args[0]);
+    const maxValue = mathUtils.parseStringToNumber(args[0]);
 
     if (maxValue === null) {
       return message.channel.send(":game_die: **| Invalid number**");
     }
 
-    const rolled = utils.math.getRandomArbitrary(1, maxValue);
+    const rolled = mathUtils.getRandomArbitrary(1, maxValue);
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setDescription(`:game_die: Dice rolled ${rolled}`);
 

@@ -1,6 +1,9 @@
 import { Command } from "discord.js";
 import { DateTime } from "luxon";
 
+import { mathUtils } from "~/utils/mathUtil";
+import { responseUtils } from "~/utils/responseUtils";
+
 const getDailyFix = (number: number) => {
   if (number < 1) {
     return {
@@ -31,7 +34,7 @@ export const dailyCommand: Command = {
   isAdmin: false,
   description: "Get your daily fix",
 
-  async execute(message, args, { dataSources, utils }) {
+  async execute(message, args, { dataSources }) {
     if (args.length !== 0) {
       return message.channel.send("Invalid parameters");
     }
@@ -45,7 +48,7 @@ export const dailyCommand: Command = {
       const currentTime = DateTime.utc();
 
       if (dailyAvailableTime.valueOf() > currentTime.valueOf()) {
-        const embed = utils.response.cooldown({
+        const embed = responseUtils.cooldown({
           discordUser: message.author,
           availableAt: dailyAvailableTime,
         });
@@ -54,8 +57,8 @@ export const dailyCommand: Command = {
       }
     }
 
-    const dailyAmountBase = utils.math.getRandomArbitrary(380, 420);
-    const luckinessProbability = utils.math.getRandomArbitrary(0, 99);
+    const dailyAmountBase = mathUtils.getRandomArbitrary(380, 420);
+    const luckinessProbability = mathUtils.getRandomArbitrary(0, 99);
 
     const { multiplier, explainer } = getDailyFix(luckinessProbability);
 
@@ -68,7 +71,7 @@ export const dailyCommand: Command = {
 
     const extra = explainer ? `, __${explainer}__` : "";
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle(`+ ${dailyAmount} memes`)
       .setDescription(`You redeemed your daily memes${extra}!`)

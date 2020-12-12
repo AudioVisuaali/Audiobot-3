@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const ipCommand: Command = {
   name: "IP info",
   command: "ip",
@@ -9,10 +11,10 @@ export const ipCommand: Command = {
   isAdmin: false,
   description: "Ip related information",
 
-  async execute(message, args, { services, utils }) {
+  async execute(message, args, { services }) {
     const ipData = await services.ip.getIpData({ ip: args[0] });
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle(`Information for ${ipData.ip}`)
       .addFields(

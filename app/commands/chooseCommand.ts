@@ -1,5 +1,8 @@
 import { Command } from "discord.js";
 
+import { mathUtils } from "~/utils/mathUtil";
+import { responseUtils } from "~/utils/responseUtils";
+
 export const chooseCommand: Command = {
   name: "Choose Option",
   command: "choose",
@@ -9,20 +12,20 @@ export const chooseCommand: Command = {
   isAdmin: false,
   description: "Choose a random option",
 
-  async execute(message, args, { utils }) {
+  async execute(message, args) {
     const options = args.join("").split("|");
 
     if (options.length === 0) {
-      const embed = utils.response
+      const embed = responseUtils
         .negative({ discordUser: message.author })
         .setDescription("You need to provide options");
 
       return message.channel.send(embed);
     }
 
-    const position = utils.math.getRandomArbitrary(0, options.length - 1);
+    const position = mathUtils.getRandomArbitrary(0, options.length - 1);
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle(`I choose ${options[position]}`);
 

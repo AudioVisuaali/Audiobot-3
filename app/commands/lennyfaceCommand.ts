@@ -1,5 +1,8 @@
 import { Command } from "discord.js";
 
+import { lennyFacesUtils } from "~/utils/lennyFaceUtils";
+import { mathUtils } from "~/utils/mathUtil";
+
 export const lennyfaceCommand: Command = {
   name: "Lennyfaces",
   command: "lennyface",
@@ -9,12 +12,12 @@ export const lennyfaceCommand: Command = {
   isAdmin: false,
   description: "Get a random lenny face",
 
-  async execute(message, _, { utils }) {
-    const randomPosition = utils.math.getRandomArbitrary(
+  async execute(message) {
+    const randomPosition = mathUtils.getRandomArbitrary(
       0,
-      utils.lennyFaces.length - 1,
+      lennyFacesUtils.length - 1,
     );
 
-    message.channel.send(utils.lennyFaces[randomPosition]);
+    message.channel.send(lennyFacesUtils[randomPosition]);
   },
 };

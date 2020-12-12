@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const yoMamaCommand: Command = {
   name: "Yo mama",
   command: "yomama",
@@ -9,10 +11,10 @@ export const yoMamaCommand: Command = {
   isAdmin: false,
   description: "Yo mama so fat",
 
-  async execute(message, _, { services, utils }) {
+  async execute(message, _, { services }) {
     const joke = await services.jokes.getYoMamaJoke();
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setDescription(joke);
 

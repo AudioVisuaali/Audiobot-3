@@ -1,5 +1,7 @@
 import { Command } from "discord.js";
 
+import { responseUtils } from "~/utils/responseUtils";
+
 export const serverCommand: Command = {
   name: "Server Info",
   command: "serverinfo",
@@ -9,12 +11,12 @@ export const serverCommand: Command = {
   isAdmin: false,
   description: "Get information about the server",
 
-  async execute(message, _, { utils }) {
+  async execute(message) {
     if (!message.guild) {
       return;
     }
 
-    const embed = utils.response
+    const embed = responseUtils
       .positive({ discordUser: message.author })
       .setAuthor(message.guild.name, message.guild.iconURL() ?? undefined)
       .addField("Verification Level", message.guild.verificationLevel, true)

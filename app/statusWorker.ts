@@ -1,13 +1,13 @@
 import { Client } from "discord.js";
 
-import { Utils } from "./utils/utils";
+import { statusUtils } from "~/utils/statusUtils";
 
 const sleep = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time));
 
-export const statusWorker = async (opts: { client: Client; utils: Utils }) => {
+export const statusWorker = async (opts: { client: Client }) => {
   while (true) {
-    const { usersCount } = opts.utils.status.getTotalServersAndUsers({
+    const { usersCount } = statusUtils.getTotalServersAndUsers({
       client: opts.client,
     });
 

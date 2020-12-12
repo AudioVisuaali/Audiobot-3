@@ -2,10 +2,6 @@ import axios, { AxiosInstance } from "axios";
 
 import { CreateServiceOptions, ServiceWithContext } from "./ServiceWithContext";
 
-// import eightBallResponses from "../maps/8ball.json";
-// import jokes from "../maps/jokes.json";
-// import lennyFaces from "../maps/lennyFaces.json";
-
 export enum BPICurrencyType {
   EUR = "EUR",
   GBP = "GBP",
