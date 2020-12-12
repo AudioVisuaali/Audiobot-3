@@ -6,9 +6,13 @@ export const reverseCommand: Command = {
   aliases: [],
   description: "Reverse anything",
 
-  async execute(message, args) {
+  async execute(message, args, { utils }) {
     const letter = args.join(" ").split("").reverse().join("");
 
-    message.channel.send(`**:arrows_counterclockwise: ${letter}**`);
+    const embed = utils.response
+      .positive({ discordUser: message.author })
+      .setDescription(letter);
+
+    message.channel.send(embed);
   },
 };

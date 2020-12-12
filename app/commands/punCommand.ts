@@ -11,7 +11,6 @@ export const punCommand: Command = {
 
     const embed = utils.response
       .positive({ discordUser: message.author })
-      .setTitle("Random pun!")
       .setDescription(pun.Pun);
 
     message.channel.send(embed);

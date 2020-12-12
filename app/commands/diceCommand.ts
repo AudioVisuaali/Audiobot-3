@@ -10,7 +10,11 @@ export const diceCommand: Command = {
     if (args.length === 0) {
       const rolled = utils.math.getRandomArbitrary(1, 6);
 
-      return message.channel.send(`:game_die: **| Dice rolled ${rolled}**`);
+      const embed = utils.response
+        .positive({ discordUser: message.author })
+        .setDescription(`:game_die: Dice rolled ${rolled}`);
+
+      return message.channel.send(embed);
     }
 
     const maxValue = utils.math.parseStringToNumber(args[0]);
@@ -21,6 +25,10 @@ export const diceCommand: Command = {
 
     const rolled = utils.math.getRandomArbitrary(1, maxValue);
 
-    return message.channel.send(`:game_die: **| Dice rolled ${rolled}**`);
+    const embed = utils.response
+      .positive({ discordUser: message.author })
+      .setDescription(`:game_die: Dice rolled ${rolled}`);
+
+    return message.channel.send(embed);
   },
 };

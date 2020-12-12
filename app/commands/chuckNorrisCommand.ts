@@ -11,7 +11,6 @@ export const chuckNorrisCommand: Command = {
 
     const embed = utils.response
       .positive({ discordUser: message.author })
-      .setTitle("Chuck norris joke!")
       .setDescription(chuckNorris.value.joke);
 
     message.channel.send(embed);

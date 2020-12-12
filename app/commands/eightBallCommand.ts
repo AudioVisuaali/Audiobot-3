@@ -18,6 +18,10 @@ export const eightBallCommand: Command = {
       utils.eightBall.length - 1,
     );
 
-    message.channel.send(`:8ball: **| ${utils.eightBall[randomIndex]}**`);
+    const embed = utils.response
+      .positive({ discordUser: message.author })
+      .setDescription(`:8ball: ${utils.eightBall[randomIndex]}`);
+
+    message.channel.send(embed);
   },
 };
