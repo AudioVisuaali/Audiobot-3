@@ -75,8 +75,8 @@ export const helpCommand: Command = {
       .positive({ discordUser: message.author })
       .setTitle(`Help => ${command.name}`)
       .setDescription(command.description)
-      .addField("Syntax", `${prefix}${command.command} ${command.syntax}`, true)
-      .addField("Examples", examples, true);
+      .addField("Syntax", `${prefix}${command.command} ${command.syntax}`)
+      .addField("Examples", examples);
 
     if (command.aliases.length) {
       embed.addField("Aliases", command.aliases.join("\n"));

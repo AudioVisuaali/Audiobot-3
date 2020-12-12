@@ -1,6 +1,8 @@
 import { User, MessageEmbed } from "discord.js";
 import { DateTime } from "luxon";
 
+import { UserTable } from "~/dataSources/UserDataSource";
+
 class ResponseUtils {
   private colors = {
     error: "#ff0000",
@@ -30,10 +32,28 @@ class ResponseUtils {
       .setDescription("The amount you gave is not valid");
   }
 
-  insufficientFunds(opts: { discordUser: User }) {
+  insufficientFunds(opts: { discordUser: User; user: UserTable }) {
     return this.createFooter({ user: opts.discordUser })
       .setColor(this.colors.error)
-      .setTitle("Insufficient funds");
+      .setTitle("Insufficient funds")
+      .setDescription(
+        `You are gambling with more currency than you can afford. You currently have ${opts.user.points} points`,
+      );
+  }
+
+  insufficientMinAmount(opts: { discordUser: User; minAmount: number }) {
+    return this.createFooter({ user: opts.discordUser })
+      .setColor(this.colors.error)
+      .setTitle("Insufficient amount")
+      .setDescription(
+        `Your gambling amount needs to be atleast **${opts.minAmount}** points`,
+      );
+  }
+
+  specifyGamblingAmount(opts: { discordUser: User }) {
+    return this.createFooter({ user: opts.discordUser }).setDescription(
+      "You need to specify the amount you want to gamble",
+    );
   }
 
   cooldown(opts: { discordUser: User; availableAt: DateTime }) {

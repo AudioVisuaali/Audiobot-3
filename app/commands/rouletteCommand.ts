@@ -10,7 +10,7 @@ export const rouletteCommand: Command = {
   command: "roulette",
   aliases: [],
   syntax: "<amount>",
-  examples: ["50"],
+  examples: ["50", "half", "60%"],
   isAdmin: false,
   description: "Gamble your money in roulette",
 
@@ -19,44 +19,44 @@ export const rouletteCommand: Command = {
       userDiscordId: message.author.id,
     });
 
-    // MIN 10 POINTS
     if (args.length === 0) {
-      const embed = responseUtils
-        .invalidCurrency({ discordUser: message.author })
-        .setDescription("You need to specify the amount you want to roulette");
+      const embed = responseUtils.specifyGamblingAmount({
+        discordUser: message.author,
+      });
 
       return message.channel.send(embed);
     }
 
+    const gambleAmount = await dataSources.userDS.getAmountFromUserInput({
+      input: args[0],
+      user,
+    });
+
     // INVALID INPUT
-    const gambleAmount = mathUtils.parseStringToNumber(args[0]);
     if (!gambleAmount) {
-      const embed = responseUtils
-        .invalidCurrency({ discordUser: message.author })
-        .setDescription("The amount you gave is not valid");
+      const embed = responseUtils.invalidCurrency({
+        discordUser: message.author,
+      });
 
       return message.channel.send(embed);
     }
 
     // VALUE TOO LOW
     if (user.points < ROULETTER_MIN_POT) {
-      const embed = responseUtils
-        .insufficientFunds({ discordUser: message.author })
-        .setDescription(
-          `You need atleast **${ROULETTER_MIN_POT}** points to roulette. You currently have **${user.points}** points.`,
-        );
+      const embed = responseUtils.insufficientFunds({
+        discordUser: message.author,
+        user,
+      });
 
       return message.channel.send(embed);
     }
 
     // NOT ENOUGH MONEY
     if (user.points < gambleAmount) {
-      const embed = responseUtils
-        .insufficientFunds({ discordUser: message.author })
-        .setTitle("Insufficient funds")
-        .setDescription(
-          `You are gambling with more currency than you can afford. You currently have ${user.points} points`,
-        );
+      const embed = responseUtils.insufficientFunds({
+        discordUser: message.author,
+        user,
+      });
 
       return message.channel.send(embed);
     }

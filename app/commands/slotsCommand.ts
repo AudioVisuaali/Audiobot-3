@@ -4,6 +4,8 @@ import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 import { timeUtils } from "~/utils/timeUtils";
 
+export const SLOTS_MIN_AMOUNT = 10;
+
 type Fruit = {
   value: string;
   emoji: string;
@@ -83,7 +85,7 @@ export const slotsCommand: Command = {
   command: "slotmachine",
   aliases: ["slots"],
   syntax: "<amount>",
-  examples: ["50"],
+  examples: ["50", "third", "35%"],
   isAdmin: false,
   description: "Gamble your money with slots",
 
@@ -102,13 +104,40 @@ export const slotsCommand: Command = {
       return message.channel.send(embed);
     }
 
-    const gamblingAmount = await mathUtils.parseStringToNumber(args[0]);
+    const user = await dataSources.userDS.tryGetUser({
+      userDiscordId: message.author.id,
+    });
+
+    const gamblingAmount = await dataSources.userDS.getAmountFromUserInput({
+      input: args[0],
+      user,
+    });
 
     if (!gamblingAmount) {
       const embed = responseUtils
         .negative({ discordUser: message.author })
         .setTitle("Invalid currency")
         .setDescription("The amount you gave is not valid");
+
+      return message.channel.send(embed);
+    }
+
+    // VALUE TOO LOW
+    if (gamblingAmount < SLOTS_MIN_AMOUNT) {
+      const embed = responseUtils.insufficientMinAmount({
+        discordUser: message.author,
+        minAmount: SLOTS_MIN_AMOUNT,
+      });
+
+      return message.channel.send(embed);
+    }
+
+    // NOT ENOUGH MONEY
+    if (user.points < gamblingAmount) {
+      const embed = responseUtils.insufficientFunds({
+        discordUser: message.author,
+        user,
+      });
 
       return message.channel.send(embed);
     }
@@ -133,7 +162,7 @@ export const slotsCommand: Command = {
       ? matches.reduce<number>((acc, curr) => acc + curr.multiplier, 0)
       : 1;
 
-    const outcomeAmount = gamblingAmount * multiplier;
+    const outcomeAmount = Math.floor(gamblingAmount * multiplier);
     const modifiedUser = await dataSources.userDS.tryModifyMemes({
       userDiscordId: message.author.id,
       modifyMemeCount: hasWon ? outcomeAmount : outcomeAmount * -1,
