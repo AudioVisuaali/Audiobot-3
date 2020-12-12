@@ -1,4 +1,4 @@
-import { MessageEmbed, Command } from "discord.js";
+import { Command } from "discord.js";
 
 export const tokensCommand: Command = {
   name: "Tokens",
@@ -6,15 +6,14 @@ export const tokensCommand: Command = {
   aliases: [],
   description: "Your tokens currently",
 
-  async execute(message, _, { dataSources }) {
+  async execute(message, _, { dataSources, utils }) {
     const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
     });
 
-    const embed = new MessageEmbed()
-      .setColor("#f99e1a")
-      .setTitle(`${user.tokens} tokens`)
-      .setTimestamp();
+    const embed = utils.response
+      .positive({ discordUser: message.author })
+      .setTitle(`${user.tokens} tokens`);
 
     message.channel.send(embed);
   },

@@ -1,4 +1,4 @@
-import { MessageEmbed, Command } from "discord.js";
+import { Command } from "discord.js";
 
 export const dadJokeCommand: Command = {
   name: "Dad joke!",
@@ -6,14 +6,13 @@ export const dadJokeCommand: Command = {
   aliases: ["dad"],
   description: "Get a random dad joke",
 
-  async execute(message, _, { services }) {
+  async execute(message, _, { services, utils }) {
     const dadJoke = await services.jokes.getDadJoke();
 
-    const embed = new MessageEmbed()
-      .setColor("#f99e1a")
+    const embed = utils.response
+      .positive({ discordUser: message.author })
       .setTitle("Dad joke!")
-      .setDescription(dadJoke.attachments[0].text)
-      .setTimestamp();
+      .setDescription(dadJoke.attachments[0].text);
 
     message.channel.send(embed);
   },

@@ -5,6 +5,7 @@ export const pingCommand: Command = {
   command: "ping",
   aliases: ["pong"],
   description: "Ping!",
+
   execute(message) {
     message.channel.send("Pong");
   },

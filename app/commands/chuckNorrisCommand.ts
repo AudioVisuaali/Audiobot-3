@@ -1,4 +1,4 @@
-import { MessageEmbed, Command } from "discord.js";
+import { Command } from "discord.js";
 
 export const chuckNorrisCommand: Command = {
   name: "Chuck Norris!",
@@ -6,14 +6,13 @@ export const chuckNorrisCommand: Command = {
   aliases: ["chuck", "norris", "cn"],
   description: "Get a random Chuck Norris joke",
 
-  async execute(message, _, { services }) {
+  async execute(message, _, { services, utils }) {
     const chuckNorris = await services.jokes.getChuckNorrisJoke();
 
-    const embed = new MessageEmbed()
-      .setColor("#f99e1a")
+    const embed = utils.response
+      .positive({ discordUser: message.author })
       .setTitle("Chuck norris joke!")
-      .setDescription(chuckNorris.value.joke)
-      .setTimestamp();
+      .setDescription(chuckNorris.value.joke);
 
     message.channel.send(embed);
   },

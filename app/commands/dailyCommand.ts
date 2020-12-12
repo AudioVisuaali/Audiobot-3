@@ -1,4 +1,4 @@
-import { MessageEmbed, Command } from "discord.js";
+import { Command } from "discord.js";
 import { DateTime } from "luxon";
 
 const getDailyFix = (number: number) => {
@@ -42,11 +42,10 @@ export const dailyCommand: Command = {
       const currentTime = DateTime.utc();
 
       if (dailyAvailableTime.valueOf() > currentTime.valueOf()) {
-        const embed = new MessageEmbed()
-          .setColor("#f99e1a")
-          .setTitle("You are on cooldown")
-          .setDescription(`Try again ${dailyAvailableTime.toRelative()}`)
-          .setTimestamp();
+        const embed = utils.response.cooldown({
+          discordUser: message.author,
+          availableAt: dailyAvailableTime,
+        });
 
         return message.channel.send(embed);
       }
@@ -66,12 +65,11 @@ export const dailyCommand: Command = {
 
     const extra = explainer ? `, __${explainer}__` : "";
 
-    const embed = new MessageEmbed()
-      .setColor("#f99e1a")
+    const embed = utils.response
+      .positive({ discordUser: message.author })
       .setTitle(`+ ${dailyAmount} memes`)
       .setDescription(`You redeemed your daily memes${extra}!`)
-      .addField("New total", `${userUpdated.points} memes`, true)
-      .setTimestamp();
+      .addField("New total", `${userUpdated.points} memes`, true);
 
     return message.channel.send(embed);
   },

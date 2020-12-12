@@ -1,4 +1,4 @@
-import { MessageEmbed, Command } from "discord.js";
+import { Command } from "discord.js";
 
 export const genderCommand: Command = {
   name: "Gender",
@@ -6,7 +6,7 @@ export const genderCommand: Command = {
   aliases: [],
   description: "Get persons Gender",
 
-  async execute(message, args, { services }) {
+  async execute(message, args, { services, utils }) {
     if (args.length === 0) {
       return;
     }
@@ -21,16 +21,14 @@ export const genderCommand: Command = {
       );
     }
 
-    const embed = new MessageEmbed()
-      .setColor("#f99e1a")
+    const embed = utils.response
+      .positive({ discordUser: message.author })
       .setTitle(`Gender of ${genderResponse.name}`)
       .setDescription(
         `There's a ${genderResponse.probability * 100}% of **${
           genderResponse.name
         }** being a ${genderResponse.gender}!`,
-      )
-      .setFooter(`Count: ${genderResponse.count}`)
-      .setTimestamp();
+      );
 
     return message.channel.send(embed);
   },

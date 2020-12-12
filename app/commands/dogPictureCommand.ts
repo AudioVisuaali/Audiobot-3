@@ -1,4 +1,4 @@
-import { MessageEmbed, Command } from "discord.js";
+import { Command } from "discord.js";
 
 import { Context } from "~/context";
 
@@ -25,11 +25,10 @@ export const dogPictureCommand: Command = {
       return;
     }
 
-    const embed = new MessageEmbed()
-      .setColor("#f99e1a")
+    const embed = context.utils.response
+      .positive({ discordUser: message.author })
       .setTitle("A wild dog appears!")
-      .setImage(dogPicture.url)
-      .setTimestamp();
+      .setImage(dogPicture.url);
 
     message.channel.send(embed);
   },

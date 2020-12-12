@@ -16,7 +16,7 @@ export const rouletteCommand: Command = {
     // MIN 10 POINTS
     if (args.length === 0) {
       const embed = utils.response
-        .invalidCurrency()
+        .invalidCurrency({ discordUser: message.author })
         .setDescription("You need to specify the amount you want to roulette");
 
       return message.channel.send(embed);
@@ -26,7 +26,7 @@ export const rouletteCommand: Command = {
     const gambleAmount = utils.math.parseStringToNumber(args[0]);
     if (!gambleAmount) {
       const embed = utils.response
-        .invalidCurrency()
+        .invalidCurrency({ discordUser: message.author })
         .setDescription("The amount you gave is not valid");
 
       return message.channel.send(embed);
@@ -35,7 +35,7 @@ export const rouletteCommand: Command = {
     // VALUE TOO LOW
     if (user.points < ROULETTER_MIN_POT) {
       const embed = utils.response
-        .insufficientFunds()
+        .insufficientFunds({ discordUser: message.author })
         .setDescription(
           `You need atleast **${ROULETTER_MIN_POT}** points to roulette. You currently have **${user.points}** points.`,
         );
@@ -46,7 +46,7 @@ export const rouletteCommand: Command = {
     // NOT ENOUGH MONEY
     if (user.points < gambleAmount) {
       const embed = utils.response
-        .insufficientFunds()
+        .insufficientFunds({ discordUser: message.author })
         .setTitle("Insufficient funds")
         .setDescription(
           `You are gambling with more currency than you can afford. You currently have ${user.points} points`,
@@ -64,7 +64,7 @@ export const rouletteCommand: Command = {
 
     if (hasWon) {
       const embed = utils.response
-        .positiveResponse()
+        .positive({ discordUser: message.author })
         .setTitle(`+ ${gambleAmount} points`)
         .setDescription(
           `You have won **${gambleAmount}** points, you now have **${userWon.points}** points`,
@@ -74,7 +74,7 @@ export const rouletteCommand: Command = {
     }
 
     const embed = utils.response
-      .negativeResponse()
+      .negative({ discordUser: message.author })
       .setTitle(`- ${gambleAmount} points`)
       .setDescription(
         `You have lost **${gambleAmount}** points, you now have **${userWon.points}** points`,

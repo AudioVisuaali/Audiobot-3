@@ -1,4 +1,4 @@
-import { MessageEmbed, Command } from "discord.js";
+import { Command } from "discord.js";
 
 export const numberfactCommand: Command = {
   name: "NumberFact",
@@ -19,11 +19,10 @@ export const numberfactCommand: Command = {
 
     const fact = await services.stats.getNumerFact({ number });
 
-    const embed = new MessageEmbed()
-      .setColor("#f99e1a")
+    const embed = utils.response
+      .positive({ discordUser: message.author })
       .setTitle(`Numberfact #${number}`)
-      .setDescription(fact)
-      .setTimestamp();
+      .setDescription(fact);
 
     message.channel.send(embed);
   },

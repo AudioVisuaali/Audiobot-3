@@ -1,4 +1,4 @@
-import { MessageEmbed, Command } from "discord.js";
+import { Command } from "discord.js";
 
 export const catFactCommand: Command = {
   name: "Cat facts!",
@@ -6,14 +6,13 @@ export const catFactCommand: Command = {
   aliases: ["catf"],
   description: "Get a random catfact",
 
-  async execute(message, _, { services }) {
+  async execute(message, _, { services, utils }) {
     const catfact = await services.animal.getCatFact();
 
-    const embed = new MessageEmbed()
-      .setColor("#f99e1a")
+    const embed = utils.response
+      .positive({ discordUser: message.author })
       .setTitle("Random cat fact!")
-      .setDescription(catfact.fact)
-      .setTimestamp();
+      .setDescription(catfact.fact);
 
     message.channel.send(embed);
   },

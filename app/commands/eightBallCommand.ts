@@ -5,6 +5,7 @@ export const eightBallCommand: Command = {
   command: "eightball",
   aliases: ["8ball"],
   description: "() ball responses)",
+
   execute(message, args, { utils }) {
     const question = args.join(" ");
 

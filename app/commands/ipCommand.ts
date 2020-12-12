@@ -1,4 +1,4 @@
-import { MessageEmbed, Command } from "discord.js";
+import { Command } from "discord.js";
 
 export const ipCommand: Command = {
   name: "IP info",
@@ -6,11 +6,11 @@ export const ipCommand: Command = {
   aliases: [],
   description: "Ip related information",
 
-  async execute(message, args, { services }) {
+  async execute(message, args, { services, utils }) {
     const ipData = await services.ip.getIpData({ ip: args[0] });
 
-    const embed = new MessageEmbed()
-      .setColor("#f99e1a")
+    const embed = utils.response
+      .positive({ discordUser: message.author })
       .setTitle(`Information for ${ipData.ip}`)
       .addFields(
         {
@@ -33,8 +33,7 @@ export const ipCommand: Command = {
           value: ipData.loc,
           inline: true,
         },
-      )
-      .setTimestamp();
+      );
 
     message.channel.send(embed);
   },

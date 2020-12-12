@@ -1,4 +1,4 @@
-import { MessageEmbed, Command } from "discord.js";
+import { Command } from "discord.js";
 
 const fruits = {
   honeyPot: {
@@ -60,23 +60,21 @@ export const slotsCommand: Command = {
         .map((extra) => `${extra.count} straight ${extra.multiplier}x`)
         .join("\n");
 
-      const embed = new MessageEmbed()
-        .setColor("#f99e1a")
+      const embed = utils.response
+        .positive({ discordUser: message.author })
         .addField("Slots machine multipliers", valuesMessage)
-        .addField("Slots machine extras", extrasMessage)
-        .setTimestamp();
+        .addField("Slots machine extras", extrasMessage);
 
-      message.channel.send(embed);
+      return message.channel.send(embed);
     }
 
     const gamblingAmount = await utils.math.parseStringToNumber(args[0]);
 
     if (!gamblingAmount) {
-      const embed = new MessageEmbed()
-        .setColor("#f99e1a")
+      const embed = utils.response
+        .negative({ discordUser: message.author })
         .setTitle("Invalid currency")
-        .setDescription("The amount you gave is not valid")
-        .setTimestamp();
+        .setDescription("The amount you gave is not valid");
 
       return message.channel.send(embed);
     }
