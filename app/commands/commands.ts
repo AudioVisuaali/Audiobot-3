@@ -13,6 +13,7 @@ import { dogPictureCommand } from "./dogPictureCommand";
 import { eightBallCommand } from "./eightBallCommand";
 import { genderCommand } from "./genderCommand";
 import { helpCommand } from "./helpCommand";
+import { investCommand } from "./investCommand";
 import { ipCommand } from "./ipCommand";
 import { lennyfaceCommand } from "./lennyfaceCommand";
 import { numberfactCommand } from "./numberfactCommand";
@@ -27,6 +28,7 @@ import { serverCommand } from "./serverCommand";
 import { slotsCommand } from "./slotsCommand";
 import { spongebobCommand } from "./spongebobCommand";
 import { tokensCommand } from "./tokensCommand";
+import { transferCommand } from "./transferCommand";
 import { urbanCommand } from "./urbanCommand";
 import { wikipediaCommand } from "./wikipediaCommand";
 import { yoMamaCommand } from "./yoMamaCommand";
@@ -63,6 +65,8 @@ export const modules = [
   serverCommand,
   chooseCommand,
   prefixCommand,
+  investCommand,
+  transferCommand,
   pingCommand,
 ];
 

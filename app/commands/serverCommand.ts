@@ -24,8 +24,9 @@ export const serverCommand: Command = {
       .addField("Users", message.guild.memberCount, true)
       // .addField("Channels -> categories,text,voice")
       .addField("Large server", message.guild.large, true)
+      .addField("Partnered", message.guild.partnered ? "True" : "False", true)
       // .addField("Emojis", message.guild.emojis, true) // Count
-      .addField("Owner", message.guild.owner?.displayName, true)
+      .addField("Owner", message.guild?.owner?.nickname ?? "Unknown", true)
       .addField("Created at", message.guild.createdAt, true);
     // .addField("Roles", message.guild.roles, true);
 

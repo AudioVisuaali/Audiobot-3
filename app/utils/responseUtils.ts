@@ -13,16 +13,18 @@ class ResponseUtils {
   };
 
   private createFooter(opts: { user: User }) {
-    const embed = new MessageEmbed().setTimestamp();
+    const embed = new MessageEmbed();
 
     if (opts.user.avatar) {
-      return new MessageEmbed().setFooter(
-        `Requested by ${opts.user.username}`,
-        opts.user.avatarURL() ?? opts.user.defaultAvatarURL,
-      );
+      return new MessageEmbed()
+        .setFooter(
+          `Requested by ${opts.user.username}`,
+          opts.user.avatarURL() ?? opts.user.defaultAvatarURL,
+        )
+        .setTimestamp();
     }
 
-    return embed.setFooter(`Requested by ${opts.user.username}`);
+    return embed.setFooter(`Requested by ${opts.user.username}`).setTimestamp();
   }
 
   invalidCurrency(opts: { discordUser: User }) {
@@ -37,7 +39,16 @@ class ResponseUtils {
       .setColor(this.colors.error)
       .setTitle("Insufficient funds")
       .setDescription(
-        `You are gambling with more currency than you can afford. You currently have ${opts.user.points} points`,
+        `You dont have enough currency. You currently have **${opts.user.points}** points`,
+      );
+  }
+
+  insufficientFundsStock(opts: { discordUser: User; user: UserTable }) {
+    return this.createFooter({ user: opts.discordUser })
+      .setColor(this.colors.error)
+      .setTitle("Insufficient funds")
+      .setDescription(
+        `You dont have enough in investments. You currently have **${opts.user.stock}** points invested`,
       );
   }
 
@@ -56,11 +67,38 @@ class ResponseUtils {
     );
   }
 
+  invalidParameter(opts: { discordUser: User }) {
+    return this.createFooter({ user: opts.discordUser })
+      .setColor(this.colors.error)
+      .setTitle("Invalid parameter");
+  }
+
   cooldown(opts: { discordUser: User; availableAt: DateTime }) {
     return this.createFooter({ user: opts.discordUser })
       .setColor(this.colors.neutral)
       .setTitle("You are on cooldown")
       .setDescription(`Try again ${opts.availableAt.toRelative()}`);
+  }
+
+  cannotReferenceSelf(opts: { discordUser: User }) {
+    return this.createFooter({ user: opts.discordUser })
+      .setColor(this.colors.error)
+      .setTitle("Invalid user")
+      .setDescription("You cannot reference yourself");
+  }
+
+  invalidReferenceUser(opts: { discordUser: User }) {
+    return this.createFooter({ user: opts.discordUser })
+      .setColor(this.colors.error)
+      .setTitle("Invalid user")
+      .setDescription("This user is not referrable");
+  }
+
+  invalidAmountOfArguments(opts: { discordUser: User }) {
+    return this.createFooter({ user: opts.discordUser })
+      .setColor(this.colors.error)
+      .setTitle("Invalid arguments")
+      .setDescription("Amount of arguments you provided is not processable");
   }
 
   negative(opts: { discordUser: User }) {

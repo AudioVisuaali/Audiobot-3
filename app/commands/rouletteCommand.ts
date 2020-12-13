@@ -1,5 +1,6 @@
 import { Command } from "discord.js";
 
+import { inputUtils } from "~/utils/inputUtils";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -27,9 +28,9 @@ export const rouletteCommand: Command = {
       return message.channel.send(embed);
     }
 
-    const gambleAmount = await dataSources.userDS.getAmountFromUserInput({
+    const gambleAmount = await inputUtils.getAmountFromUserInput({
       input: args[0],
-      user,
+      currentPoints: user.points,
     });
 
     // INVALID INPUT
@@ -63,9 +64,9 @@ export const rouletteCommand: Command = {
 
     const hasWon = !!mathUtils.getRandomArbitrary(0, 1);
 
-    const userWon = await dataSources.userDS.tryModifyMemes({
+    const userWon = await dataSources.userDS.tryModifyCurrency({
       userDiscordId: message.author.id,
-      modifyMemeCount: hasWon ? gambleAmount : gambleAmount * -1,
+      modifyPoints: hasWon ? gambleAmount : gambleAmount * -1,
     });
 
     if (hasWon) {

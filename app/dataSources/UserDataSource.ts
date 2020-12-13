@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 import { DataSourceWithContext } from "./DataSourceWithContext";
 
 import { Table, UserTableRaw } from "~/database/types";
-import { mathUtils } from "~/utils/mathUtil";
 
 export type UserTable = {
   id: number;
@@ -59,9 +58,12 @@ export class UserDataSource extends DataSourceWithContext {
     return this.formatRow(user);
   }
 
-  public async tryModifyMemes(opts: {
+  public async tryModifyCurrency(opts: {
     userDiscordId: string;
-    modifyMemeCount: number;
+    modifyPoints?: number;
+    modifyStock?: number;
+    modifyTokens?: number;
+    modifyStockMinCompoundAmount?: number;
     updateDailyClaimed?: boolean;
   }) {
     const user = await this.tryGetUser({ userDiscordId: opts.userDiscordId });
@@ -69,8 +71,20 @@ export class UserDataSource extends DataSourceWithContext {
     const updatedUsers = await this.knex<UserTableRaw>(Table.USERS)
       .where({ discordId: opts.userDiscordId })
       .update({
-        points: user.points + opts.modifyMemeCount,
         updatedAt: new Date(),
+        ...(opts.modifyStockMinCompoundAmount
+          ? {
+              stockMinCompoundAmount:
+                user.stockMinCompoundAmount + opts.modifyStockMinCompoundAmount,
+            }
+          : {}),
+        ...(opts.modifyPoints
+          ? { points: user.points + opts.modifyPoints }
+          : {}),
+        ...(opts.modifyStock ? { stock: user.stock + opts.modifyStock } : {}),
+        ...(opts.modifyTokens
+          ? { tokens: user.tokens + opts.modifyTokens }
+          : {}),
         ...(opts.updateDailyClaimed ? { dailyRetrieved: new Date() } : {}),
       })
       .returning("*");
@@ -109,34 +123,5 @@ export class UserDataSource extends DataSourceWithContext {
     return await this.createUser({
       userDiscordId: opts.userDiscordId,
     });
-  }
-
-  public async getAmountFromUserInput(opts: {
-    input: string;
-    user: UserTable;
-  }) {
-    switch (opts.input) {
-      case "all":
-        return opts.user.points;
-
-      case "half":
-        return Math.floor(opts.user.points / 2);
-
-      case "third":
-        return Math.floor(opts.user.points / 3);
-    }
-
-    // 80% 56%
-    if (opts.input.endsWith("%")) {
-      const percent = parseFloat(opts.input);
-
-      if (isNaN(percent) || percent < 0 || percent > 100) {
-        return null;
-      }
-
-      return Math.floor(opts.user.points * (percent / 100));
-    }
-
-    return mathUtils.parseStringToNumber(opts.input);
   }
 }

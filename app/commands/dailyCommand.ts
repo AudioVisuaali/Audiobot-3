@@ -63,9 +63,9 @@ export const dailyCommand: Command = {
     const { multiplier, explainer } = getDailyFix(luckinessProbability);
 
     const dailyAmount = dailyAmountBase * multiplier;
-    const userUpdated = await dataSources.userDS.tryModifyMemes({
+    const userUpdated = await dataSources.userDS.tryModifyCurrency({
       userDiscordId: message.author.id,
-      modifyMemeCount: dailyAmount,
+      modifyPoints: dailyAmount,
       updateDailyClaimed: true,
     });
 
@@ -74,8 +74,9 @@ export const dailyCommand: Command = {
     const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle(`+ ${dailyAmount} memes`)
-      .setDescription(`You redeemed your daily memes${extra}!`)
-      .addField("New total", `${userUpdated.points} memes`, true);
+      .setDescription(
+        `You redeemed your daily memes${extra}! You now have **${userUpdated.points}** points`,
+      );
 
     return message.channel.send(embed);
   },

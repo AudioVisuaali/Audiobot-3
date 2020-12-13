@@ -1,5 +1,6 @@
 import { Command } from "discord.js";
 
+import { inputUtils } from "~/utils/inputUtils";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 import { timeUtils } from "~/utils/timeUtils";
@@ -108,16 +109,15 @@ export const slotsCommand: Command = {
       userDiscordId: message.author.id,
     });
 
-    const gamblingAmount = await dataSources.userDS.getAmountFromUserInput({
+    const gamblingAmount = await inputUtils.getAmountFromUserInput({
       input: args[0],
-      user,
+      currentPoints: user.points,
     });
 
     if (!gamblingAmount) {
-      const embed = responseUtils
-        .negative({ discordUser: message.author })
-        .setTitle("Invalid currency")
-        .setDescription("The amount you gave is not valid");
+      const embed = responseUtils.invalidCurrency({
+        discordUser: message.author,
+      });
 
       return message.channel.send(embed);
     }
@@ -163,9 +163,9 @@ export const slotsCommand: Command = {
       : 1;
 
     const outcomeAmount = Math.floor(gamblingAmount * multiplier);
-    const modifiedUser = await dataSources.userDS.tryModifyMemes({
+    const modifiedUser = await dataSources.userDS.tryModifyCurrency({
       userDiscordId: message.author.id,
-      modifyMemeCount: hasWon ? outcomeAmount : outcomeAmount * -1,
+      modifyPoints: hasWon ? outcomeAmount : outcomeAmount * -1,
     });
 
     const sentMessage = await message.channel.send(msg1);
