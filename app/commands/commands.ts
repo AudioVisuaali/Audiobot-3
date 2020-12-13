@@ -18,6 +18,7 @@ import { investCommand } from "./investCommand";
 import { ipCommand } from "./ipCommand";
 import { lennyfaceCommand } from "./lennyfaceCommand";
 import { numberfactCommand } from "./numberfactCommand";
+import { osuCommand } from "./osuCommand";
 import { pingCommand } from "./pingCommand";
 import { pointsCommand } from "./pointsCommand";
 import { prefixCommand } from "./prefixCommand";
@@ -73,6 +74,7 @@ export const modules = [
   stockCommand,
   avatarCommand,
   weatherCommand,
+  osuCommand,
   pingCommand,
 ];
 

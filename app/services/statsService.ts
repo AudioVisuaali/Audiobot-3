@@ -61,6 +61,44 @@ type WikipediaResponse = {
   };
 };
 
+type OsuResponse = {
+  accuracy: string;
+  count50: string;
+  count100: string;
+  count300: string;
+  // eslint-disable-next-line camelcase
+  count_rank_a: string;
+  // eslint-disable-next-line camelcase
+  count_rank_s: string;
+  // eslint-disable-next-line camelcase
+  count_rank_sh: string;
+  // eslint-disable-next-line camelcase
+  count_rank_ss: string;
+  // eslint-disable-next-line camelcase
+  count_rank_ssh: string;
+  country: string;
+  events: unknown[];
+  // eslint-disable-next-line camelcase
+  join_date: string;
+  level: string;
+  playcount: string;
+  // eslint-disable-next-line camelcase
+  pp_country_rank: string;
+  // eslint-disable-next-line camelcase
+  pp_rank: string;
+  // eslint-disable-next-line camelcase
+  pp_raw: string;
+  // eslint-disable-next-line camelcase
+  ranked_score: string;
+  // eslint-disable-next-line camelcase
+  total_score: string;
+  // eslint-disable-next-line camelcase
+  total_seconds_played: string;
+  // eslint-disable-next-line camelcase
+  user_id: string;
+  username: string;
+};
+
 type StockResultData = {
   assetClass: string;
   companyName: string;
@@ -147,7 +185,7 @@ export class StatsService extends ServiceWithContext {
     this.genderApi = axios.create({ baseURL: "https://api.genderize.io/" });
     this.numberFactApi = axios.create({ baseURL: "http://numbersapi.com/" });
     this.osuApi = axios.create({
-      baseURL: "https://osu.ppy.sh/api/v1/",
+      baseURL: "https://osu.ppy.sh/api/",
       params: { k: opts.config.osuApiKey },
     });
     this.urbanApi = axios.create({
@@ -190,7 +228,7 @@ export class StatsService extends ServiceWithContext {
   }
 
   public async getOsuProfile(opts: { username: string }) {
-    const { data } = await this.osuApi.get("/", {
+    const { data } = await this.osuApi.get<OsuResponse[]>("/get_user", {
       params: { u: opts.username },
     });
 
