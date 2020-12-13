@@ -1,7 +1,12 @@
+import DataLoader from "dataloader";
+import { Snowflake } from "discord.js";
 import { DateTime } from "luxon";
 import { v4 as uuidv4 } from "uuid";
 
-import { DataSourceWithContext } from "./DataSourceWithContext";
+import {
+  CreateDataSourceOptions,
+  DataSourceWithContext,
+} from "./DataSourceWithContext";
 
 import { Table, GuildTableRaw } from "~/database/types";
 import { timeUtils } from "~/utils/timeUtils";
@@ -9,33 +14,57 @@ import { timeUtils } from "~/utils/timeUtils";
 export type GuildTable = {
   id: number;
   uuid: string;
-  discordId: string;
+  discordId: Snowflake;
   prefix: string;
+  casinoChannelId: Snowflake | null;
   createdAt: DateTime;
   updatedAt: DateTime | null;
 };
 
 export class GuildDataSource extends DataSourceWithContext {
+  public dataLoader: DataLoader<Snowflake, GuildTable | null>;
+
+  constructor(opts: CreateDataSourceOptions) {
+    super(opts);
+
+    this.dataLoader = new DataLoader<Snowflake, GuildTable>(async (keys) => {
+      const serverRows = await this.getGuilds({ guildDiscordIds: keys });
+
+      const persons = serverRows.reduce<{ [key: string]: GuildTable }>(
+        (prev, current) => ({ ...prev, [current.discordId]: current }),
+        {},
+      );
+
+      return keys.map((key) => persons[key] ?? null);
+    });
+  }
+
+  private async getGuilds(opts: { guildDiscordIds: readonly string[] }) {
+    const guilds = await this.knex<GuildTableRaw>(Table.GUILDS).whereIn(
+      "discordId",
+      opts.guildDiscordIds,
+    );
+
+    return guilds.map(this.formatRow);
+  }
+
   private formatRow(row: GuildTableRaw): GuildTable {
     return {
       id: row.id,
       uuid: row.uuid,
       discordId: row.discordId,
       prefix: row.prefix,
+      casinoChannelId: row.casinoChannelId,
       createdAt: DateTime.fromJSDate(row.createdAt),
       updatedAt: timeUtils.parseDBTime(row.updatedAt),
     };
   }
 
-  public async getGuild(opts: { guildDiscordId: string }) {
-    const guild = await this.knex<GuildTableRaw>(Table.GUILDS)
-      .where({ discordId: opts.guildDiscordId })
-      .first();
-
-    return guild ? this.formatRow(guild) : null;
+  public async getGuild(opts: { guildDiscordId: Snowflake }) {
+    return await this.dataLoader.load(opts.guildDiscordId);
   }
 
-  public async createGuild(opts: { guildDiscordId: string }) {
+  public async createGuild(opts: { guildDiscordId: Snowflake }) {
     const insertedGuilds = await this.knex<GuildTableRaw>(Table.GUILDS)
       .insert({
         uuid: uuidv4(),
@@ -49,24 +78,24 @@ export class GuildDataSource extends DataSourceWithContext {
       throw new Error(`Could not create server: ${opts.guildDiscordId}`);
     }
 
-    const [guild] = insertedGuilds;
+    const guild = this.formatRow(insertedGuilds[0]);
 
-    return this.formatRow(guild);
+    this.dataLoader.clear(guild.discordId).prime(guild.discordId, guild);
+
+    return guild;
   }
 
-  public async tryGetGuild(opts: { guildDiscordId: string }) {
-    const guild = await this.knex<GuildTableRaw>(Table.GUILDS)
-      .where({ discordId: opts.guildDiscordId })
-      .first();
+  public async tryGetGuild(opts: { guildDiscordId: Snowflake }) {
+    const guild = await this.getGuild({ guildDiscordId: opts.guildDiscordId });
 
     if (!guild) {
       throw new Error("Server not found");
     }
 
-    return this.formatRow(guild);
+    return guild;
   }
 
-  public async verifyGuild(opts: { guildDiscordId: string }) {
+  public async verifyGuild(opts: { guildDiscordId: Snowflake }) {
     const server = await this.getGuild({
       guildDiscordId: opts.guildDiscordId,
     });
@@ -80,13 +109,20 @@ export class GuildDataSource extends DataSourceWithContext {
     });
   }
 
-  public async modifyGuildPrefix(opts: {
-    guildDiscordId: string;
-    prefix: string;
+  public async modifyGuild(opts: {
+    guildDiscordId: Snowflake;
+    newPrefix?: string;
+    newCasinoChannelId?: Snowflake | null;
   }) {
     const updatedGuilds = await this.knex<GuildTableRaw>(Table.GUILDS)
       .where({ discordId: opts.guildDiscordId })
-      .update({ prefix: opts.prefix, updatedAt: new Date() })
+      .update({
+        updatedAt: new Date(),
+        ...(opts.newPrefix ? { prefix: opts.newPrefix } : {}),
+        ...(opts.newCasinoChannelId
+          ? { casinoChannelId: opts.newCasinoChannelId }
+          : {}),
+      })
       .returning("*");
 
     if (updatedGuilds.length !== 1) {
@@ -94,8 +130,10 @@ export class GuildDataSource extends DataSourceWithContext {
       throw new Error(`Could modify create server: ${opts.guildDiscordId}`);
     }
 
-    const [guild] = updatedGuilds;
+    const guild = this.formatRow(updatedGuilds[0]);
 
-    return this.formatRow(guild);
+    this.dataLoader.clear(guild.discordId).prime(guild.discordId, guild);
+
+    return guild;
   }
 }

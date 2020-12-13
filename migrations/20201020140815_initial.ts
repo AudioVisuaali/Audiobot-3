@@ -21,6 +21,7 @@ export async function up(knex: Knex): Promise<void> {
       table.uuid("uuid").notNullable();
       table.text("prefix").notNullable();
       table.text("discordId").notNullable();
+      table.text("casinoChannelId").nullable();
       table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
       table.timestamp("updatedAt").nullable();
     })

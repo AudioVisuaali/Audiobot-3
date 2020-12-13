@@ -1,3 +1,4 @@
+import { Snowflake } from "discord.js";
 import { DateTime } from "luxon";
 import { v4 as uuidv4 } from "uuid";
 
@@ -9,7 +10,7 @@ import { timeUtils } from "~/utils/timeUtils";
 export type UserTable = {
   id: number;
   UUID: string;
-  discordId: string;
+  discordId: Snowflake;
   points: number;
   stock: number;
   stockMinCompoundAmount: number;
@@ -37,7 +38,7 @@ export class UserDataSource extends DataSourceWithContext {
     };
   }
 
-  public async getUser(opts: { userDiscordId: string }) {
+  public async getUser(opts: { userDiscordId: Snowflake }) {
     const user = await this.knex<UserTableRaw>(Table.USERS)
       .where({ discordId: opts.userDiscordId })
       .first();
@@ -45,7 +46,7 @@ export class UserDataSource extends DataSourceWithContext {
     return user ? this.formatRow(user) : null;
   }
 
-  public async tryGetUser(opts: { userDiscordId: string }) {
+  public async tryGetUser(opts: { userDiscordId: Snowflake }) {
     const user = await this.knex<UserTableRaw>(Table.USERS)
       .where({ discordId: opts.userDiscordId })
       .first();
@@ -74,7 +75,7 @@ export class UserDataSource extends DataSourceWithContext {
   }
 
   public async tryModifyCurrency(opts: {
-    userDiscordId: string;
+    userDiscordId: Snowflake;
     modifyPoints?: number;
     modifyStock?: number;
     modifyTokens?: number;
@@ -112,7 +113,7 @@ export class UserDataSource extends DataSourceWithContext {
     return this.formatRow(updatedUsers[0]);
   }
 
-  public async createUser(opts: { userDiscordId: string }) {
+  public async createUser(opts: { userDiscordId: Snowflake }) {
     const servers = await this.knex<UserTableRaw>(Table.USERS)
       .insert({
         uuid: uuidv4(),
@@ -128,7 +129,7 @@ export class UserDataSource extends DataSourceWithContext {
     return this.formatRow(servers[0]);
   }
 
-  public async verifyUser(opts: { userDiscordId: string }) {
+  public async verifyUser(opts: { userDiscordId: Snowflake }) {
     const user = await this.getUser({ userDiscordId: opts.userDiscordId });
 
     if (user) {

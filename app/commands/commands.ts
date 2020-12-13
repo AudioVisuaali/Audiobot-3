@@ -2,6 +2,7 @@ import { Message, Client, Command } from "discord.js";
 
 import { avatarCommand } from "./avatarCommand";
 import { bitcoinCommand } from "./bitcoinCommand";
+import { casinoCommand } from "./casinoCommand";
 import { catFactCommand } from "./catFactCommand";
 import { catPictureCommand } from "./catPictureCommand";
 import { chooseCommand } from "./chooseCommand";
@@ -75,6 +76,7 @@ export const modules = [
   avatarCommand,
   weatherCommand,
   osuCommand,
+  casinoCommand,
   pingCommand,
 ];
 

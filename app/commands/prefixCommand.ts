@@ -13,7 +13,7 @@ export const prefixCommand: Command = {
   isAdmin: true,
   description: "Chang the prefix of your server",
 
-  async execute(message, args, { dataSources, dataLoaders }) {
+  async execute(message, args, { dataSources }) {
     if (!message.guild) {
       return;
     }
@@ -22,7 +22,9 @@ export const prefixCommand: Command = {
       return;
     }
 
-    const prefix = await dataLoaders.prefixDL.load(message.guild.id);
+    const { prefix } = await dataSources.guildDS.tryGetGuild({
+      guildDiscordId: message.guild.id,
+    });
 
     if (args.length === 0) {
       const embed = responseUtils
@@ -47,14 +49,10 @@ export const prefixCommand: Command = {
       return message.channel.send(embed);
     }
 
-    const guild = await dataSources.guildDS.modifyGuildPrefix({
+    await dataSources.guildDS.modifyGuild({
       guildDiscordId: message.guild.id,
-      prefix: newPrefix,
+      newPrefix: newPrefix,
     });
-
-    dataLoaders.prefixDL
-      .clear(guild.discordId)
-      .prime(guild.discordId, guild.prefix);
 
     const embed = responseUtils
       .positive({ discordUser: message.author })

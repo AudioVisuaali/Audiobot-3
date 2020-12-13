@@ -1,3 +1,5 @@
+import { Snowflake } from "discord.js";
+
 export enum Table {
   USERS = "users",
   GUILDS = "guilds",
@@ -11,7 +13,7 @@ type Tables = UserTableRaw | GuildTableRaw | CommandTableRaw;
 export type UserTableRaw = Readonly<{
   id: number;
   uuid: string;
-  discordId: string;
+  discordId: Snowflake;
   points: number;
   stock: number;
   stockMinCompoundAmount: number;
@@ -26,7 +28,8 @@ export type GuildTableRaw = Readonly<{
   id: number;
   uuid: string;
   prefix: string;
-  discordId: string;
+  discordId: Snowflake;
+  casinoChannelId: Snowflake;
   createdAt: Date;
   updatedAt: Date | null;
 }>;
@@ -34,7 +37,7 @@ export type GuildTableRaw = Readonly<{
 export type CommandTableRaw = Readonly<{
   id: number;
   uuid: string;
-  guildId: number;
+  guildId: Snowflake;
   addedBy: number;
   command: string;
   response: string;

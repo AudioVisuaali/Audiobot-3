@@ -13,12 +13,14 @@ export const helpCommand: Command = {
   isAdmin: false,
   description: "Help menu",
 
-  async execute(message, args, { dataLoaders }) {
+  async execute(message, args, { dataSources }) {
     if (!message.guild) {
       return;
     }
 
-    const prefix = await dataLoaders.prefixDL.load(message.guild.id);
+    const { prefix } = await dataSources.guildDS.tryGetGuild({
+      guildDiscordId: message.guild.id,
+    });
 
     if (args.length === 0) {
       const embed = responseUtils

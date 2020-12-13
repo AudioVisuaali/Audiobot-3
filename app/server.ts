@@ -5,7 +5,6 @@ import { Config } from "./config";
 import { createContext } from "./context";
 import { createDataSources } from "./dataSources/dataSources";
 import { createKnex } from "./database/connection";
-import { createDataLoaders } from "./dataloaders/dataLoaders";
 import { handleMessage } from "./discord";
 import { createLogger } from "./logger";
 import { createServices } from "./services/services";
@@ -17,12 +16,10 @@ export const createServer = ({ config }: { config: Config }) => {
   const knex = createKnex({ config });
   const services = createServices({ config, logger });
   const dataSources = createDataSources({ config, logger, knex });
-  const dataLoaders = createDataLoaders({ knex });
   const context = createContext({
     logger,
     services,
     dataSources,
-    dataLoaders,
   });
 
   const client = new Discord.Client();

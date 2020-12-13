@@ -62,7 +62,8 @@ export const rouletteCommand: Command = {
       return message.channel.send(embed);
     }
 
-    const hasWon = !!mathUtils.getRandomArbitrary(0, 1);
+    // Rigged
+    const hasWon = mathUtils.getRandomArbitrary(0, 99) < 49;
 
     const userWon = await dataSources.userDS.tryModifyCurrency({
       userDiscordId: message.author.id,

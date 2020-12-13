@@ -14,10 +14,10 @@ type Fruit = {
 };
 
 const fruits = [
-  { value: "honeyPot", emoji: ":honey_pot:", multiplier: 10 },
-  { value: "eggplant", emoji: ":eggplant:", multiplier: 6.5 },
-  { value: "banana", emoji: ":banana:", multiplier: 5 },
-  { value: "peach", emoji: ":peach:", multiplier: 3.5 },
+  { value: "honeyPot", emoji: ":honey_pot:", multiplier: 7.5 },
+  { value: "eggplant", emoji: ":eggplant:", multiplier: 5.5 },
+  { value: "banana", emoji: ":banana:", multiplier: 4 },
+  { value: "peach", emoji: ":peach:", multiplier: 3 },
   { value: "cherries", emoji: ":cherries:", multiplier: 2.5 },
   { value: "apple", emoji: ":apple:", multiplier: 2 },
 ];

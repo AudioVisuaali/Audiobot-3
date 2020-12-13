@@ -36,10 +36,7 @@ export const handleMessage: HandleMessage = (context) => async (message) => {
   }
 
   const guildId = message.guild.id;
-  const prefix = await getServerPrefixWithCreate({
-    context,
-    guildId,
-  });
+  const prefix = await getServerWithCreate({ context, guildId });
 
   if (!message.content.startsWith(prefix)) {
     return;
@@ -56,16 +53,16 @@ export const handleMessage: HandleMessage = (context) => async (message) => {
   });
 };
 
-const getServerPrefixWithCreate = async (opts: {
+const getServerWithCreate = async (opts: {
   context: Context;
   guildId: string;
 }) => {
-  const cachePrefix = await opts.context.dataLoaders.prefixDL.load(
-    opts.guildId,
-  );
+  const serverDL = await opts.context.dataSources.guildDS.getGuild({
+    guildDiscordId: opts.guildId,
+  });
 
-  if (cachePrefix) {
-    return cachePrefix;
+  if (serverDL) {
+    return serverDL.prefix;
   }
 
   const server = await opts.context.dataSources.guildDS.verifyGuild({

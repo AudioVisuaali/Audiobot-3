@@ -27,6 +27,15 @@ class ResponseUtils {
     return embed.setFooter(`Requested by ${opts.user.username}`).setTimestamp();
   }
 
+  invalidPermissions(opts: { discordUser: User }) {
+    return this.createFooter({ user: opts.discordUser })
+      .setColor(this.colors.error)
+      .setTitle("Invalid permissions")
+      .setDescription(
+        "You are not authorized to run this command on this server",
+      );
+  }
+
   invalidCurrency(opts: { discordUser: User }) {
     return this.createFooter({ user: opts.discordUser })
       .setColor(this.colors.error)
@@ -92,6 +101,13 @@ class ResponseUtils {
       .setColor(this.colors.error)
       .setTitle("Invalid user")
       .setDescription("This user is not referrable");
+  }
+
+  invalidReferenceChannel(opts: { discordUser: User }) {
+    return this.createFooter({ user: opts.discordUser })
+      .setColor(this.colors.error)
+      .setTitle("Invalid channel")
+      .setDescription("This channel is not referrable");
   }
 
   invalidAmountOfArguments(opts: { discordUser: User }) {

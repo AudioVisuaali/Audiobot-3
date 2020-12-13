@@ -43,6 +43,19 @@ class InputUtils {
       }
     }
   };
+
+  public getChannelMention = (opts: {
+    message: Message;
+    mentionInString: string;
+  }) => {
+    const mentions = opts.message.mentions.channels.values();
+
+    for (const mention of mentions) {
+      if (opts.mentionInString.includes(mention.id)) {
+        return mention;
+      }
+    }
+  };
 }
 
 export const inputUtils = new InputUtils();
