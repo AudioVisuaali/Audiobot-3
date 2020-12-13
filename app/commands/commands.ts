@@ -15,6 +15,7 @@ import { dogPictureCommand } from "./dogPictureCommand";
 import { eightBallCommand } from "./eightBallCommand";
 import { genderCommand } from "./genderCommand";
 import { helpCommand } from "./helpCommand";
+import { historyCommand } from "./historyCommand";
 import { investCommand } from "./investCommand";
 import { ipCommand } from "./ipCommand";
 import { lennyfaceCommand } from "./lennyfaceCommand";
@@ -77,6 +78,7 @@ export const modules = [
   weatherCommand,
   osuCommand,
   casinoCommand,
+  historyCommand,
   pingCommand,
 ];
 

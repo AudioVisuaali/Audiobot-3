@@ -36,11 +36,28 @@ export async function up(knex: Knex): Promise<void> {
       table.boolean("deleted").notNullable().defaultTo(false);
       table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
       table.timestamp("updatedAt").nullable();
+    })
+    .createTable("currencyHistory", (table) => {
+      table.increments("id").primary().notNullable();
+      table.uuid("uuid").notNullable();
+      table.integer("guildId").notNullable().references("guilds.id");
+      table.integer("userId").notNullable().references("users.id");
+      table.text("discordGuildId").notNullable();
+      table.text("discordUserId").notNullable();
+      table.text("actionType").notNullable();
+      table.text("currencyType").notNullable();
+      table.integer("bet").nullable();
+      table.integer("outcome").nullable();
+      table.text("metadata").nullable();
+      table.boolean("hasProfited").notNullable().defaultTo(false);
+      table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+      table.timestamp("updatedAt").nullable();
     });
 }
 
 export async function down(knex: Knex): Promise<void> {
   return knex.schema
+    .dropTableIfExists("currencyHistory")
     .dropTableIfExists("commands")
     .dropTableIfExists("users")
     .dropTableIfExists("guilds")

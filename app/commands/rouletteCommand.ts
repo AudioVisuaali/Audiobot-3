@@ -1,5 +1,9 @@
 import { Command } from "discord.js";
 
+import {
+  CurrencyHistoryActionType,
+  CurrencyHistoryCurrencyType,
+} from "~/database/types";
 import { inputUtils } from "~/utils/inputUtils";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
@@ -15,7 +19,12 @@ export const rouletteCommand: Command = {
   isAdmin: false,
   description: "Gamble your money in roulette",
 
+  // eslint-disable-next-line max-statements
   async execute(message, args, { dataSources }) {
+    if (!message.guild) {
+      return;
+    }
+
     const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
     });
@@ -27,6 +36,14 @@ export const rouletteCommand: Command = {
 
       return message.channel.send(embed);
     }
+
+    const guild = await dataSources.guildDS.tryGetGuild({
+      guildDiscordId: message.guild.id,
+    });
+
+    const isInCasinoChannel = guild.casinoChannelId
+      ? guild.casinoChannelId === message.channel.id
+      : false;
 
     const gambleAmount = await inputUtils.getAmountFromUserInput({
       input: args[0],
@@ -63,31 +80,78 @@ export const rouletteCommand: Command = {
     }
 
     // Rigged
-    const hasWon = mathUtils.getRandomArbitrary(0, 99) < 49;
+    const winNumber = mathUtils.getRandomArbitrary(0, 99);
+    const hasWon = isInCasinoChannel ? winNumber < 42 : winNumber < 49;
 
-    const userWon = await dataSources.userDS.tryModifyCurrency({
-      userDiscordId: message.author.id,
-      modifyPoints: hasWon ? gambleAmount : gambleAmount * -1,
-    });
+    if (!hasWon) {
+      const userLost = await dataSources.userDS.tryModifyCurrency({
+        userDiscordId: message.author.id,
+        modifyPoints: gambleAmount * -1,
+      });
 
-    if (hasWon) {
       const embed = responseUtils
-        .positive({ discordUser: message.author })
-        .setTitle(`+ ${gambleAmount} points`)
+        .negative({ discordUser: message.author })
+        .setTitle(`:slot_machine: - ${gambleAmount} points`)
         .setDescription(
-          `You have won **${gambleAmount}** points, you now have **${userWon.points}** points`,
+          `You have lost **${gambleAmount}** points, you now have **${userLost.points}** points`,
         );
+
+      dataSources.currencyHistoryDS.addCurrencyHistory({
+        userId: user.id,
+        guildId: guild.id,
+        discordUserId: message.author.id,
+        discordGuildId: message.guild.id,
+        actionType: CurrencyHistoryActionType.ROULETTE,
+        currencyType: CurrencyHistoryCurrencyType.POINT,
+        bet: gambleAmount,
+        outcome: gambleAmount * -1,
+        metadata: null,
+        hasProfited: false,
+      });
 
       return message.channel.send(embed);
     }
 
+    const { percent, bonusCurrent } = mathUtils.getBonusCount({
+      current: gambleAmount,
+    });
+
+    const modifyPoints = isInCasinoChannel
+      ? gambleAmount + bonusCurrent
+      : gambleAmount;
+
+    const userWon = await dataSources.userDS.tryModifyCurrency({
+      userDiscordId: message.author.id,
+      modifyPoints,
+    });
+
     const embed = responseUtils
-      .negative({ discordUser: message.author })
-      .setTitle(`- ${gambleAmount} points`)
+      .positive({ discordUser: message.author })
+      .setTitle(`+ ${modifyPoints} points`)
       .setDescription(
-        `You have lost **${gambleAmount}** points, you now have **${userWon.points}** points`,
+        `You have won **${modifyPoints}** points, you now have **${userWon.points}** points`,
       );
 
-    message.channel.send(embed);
+    if (isInCasinoChannel) {
+      embed.addField(
+        "Casino addition :confetti_ball:",
+        `+ ${bonusCurrent} points / ${percent}%`,
+      );
+    }
+
+    dataSources.currencyHistoryDS.addCurrencyHistory({
+      userId: user.id,
+      guildId: guild.id,
+      discordUserId: message.author.id,
+      discordGuildId: message.guild.id,
+      actionType: CurrencyHistoryActionType.ROULETTE,
+      currencyType: CurrencyHistoryCurrencyType.POINT,
+      bet: gambleAmount,
+      outcome: modifyPoints,
+      metadata: `Casino +${bonusCurrent} points / ${percent}%`,
+      hasProfited: true,
+    });
+
+    return message.channel.send(embed);
   },
 };

@@ -3,6 +3,8 @@ import { Snowflake } from "discord.js";
 export enum Table {
   USERS = "users",
   GUILDS = "guilds",
+  CURRENCY_HISTORY = "currencyHistory",
+  COMMANDS = "commands",
 }
 
 export const tableColumn = <T extends Tables>(table: Table, column: keyof T) =>
@@ -43,6 +45,35 @@ export type CommandTableRaw = Readonly<{
   response: string;
   timesUser: number;
   deleted: boolean;
+  createdAt: Date;
+  updatedAt: Date | null;
+}>;
+
+export enum CurrencyHistoryActionType {
+  SLOTS = "slots",
+  ROULETTE = "roulette",
+  DAILY = "daily",
+  TRANSFER = "transfer",
+}
+
+export enum CurrencyHistoryCurrencyType {
+  POINT = "point",
+  TOKEN = "token",
+}
+
+export type CurrencyHistoryTableRaw = Readonly<{
+  id: number;
+  uuid: string;
+  guildId: number;
+  userId: number;
+  discordGuildId: Snowflake;
+  discordUserId: Snowflake;
+  actionType: CurrencyHistoryActionType;
+  currencyType: CurrencyHistoryCurrencyType;
+  bet: number | null;
+  outcome: number | null;
+  metadata: string | null;
+  hasProfited: boolean;
   createdAt: Date;
   updatedAt: Date | null;
 }>;

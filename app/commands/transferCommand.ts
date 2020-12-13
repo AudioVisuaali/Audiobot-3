@@ -1,5 +1,9 @@
 import { Command } from "discord.js";
 
+import {
+  CurrencyHistoryActionType,
+  CurrencyHistoryCurrencyType,
+} from "~/database/types";
 import { inputUtils } from "~/utils/inputUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -12,7 +16,12 @@ export const transferCommand: Command = {
   isAdmin: false,
   description: "Transfer money for other users",
 
+  // eslint-disable-next-line max-statements
   async execute(message, args, { dataSources }) {
+    if (!message.guild) {
+      return;
+    }
+
     if (!message.author) {
       return;
     }
@@ -72,6 +81,10 @@ export const transferCommand: Command = {
       return message.channel.send(embed);
     }
 
+    const guild = await dataSources.guildDS.tryGetGuild({
+      guildDiscordId: message.guild.id,
+    });
+
     const receivingUser = await dataSources.userDS.verifyUser({
       userDiscordId: userMentioned.id,
     });
@@ -84,6 +97,32 @@ export const transferCommand: Command = {
     const updatedReceiver = await dataSources.userDS.tryModifyCurrency({
       userDiscordId: receivingUser.discordId,
       modifyPoints: transferrableAmount,
+    });
+
+    dataSources.currencyHistoryDS.addCurrencyHistory({
+      userId: user.id,
+      guildId: guild.id,
+      discordUserId: message.author.id,
+      discordGuildId: message.guild.id,
+      actionType: CurrencyHistoryActionType.TRANSFER,
+      currencyType: CurrencyHistoryCurrencyType.POINT,
+      bet: null,
+      outcome: transferrableAmount * -1,
+      metadata: `To ${userMentioned.username}`,
+      hasProfited: false,
+    });
+
+    dataSources.currencyHistoryDS.addCurrencyHistory({
+      userId: receivingUser.id,
+      guildId: guild.id,
+      discordUserId: userMentioned.id,
+      discordGuildId: message.guild.id,
+      actionType: CurrencyHistoryActionType.ROULETTE,
+      currencyType: CurrencyHistoryCurrencyType.POINT,
+      bet: null,
+      outcome: transferrableAmount,
+      metadata: `From ${message.author.username}`,
+      hasProfited: false,
     });
 
     const embed = responseUtils

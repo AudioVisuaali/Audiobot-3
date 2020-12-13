@@ -1,6 +1,10 @@
 import { Command } from "discord.js";
 import { DateTime } from "luxon";
 
+import {
+  CurrencyHistoryActionType,
+  CurrencyHistoryCurrencyType,
+} from "~/database/types";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -35,9 +39,17 @@ export const dailyCommand: Command = {
   description: "Get your daily fix",
 
   async execute(message, args, { dataSources }) {
+    if (!message.guild) {
+      return;
+    }
+
     if (args.length !== 0) {
       return message.channel.send("Invalid parameters");
     }
+
+    const guild = await dataSources.guildDS.tryGetGuild({
+      guildDiscordId: message.guild.id,
+    });
 
     const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
@@ -70,6 +82,19 @@ export const dailyCommand: Command = {
     });
 
     const extra = explainer ? `, __${explainer}__` : "";
+
+    dataSources.currencyHistoryDS.addCurrencyHistory({
+      userId: user.id,
+      guildId: guild.id,
+      discordUserId: message.author.id,
+      discordGuildId: message.guild.id,
+      actionType: CurrencyHistoryActionType.DAILY,
+      currencyType: CurrencyHistoryCurrencyType.POINT,
+      bet: null,
+      outcome: dailyAmount,
+      metadata: null,
+      hasProfited: true,
+    });
 
     const embed = responseUtils
       .positive({ discordUser: message.author })

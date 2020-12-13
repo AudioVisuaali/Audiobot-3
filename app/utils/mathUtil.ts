@@ -35,6 +35,20 @@ class MathUtils {
   public kelvinToFahrenheit(opts: { kelvin: number }) {
     return Math.round(((opts.kelvin - 273.15) * 9) / 5 + 32);
   }
+
+  public getBonusCount(opts: {
+    current: number;
+    minPercent?: number;
+    maxPercent?: number;
+  }) {
+    const min = opts.minPercent || 6;
+    const max = opts.maxPercent || 10;
+    const percent = this.getRandomArbitrary(min, max);
+
+    const bonusCurrent = Math.floor((percent / 100) * opts.current);
+
+    return { percent, bonusCurrent };
+  }
 }
 
 export const mathUtils = new MathUtils();

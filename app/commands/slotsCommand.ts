@@ -1,5 +1,9 @@
 import { Command } from "discord.js";
 
+import {
+  CurrencyHistoryActionType,
+  CurrencyHistoryCurrencyType,
+} from "~/database/types";
 import { inputUtils } from "~/utils/inputUtils";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
@@ -7,19 +11,28 @@ import { timeUtils } from "~/utils/timeUtils";
 
 export const SLOTS_MIN_AMOUNT = 10;
 
-type Fruit = {
+type Multiplier = {
   value: string;
   emoji: string;
   multiplier: number;
 };
 
-const fruits = [
-  { value: "honeyPot", emoji: ":honey_pot:", multiplier: 7.5 },
-  { value: "eggplant", emoji: ":eggplant:", multiplier: 5.5 },
-  { value: "banana", emoji: ":banana:", multiplier: 4 },
-  { value: "peach", emoji: ":peach:", multiplier: 3 },
-  { value: "cherries", emoji: ":cherries:", multiplier: 2.5 },
-  { value: "apple", emoji: ":apple:", multiplier: 2 },
+const formatMultiplier = (multiplier: Multiplier) =>
+  `${multiplier.emoji} ${multiplier.multiplier}x`;
+
+const casinoBonus = {
+  value: "casino",
+  emoji: "🎰 Casino",
+  multiplier: 1,
+};
+
+const fruits: Multiplier[] = [
+  { value: "honeyPot", emoji: "🍯", multiplier: 7.5 },
+  { value: "eggplant", emoji: "🍆", multiplier: 5.5 },
+  { value: "banana", emoji: "🍌", multiplier: 4 },
+  { value: "peach", emoji: "🍑", multiplier: 3 },
+  { value: "cherries", emoji: "🍒", multiplier: 2.5 },
+  { value: "apple", emoji: "🍎", multiplier: 2 },
 ];
 
 const createColumnOfFruits = () => mathUtils.shuffleList(fruits).slice(0, 3);
@@ -30,7 +43,7 @@ const createGrid = () => [
   createColumnOfFruits(),
 ];
 
-const joinRow = (items: Fruit[]) =>
+const joinRow = (items: Multiplier[]) =>
   items.map((value) => `[${value.emoji}]`).join(" - ");
 
 type Grid = ReturnType<typeof createGrid>;
@@ -92,6 +105,10 @@ export const slotsCommand: Command = {
 
   // eslint-disable-next-line max-statements
   async execute(message, args, { dataSources }) {
+    if (!message.guild) {
+      return;
+    }
+
     if (args.length === 0) {
       const valuesMessage = Object.values(fruits)
         .map((fruit) => `${fruit.emoji} ${fruit.multiplier}x`)
@@ -142,6 +159,14 @@ export const slotsCommand: Command = {
       return message.channel.send(embed);
     }
 
+    const guild = await dataSources.guildDS.tryGetGuild({
+      guildDiscordId: message.guild.id,
+    });
+
+    const isInCasinoChannel = guild.casinoChannelId
+      ? guild.casinoChannelId === message.channel.id
+      : false;
+
     const gridv1 = createGrid();
     const gridv2 = createGrid();
     const gridv3 = createGrid();
@@ -158,8 +183,13 @@ export const slotsCommand: Command = {
     const matches = getStraights(gridv3);
     const hasWon = !!matches.length;
 
+    const multiplierBase = isInCasinoChannel ? 1 : 0;
+
     const multiplier = hasWon
-      ? matches.reduce<number>((acc, curr) => acc + curr.multiplier, 0)
+      ? matches.reduce<number>(
+          (acc, curr) => acc + curr.multiplier,
+          multiplierBase,
+        )
       : 1;
 
     const outcomeAmount = Math.floor(gamblingAmount * multiplier);
@@ -187,11 +217,39 @@ export const slotsCommand: Command = {
         `Your new total is **${modifiedUser.points}** points`,
       );
       msg3.addField("Stake", `${gamblingAmount} points`);
-      msg3.addField(
-        "Multiplier",
-        matches.map((match) => `${match.emoji} ${match.multiplier}x`),
-      );
+
+      const matchesAll = isInCasinoChannel
+        ? [...matches, casinoBonus]
+        : matches;
+
+      const mappedMultipliers = matchesAll.map(formatMultiplier);
+      msg3.addField("Multiplier", mappedMultipliers.join("\n"));
+      dataSources.currencyHistoryDS.addCurrencyHistory({
+        userId: user.id,
+        guildId: guild.id,
+        discordGuildId: message.guild.id,
+        discordUserId: message.author.id,
+        actionType: CurrencyHistoryActionType.SLOTS,
+        currencyType: CurrencyHistoryCurrencyType.POINT,
+        bet: gamblingAmount,
+        outcome: outcomeAmount,
+        metadata: mappedMultipliers.join(", "),
+        hasProfited: true,
+      });
     } else {
+      dataSources.currencyHistoryDS.addCurrencyHistory({
+        userId: user.id,
+        guildId: guild.id,
+        discordGuildId: message.guild.id,
+        discordUserId: message.author.id,
+        actionType: CurrencyHistoryActionType.SLOTS,
+        currencyType: CurrencyHistoryCurrencyType.POINT,
+        bet: gamblingAmount,
+        outcome: outcomeAmount * -1,
+        metadata: null,
+        hasProfited: false,
+      });
+
       msg3.addField(
         `- ${outcomeAmount} points`,
         `Your new total is **${modifiedUser.points}** points`,
