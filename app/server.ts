@@ -9,6 +9,7 @@ import { createDataLoaders } from "./dataloaders/dataLoaders";
 import { handleMessage } from "./discord";
 import { createLogger } from "./logger";
 import { createServices } from "./services/services";
+import { investWorker } from "./workers/investWorker";
 import { statusWorker } from "./workers/statusWorker";
 
 export const createServer = ({ config }: { config: Config }) => {
@@ -40,7 +41,8 @@ export const createServer = ({ config }: { config: Config }) => {
     logger.info(`Client ID: ${user.id}!`);
     logger.info("Listening to the chat!");
 
-    statusWorker({ client });
+    investWorker({ client, context });
+    statusWorker({ client, logger });
   });
 
   client.on("error", (error) => {

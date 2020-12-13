@@ -1,16 +1,22 @@
+/* eslint-disable switch-case/no-case-curly */
 import { Command } from "discord.js";
+import { DateTime } from "luxon";
 
 import { inputUtils } from "~/utils/inputUtils";
 import { responseUtils } from "~/utils/responseUtils";
+import { timeUtils } from "~/utils/timeUtils";
+
+const description =
+  "Invest your money to get a weekly 1% payback. For your money to get compounded you need to keep your money invested for a week.";
 
 export const investCommand: Command = {
   name: "Invest",
   command: "invest",
   aliases: [],
-  syntax: "<add | take> <amount>",
-  examples: ["add 500", "add 50%", "take 200", "take half"],
+  syntax: "<<add|put|deposit> | <take|withdraw|remove>> <amount>",
+  examples: ["add 500", "deposit 50%", "take 200", "remove half"],
   isAdmin: false,
-  description: "Your tokens currently",
+  description,
 
   // eslint-disable-next-line max-statements
   async execute(message, args, { dataSources }) {
@@ -18,11 +24,40 @@ export const investCommand: Command = {
       userDiscordId: message.author.id,
     });
 
-    if (args.length !== 2) {
-      return;
+    if (args.length === 0) {
+      const nextCompoundAt = timeUtils.getNextCompoundAt();
+      const now = DateTime.utc();
+      const nextCompound = timeUtils.humanReadableTimeBetweenDates(
+        now,
+        nextCompoundAt,
+      );
+
+      const embed = responseUtils
+        .positive({ discordUser: message.author })
+        .setTitle(":moneybag: Invest")
+        .setDescription(description)
+        .addField("Next compound", timeUtils.nextCompoundString(nextCompound))
+        .addField("Invested", `${user.stock} points`, true)
+        .addField(
+          "Next compound worth",
+          `${Math.floor(user.stockMinCompoundAmount * 0.01)} points`,
+          true,
+        );
+
+      return message.channel.send(embed);
     }
 
-    if (!["add", "take"].includes(args[0])) {
+    if (args.length !== 2) {
+      const embed = responseUtils.invalidAmountOfArguments({
+        discordUser: message.author,
+      });
+
+      return message.channel.send(embed);
+    }
+
+    if (
+      !["add", "put", "deposit", "take", "withdraw", "remove"].includes(args[0])
+    ) {
       const embed = responseUtils
         .invalidParameter({ discordUser: message.author })
         .setDescription(
@@ -33,8 +68,9 @@ export const investCommand: Command = {
     }
 
     switch (args[0]) {
-      // eslint-disable-next-line switch-case/no-case-curly
-      case "add": {
+      case "put":
+      case "add":
+      case "deposit": {
         const transferAmount = inputUtils.getAmountFromUserInput({
           input: args[1],
           currentPoints: user.points,
@@ -79,7 +115,9 @@ export const investCommand: Command = {
       }
 
       // eslint-disable-next-line switch-case/no-case-curly
-      case "take": {
+      case "take":
+      case "withdraw":
+      case "remove": {
         const transferAmount = inputUtils.getAmountFromUserInput({
           input: args[1],
           currentPoints: user.stock,
@@ -122,7 +160,7 @@ export const investCommand: Command = {
         const embed = responseUtils
           .positive({ discordUser: message.author })
           .setTitle("Investment")
-          .setDescription(`You invested **${transferAmount}** points`)
+          .setDescription(`You withdrawed **${transferAmount}** points`)
           .addField(
             "New balance",
             [

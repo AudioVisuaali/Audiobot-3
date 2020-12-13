@@ -57,6 +57,22 @@ export class UserDataSource extends DataSourceWithContext {
     return this.formatRow(user);
   }
 
+  public async updateStockFields() {
+    const transaction = await this.knex.transaction();
+
+    await transaction.raw(
+      // eslint-disable-next-line quotes
+      'UPDATE "users" SET "stock" = FLOOR("stockMinCompoundAmount" * 1.01);',
+    );
+
+    await transaction.raw(
+      // eslint-disable-next-line quotes
+      'UPDATE "users" SET "stockMinCompoundAmount" = "stock";',
+    );
+
+    transaction.commit();
+  }
+
   public async tryModifyCurrency(opts: {
     userDiscordId: string;
     modifyPoints?: number;
@@ -122,5 +138,11 @@ export class UserDataSource extends DataSourceWithContext {
     return await this.createUser({
       userDiscordId: opts.userDiscordId,
     });
+  }
+
+  public async getUsers() {
+    const users = await this.knex(Table.USERS);
+
+    return users.map(this.formatRow);
   }
 }
