@@ -1,22 +1,27 @@
 import { Command } from "discord.js";
 
+import { networkUtils } from "~/utils/networkUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const ipCommand: Command = {
   name: "IP info",
   command: "ip",
-  aliases: [],
-  syntax: "<ip>",
+  aliases: ["domain"],
+  syntax: "<ip | domain>",
   examples: ["8.8.8.8"],
   isAdmin: false,
   description: "Ip related information",
 
   async execute(message, args, { services }) {
-    const ipData = await services.ip.getIpData({ ip: args[0] });
+    const isIP = networkUtils.validateIPaddress(args[0]);
+
+    const ip = isIP ? args[0] : await networkUtils.getIPOfDomain(args[0]);
+
+    const ipData = await services.ip.getIpData({ ip });
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle(`Information for ${ipData.ip}`)
+      .setTitle(`Information for ${isIP ? ip : args[0]}`)
       .addFields(
         {
           name: "City",
@@ -36,6 +41,11 @@ export const ipCommand: Command = {
         {
           name: "Location",
           value: ipData.loc,
+          inline: true,
+        },
+        {
+          name: "IP",
+          value: ipData.ip,
           inline: true,
         },
       );
