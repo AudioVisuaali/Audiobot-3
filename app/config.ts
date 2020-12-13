@@ -55,6 +55,7 @@ export const getConfigFromEnv = () => ({
 
   googleAPIKey: requireEnv("GOOGLE_API_KEY"),
   osuApiKey: requireEnv("OSU_API_KEY"),
+  weatherAPI: requireEnv("WEATHER_API"),
 
   databaseType: requireEnv("DATABASE_TYPE"),
   databaseHost: requireEnv("DATABASE_HOST"),

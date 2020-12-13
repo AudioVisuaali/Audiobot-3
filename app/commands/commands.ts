@@ -32,6 +32,7 @@ import { stockCommand } from "./stockCommand";
 import { tokensCommand } from "./tokensCommand";
 import { transferCommand } from "./transferCommand";
 import { urbanCommand } from "./urbanCommand";
+import { weatherCommand } from "./weatherCommand";
 import { wikipediaCommand } from "./wikipediaCommand";
 import { yoMamaCommand } from "./yoMamaCommand";
 
@@ -71,6 +72,7 @@ export const modules = [
   transferCommand,
   stockCommand,
   avatarCommand,
+  weatherCommand,
   pingCommand,
 ];
 

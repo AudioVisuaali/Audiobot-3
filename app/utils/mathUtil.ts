@@ -27,6 +27,14 @@ class MathUtils {
 
     return Math.floor(newValue);
   }
+
+  public kelvinToCelsius(opts: { kelvin: number }) {
+    return Math.round(opts.kelvin - 273.15);
+  }
+
+  public kelvinToFahrenheit(opts: { kelvin: number }) {
+    return Math.round(((opts.kelvin - 273.15) * 9) / 5 + 32);
+  }
 }
 
 export const mathUtils = new MathUtils();

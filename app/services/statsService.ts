@@ -98,6 +98,41 @@ type StockResult = {
   };
 };
 
+type WeatherResponse = {
+  base: string;
+  clouds: { all: number };
+  cod: number;
+  coord: {
+    lon: number;
+    lat: number;
+  };
+  dt: number;
+  id: number;
+  main: {
+    temp: number;
+    // eslint-disable-next-line camelcase
+    feels_like: number;
+    // eslint-disable-next-line camelcase
+    temp_min: number;
+    // eslint-disable-next-line camelcase
+    temp_max: number;
+    pressure: number;
+    humidity: number;
+  };
+  name: string;
+  sys: {
+    type: number;
+    id: number;
+    country: string;
+    sunrise: number;
+    sunset: number;
+  };
+  timezone: number;
+  visibility: number;
+  weather: [{ id: number; main: string; description: string; icon: string }];
+  wind: { speed: number; deg: number };
+};
+
 export class StatsService extends ServiceWithContext {
   protected genderApi: AxiosInstance;
   protected numberFactApi: AxiosInstance;
@@ -105,6 +140,7 @@ export class StatsService extends ServiceWithContext {
   protected urbanApi: AxiosInstance;
   protected wikipediaApi: AxiosInstance;
   protected stockAPI: AxiosInstance;
+  protected weatherAPI: AxiosInstance;
 
   constructor(opts: CreateServiceOptions) {
     super(opts);
@@ -127,6 +163,10 @@ export class StatsService extends ServiceWithContext {
       },
     });
     this.stockAPI = axios.create({ baseURL: "https://api.nasdaq.com/api/" });
+    this.weatherAPI = axios.create({
+      baseURL: "http://api.openweathermap.org/data/2.5/weather/",
+      params: { appid: "1d81882a1995f3f7516f9a9619c33e9c" },
+    });
   }
 
   public async getGenderOfName(opts: { name: string }) {
@@ -180,5 +220,13 @@ export class StatsService extends ServiceWithContext {
     );
 
     return data.data;
+  }
+
+  public async getWeather(opts: { query: string }) {
+    const { data } = await this.weatherAPI.get<WeatherResponse>("/", {
+      params: { q: opts.query },
+    });
+
+    return data;
   }
 }
