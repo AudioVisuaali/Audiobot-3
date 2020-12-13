@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { DataSourceWithContext } from "./DataSourceWithContext";
 
 import { Table, UserTableRaw } from "~/database/types";
+import { timeUtils } from "~/utils/timeUtils";
 
 export type UserTable = {
   id: number;
@@ -30,11 +31,9 @@ export class UserDataSource extends DataSourceWithContext {
       stockMinCompoundAmount: row.stockMinCompoundAmount,
       xp: row.xp,
       tokens: row.tokens,
-      dailyRetrieved: row.dailyRetrieved
-        ? DateTime.fromJSDate(row.dailyRetrieved)
-        : null,
+      dailyRetrieved: timeUtils.parseDBTime(row.dailyRetrieved),
       createdAt: DateTime.fromJSDate(row.createdAt),
-      updatedAt: row.updatedAt ? DateTime.fromJSDate(row.updatedAt) : null,
+      updatedAt: timeUtils.parseDBTime(row.updatedAt),
     };
   }
 

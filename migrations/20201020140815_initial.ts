@@ -8,10 +8,10 @@ export async function up(knex: Knex): Promise<void> {
       table.uuid("uuid").notNullable();
       table.text("discordId").notNullable();
       table.integer("points").notNullable().defaultTo(0);
-      table.integer("stock").notNullable().defaultTo(0);
-      table.integer("stockMinCompoundAmount").notNullable().defaultTo(0);
       table.integer("xp").notNullable().defaultTo(0);
       table.integer("tokens").notNullable().defaultTo(0);
+      table.integer("stock").notNullable().defaultTo(0);
+      table.integer("stockMinCompoundAmount").notNullable().defaultTo(0);
       table.timestamp("dailyRetrieved").nullable();
       table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
       table.timestamp("updatedAt").nullable();

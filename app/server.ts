@@ -9,7 +9,7 @@ import { createDataLoaders } from "./dataloaders/dataLoaders";
 import { handleMessage } from "./discord";
 import { createLogger } from "./logger";
 import { createServices } from "./services/services";
-import { statusWorker } from "./statusWorker";
+import { statusWorker } from "./workers/statusWorker";
 
 export const createServer = ({ config }: { config: Config }) => {
   const logger = createLogger({ config });

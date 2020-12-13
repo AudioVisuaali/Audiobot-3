@@ -61,12 +61,50 @@ type WikipediaResponse = {
   };
 };
 
+type StockResultData = {
+  assetClass: string;
+  companyName: string;
+  exchange: string;
+  isHeld: boolean;
+  isNasdaq100: boolean;
+  isNasdaqListed: boolean;
+  keyStats: {
+    MarketCap: { label: string; value: string };
+    OpenPrice: { label: string; value: string };
+    PreviousClose: { label: string; value: string };
+    Volume: { label: string; value: string };
+  };
+  marketStatus: string;
+  primaryData: {
+    deltaIndicator: string;
+    isRealTime: boolean;
+    lastSalePrice: string;
+    lastTradeTimestamp: string;
+    netChange: string;
+    percentageChange: string;
+  };
+  secondaryData: null;
+  stockType: string;
+  symbol: string;
+};
+
+type StockResult = {
+  data: StockResultData | null;
+  message: null;
+  status: {
+    bCodeMessage: null;
+    developerMessage: null;
+    rCode: number;
+  };
+};
+
 export class StatsService extends ServiceWithContext {
   protected genderApi: AxiosInstance;
   protected numberFactApi: AxiosInstance;
   protected osuApi: AxiosInstance;
   protected urbanApi: AxiosInstance;
   protected wikipediaApi: AxiosInstance;
+  protected stockAPI: AxiosInstance;
 
   constructor(opts: CreateServiceOptions) {
     super(opts);
@@ -88,6 +126,7 @@ export class StatsService extends ServiceWithContext {
         format: "json",
       },
     });
+    this.stockAPI = axios.create({ baseURL: "https://api.nasdaq.com/api/" });
   }
 
   public async getGenderOfName(opts: { name: string }) {
@@ -132,5 +171,14 @@ export class StatsService extends ServiceWithContext {
     });
 
     return data;
+  }
+
+  public async getStock(opts: { tickerSymbol: string }) {
+    const { data } = await this.stockAPI.get<StockResult>(
+      `/quote/${encodeURI(opts.tickerSymbol)}/info`,
+      { params: { assetclass: "stocks" } },
+    );
+
+    return data.data;
   }
 }

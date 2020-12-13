@@ -27,6 +27,7 @@ import { rouletteCommand } from "./rouletteCommand";
 import { serverCommand } from "./serverCommand";
 import { slotsCommand } from "./slotsCommand";
 import { spongebobCommand } from "./spongebobCommand";
+import { stockCommand } from "./stockCommand";
 import { tokensCommand } from "./tokensCommand";
 import { transferCommand } from "./transferCommand";
 import { urbanCommand } from "./urbanCommand";
@@ -67,6 +68,7 @@ export const modules = [
   prefixCommand,
   investCommand,
   transferCommand,
+  stockCommand,
   pingCommand,
 ];
 

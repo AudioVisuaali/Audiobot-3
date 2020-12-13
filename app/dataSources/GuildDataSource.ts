@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { DataSourceWithContext } from "./DataSourceWithContext";
 
 import { Table, GuildTableRaw } from "~/database/types";
+import { timeUtils } from "~/utils/timeUtils";
 
 export type GuildTable = {
   id: number;
@@ -22,7 +23,7 @@ export class GuildDataSource extends DataSourceWithContext {
       discordId: row.discordId,
       prefix: row.prefix,
       createdAt: DateTime.fromJSDate(row.createdAt),
-      updatedAt: row.updatedAt ? DateTime.fromJSDate(row.updatedAt) : null,
+      updatedAt: timeUtils.parseDBTime(row.updatedAt),
     };
   }
 
