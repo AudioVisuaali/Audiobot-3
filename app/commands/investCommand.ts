@@ -14,7 +14,7 @@ export const investCommand: Command = {
   command: "invest",
   aliases: [],
   syntax: "<<add|put|deposit> | <take|withdraw|remove>> <amount>",
-  examples: ["add 500", "deposit 50%", "take 200", "remove half"],
+  examples: ["", "add 500", "deposit 50%", "take 200", "remove half"],
   isAdmin: false,
   description,
 
