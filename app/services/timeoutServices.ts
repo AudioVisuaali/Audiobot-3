@@ -1,5 +1,5 @@
 export class TimeoutService {
-  private timeoutMS = 2000;
+  private timeoutMS = 1200;
   private timeouts = new Map<string, Date>();
 
   public isUserTimedOut(opts: { userDiscordId: string }) {

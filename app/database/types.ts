@@ -32,7 +32,7 @@ export type GuildTableRaw = Readonly<{
   uuid: string;
   prefix: string;
   discordId: Snowflake;
-  casinoChannelId: Snowflake;
+  casinoChannelId: Snowflake | null;
   createdAt: Date;
   updatedAt: Date | null;
 }>;

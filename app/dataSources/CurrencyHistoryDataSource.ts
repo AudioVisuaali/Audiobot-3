@@ -55,7 +55,7 @@ export class CurrencyHistoryDataSource extends DataSourceWithContext {
       actionType?: CurrencyHistoryActionType;
       currencyType?: CurrencyHistoryCurrencyType;
     },
-    params?: { outcome: "ASC" | "DESC" },
+    params?: { outcome: "ASC" | "DESC"; limit?: number },
   ) {
     let instance = this.knex<CurrencyHistoryTableRaw>(Table.CURRENCY_HISTORY);
 
@@ -74,6 +74,7 @@ export class CurrencyHistoryDataSource extends DataSourceWithContext {
         ...(opts.actionType ? { actionType: opts.actionType } : {}),
         ...(opts.currencyType ? { currencyType: opts.currencyType } : {}),
       })
+      .limit(params?.limit ?? 20)
       .orderBy("createdAt", "desc");
 
     return currencyHistories.map(this.formatRow);
