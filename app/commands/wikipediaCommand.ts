@@ -9,7 +9,7 @@ export const wikipediaCommand: Command = {
   isAdmin: false,
   description: "Search on wikipedia",
 
-  execute(message) {
+  async execute(message) {
     message.channel.send("Pong");
   },
 };

@@ -12,7 +12,7 @@ export const eightBallCommand: Command = {
   isAdmin: false,
   description: "8 ball responses your question",
 
-  execute(message, args) {
+  async execute(message, args) {
     const question = args.join(" ");
 
     if (question.length < 8) {

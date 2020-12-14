@@ -54,7 +54,7 @@ export interface Command {
     message: Message,
     args: string[],
     context: Context,
-  ) => unknown | Promise<unknown>;
+  ) => Promise<unknown>;
 }
 
 export const commands: Command[] = [

@@ -8,9 +8,11 @@ export type HandleMessage = (opts: {
   context: Context;
 }) => (message: Message) => Promise<void>;
 
-export const handleMessage: HandleMessage = ({ context }) => async (
-  message,
-) => {
+const handleMessageWorker = async (opts: {
+  message: Message;
+  context: Context;
+}) => {
+  const { message, context } = opts;
   if (!message.guild) {
     return;
   }
@@ -63,5 +65,16 @@ export const handleMessage: HandleMessage = ({ context }) => async (
   if (!commandModule) {
     return;
   }
-  commandModule.execute(message, args, context);
+
+  await commandModule.execute(message, args, context);
+};
+
+export const handleMessage: HandleMessage = ({ context }) => async (
+  message: Message,
+) => {
+  try {
+    await handleMessageWorker({ context, message });
+  } catch (error) {
+    context.logger.error("Command error", error);
+  }
 };

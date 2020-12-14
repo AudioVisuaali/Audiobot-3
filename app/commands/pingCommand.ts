@@ -9,7 +9,7 @@ export const pingCommand: Command = {
   isAdmin: false,
   description: "Ping!",
 
-  execute(message) {
+  async execute(message) {
     message.channel.send("Pong");
   },
 };

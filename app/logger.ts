@@ -10,7 +10,7 @@ export const createLogger = (opts: { config: Config }) =>
         ? [{ level: "info" as const, stream: process.stdout }]
         : []),
       ...(opts.config.isFileLogging
-        ? [{ level: "warn" as const, path: "./logs/warn.json" }]
+        ? [{ level: "warn" as const, path: "./logs/logs.json" }]
         : []),
     ],
   });
