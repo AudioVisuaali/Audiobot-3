@@ -13,6 +13,7 @@ import { diceCommand } from "~/commands/diceCommand";
 import { dogFactCommand } from "~/commands/dogFactCommand";
 import { dogPictureCommand } from "~/commands/dogPictureCommand";
 import { eightBallCommand } from "~/commands/eightBallCommand";
+import { fingerporiCommand } from "~/commands/fingerporiCommand";
 import { genderCommand } from "~/commands/genderCommand";
 import { helpCommand } from "~/commands/helpCommand";
 import { historyCommand } from "~/commands/historyCommand";
@@ -96,6 +97,7 @@ export const commands: Command[] = [
   casinoCommand,
   historyCommand,
   statsCommand,
+  fingerporiCommand,
   pingCommand,
 ];
 

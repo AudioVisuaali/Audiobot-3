@@ -12,7 +12,7 @@ const description =
 export const investCommand: Command = {
   name: "Invest",
   command: "invest",
-  aliases: [],
+  aliases: ["bank"],
   syntax: "<<add|put|deposit> | <take|withdraw|remove>> <amount>",
   examples: ["", "add 500", "deposit 50%", "take 200", "remove half"],
   isAdmin: false,
