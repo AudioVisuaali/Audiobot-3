@@ -33,6 +33,7 @@ export type GuildTableRaw = Readonly<{
   prefix: string;
   discordId: Snowflake;
   casinoChannelId: Snowflake | null;
+  currencyPointsDisplayName: string | null;
   createdAt: Date;
   updatedAt: Date | null;
 }>;

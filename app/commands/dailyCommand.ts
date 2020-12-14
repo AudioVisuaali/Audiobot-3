@@ -96,11 +96,19 @@ export const dailyCommand: Command = {
       hasProfited: true,
     });
 
+    const currentPoints = responseUtils.formatCurrency({
+      guild,
+      amount: userUpdated.points,
+      useBold: true,
+    });
+
     const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle(`+ ${dailyAmount} memes`)
       .setDescription(
-        `You redeemed your daily memes${extra}! You now have **${userUpdated.points}** points`,
+        `You redeemed your daily ${responseUtils.getPointsDisplayName({
+          guild,
+        })}${extra}! You now have ${currentPoints}`,
       );
 
     return message.channel.send(embed);

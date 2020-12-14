@@ -60,9 +60,8 @@ export const rouletteCommand: Command = {
 
     // VALUE TOO LOW
     if (user.points < ROULETTER_MIN_POT) {
-      const embed = responseUtils.insufficientFunds({
+      const embed = responseUtils.invalidCurrency({
         discordUser: message.author,
-        user,
       });
 
       return message.channel.send(embed);
@@ -73,6 +72,7 @@ export const rouletteCommand: Command = {
       const embed = responseUtils.insufficientFunds({
         discordUser: message.author,
         user,
+        guild,
       });
 
       return message.channel.send(embed);
@@ -88,11 +88,28 @@ export const rouletteCommand: Command = {
         modifyPoints: gambleAmount * -1,
       });
 
+      const gambleAmountPoints = responseUtils.formatCurrency({
+        guild,
+        amount: gambleAmount * -1,
+      });
+
+      const gambleAmountPointsBold = responseUtils.formatCurrency({
+        guild,
+        amount: gambleAmount,
+        useBold: true,
+      });
+
+      const userLostPoints = responseUtils.formatCurrency({
+        guild,
+        amount: userLost.points,
+        useBold: true,
+      });
+
       const embed = responseUtils
         .negative({ discordUser: message.author })
-        .setTitle(`:slot_machine: - ${gambleAmount} points`)
+        .setTitle(`:slot_machine: ${gambleAmountPoints}`)
         .setDescription(
-          `You have lost **${gambleAmount}** points, you now have **${userLost.points}** points`,
+          `You have lost ${gambleAmountPointsBold}, you now have ${userLostPoints}`,
         );
 
       dataSources.currencyHistoryDS.addCurrencyHistory({
@@ -124,19 +141,47 @@ export const rouletteCommand: Command = {
       modifyPoints,
     });
 
+    const modifyPointsPoints = responseUtils.formatCurrency({
+      guild,
+      amount: modifyPoints,
+      positivePrefix: true,
+    });
+
+    const modifyPointsPointsBold = responseUtils.formatCurrency({
+      guild,
+      amount: modifyPoints,
+      useBold: true,
+    });
+
+    const userWonPoints = responseUtils.formatCurrency({
+      guild,
+      amount: userWon.points,
+      useBold: true,
+    });
+
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle(`+ ${modifyPoints} points`)
+      .setTitle(modifyPointsPoints)
       .setDescription(
-        `You have won **${modifyPoints}** points, you now have **${userWon.points}** points`,
+        `You have won ${modifyPointsPointsBold}, you now have ${userWonPoints}`,
       );
 
     if (isInCasinoChannel) {
+      const bonusPoints = responseUtils.formatCurrency({
+        guild,
+        amount: bonusCurrent,
+      });
+
       embed.addField(
         "Casino addition :confetti_ball:",
-        `+ ${bonusCurrent} points / ${percent}%`,
+        `+ ${bonusPoints} / ${percent}%`,
       );
     }
+
+    const bonusCurrentPoints = responseUtils.formatCurrency({
+      guild,
+      amount: bonusCurrent,
+    });
 
     dataSources.currencyHistoryDS.addCurrencyHistory({
       userId: user.id,
@@ -147,7 +192,7 @@ export const rouletteCommand: Command = {
       currencyType: CurrencyHistoryCurrencyType.POINT,
       bet: gambleAmount,
       outcome: modifyPoints,
-      metadata: `Casino +${bonusCurrent} points / ${percent}%`,
+      metadata: `Casino +${bonusCurrentPoints} / ${percent}%`,
       hasProfited: true,
     });
 

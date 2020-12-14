@@ -18,10 +18,18 @@ export const investCommand: Command = {
   isAdmin: false,
   description,
 
-  // eslint-disable-next-line max-statements
+  // eslint-disable-next-line complexity, max-statements
   async execute(message, args, { dataSources }) {
+    if (!message.guild) {
+      return;
+    }
+
     const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
+    });
+
+    const guild = await dataSources.guildDS.tryGetGuild({
+      guildDiscordId: message.guild.id,
     });
 
     if (args.length === 0) {
@@ -32,6 +40,16 @@ export const investCommand: Command = {
         nextCompoundAt,
       );
 
+      const userInvestedPoints = responseUtils.formatCurrency({
+        guild,
+        amount: user.stock,
+      });
+
+      const nextCompoundPoints = responseUtils.formatCurrency({
+        guild,
+        amount: Math.floor(user.stockMinCompoundAmount * 0.01),
+      });
+
       const embed = responseUtils
         .positive({ discordUser: message.author })
         .setTitle(":moneybag: Invest")
@@ -40,12 +58,8 @@ export const investCommand: Command = {
           "Next compound",
           timeUtils.durationObjectToString(nextCompound),
         )
-        .addField("Invested", `${user.stock} points`, true)
-        .addField(
-          "Next compound worth",
-          `${Math.floor(user.stockMinCompoundAmount * 0.01)} points`,
-          true,
-        );
+        .addField("Invested", userInvestedPoints, true)
+        .addField("Next compound worth", nextCompoundPoints, true);
 
       return message.channel.send(embed);
     }
@@ -91,6 +105,7 @@ export const investCommand: Command = {
           const embed = responseUtils.insufficientFunds({
             discordUser: message.author,
             user,
+            guild,
           });
 
           return message.channel.send(embed);
@@ -102,15 +117,31 @@ export const investCommand: Command = {
           modifyStock: transferAmount,
         });
 
+        const transferAmountPoints = responseUtils.formatCurrency({
+          guild,
+          amount: transferAmount,
+          useBold: true,
+        });
+
+        const updatedUserPoints = responseUtils.formatCurrency({
+          guild,
+          amount: updatedUser.points,
+        });
+
+        const updatedUserStockPoints = responseUtils.formatCurrency({
+          guild,
+          amount: updatedUser.stock,
+        });
+
         const embed = responseUtils
           .positive({ discordUser: message.author })
           .setTitle("Investment")
-          .setDescription(`You invested **${transferAmount}** points`)
+          .setDescription(`You invested ${transferAmountPoints}`)
           .addField(
             "New balance",
             [
-              `:purse: ${updatedUser.points} points`,
-              `:moneybag: ${updatedUser.stock} points`,
+              `:purse: ${updatedUserPoints}`,
+              `:moneybag: ${updatedUserStockPoints}`,
             ].join("\n"),
           );
 
@@ -138,6 +169,7 @@ export const investCommand: Command = {
           const embed = responseUtils.insufficientFundsStock({
             discordUser: message.author,
             user,
+            guild,
           });
 
           return message.channel.send(embed);
@@ -160,15 +192,31 @@ export const investCommand: Command = {
             : {}),
         });
 
+        const transferAmountPoints = responseUtils.formatCurrency({
+          guild,
+          amount: transferAmount,
+          useBold: true,
+        });
+
+        const updatedUserPoints = responseUtils.formatCurrency({
+          guild,
+          amount: updatedUser.points,
+        });
+
+        const updatedUserStockPoints = responseUtils.formatCurrency({
+          guild,
+          amount: updatedUser.stock,
+        });
+
         const embed = responseUtils
           .positive({ discordUser: message.author })
           .setTitle("Investment")
-          .setDescription(`You withdrawed **${transferAmount}** points`)
+          .setDescription(`You withdrawed ${transferAmountPoints}`)
           .addField(
             "New balance",
             [
-              `:purse: ${updatedUser.points} points`,
-              `:moneybag: ${updatedUser.stock} points`,
+              `:purse: ${updatedUserPoints}`,
+              `:moneybag: ${updatedUserStockPoints}`,
             ].join("\n"),
           );
 

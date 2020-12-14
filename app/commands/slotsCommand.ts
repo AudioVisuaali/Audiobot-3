@@ -125,6 +125,10 @@ export const slotsCommand: Command = {
       userDiscordId: message.author.id,
     });
 
+    const guild = await dataSources.guildDS.tryGetGuild({
+      guildDiscordId: message.guild.id,
+    });
+
     const gamblingAmount = await inputUtils.getAmountFromUserInput({
       input: args[0],
       currentPoints: user.points,
@@ -143,6 +147,7 @@ export const slotsCommand: Command = {
       const embed = responseUtils.insufficientMinAmount({
         discordUser: message.author,
         minAmount: SLOTS_MIN_AMOUNT,
+        guild,
       });
 
       return message.channel.send(embed);
@@ -153,14 +158,11 @@ export const slotsCommand: Command = {
       const embed = responseUtils.insufficientFunds({
         discordUser: message.author,
         user,
+        guild,
       });
 
       return message.channel.send(embed);
     }
-
-    const guild = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild.id,
-    });
 
     const isInCasinoChannel = guild.casinoChannelId
       ? guild.casinoChannelId === message.channel.id
@@ -211,11 +213,23 @@ export const slotsCommand: Command = {
       .setDescription(createEmbedBody(gridv3));
 
     if (hasWon) {
+      const newTotalPoints = responseUtils.formatCurrency({
+        guild,
+        amount: modifiedUser.points,
+        useBold: true,
+      });
+
+      const gamblingAmountPoints = responseUtils.formatCurrency({
+        guild,
+        amount: gamblingAmount,
+        useBold: true,
+      });
+
       msg3.addField(
         `+ ${outcomeAmount} points`,
-        `Your new total is **${modifiedUser.points}** points`,
+        `Your new total is ${newTotalPoints}`,
       );
-      msg3.addField("Stake", `${gamblingAmount} points`);
+      msg3.addField("Stake", gamblingAmountPoints);
 
       const matchesAll = isInCasinoChannel
         ? [...matches, casinoBonus]
@@ -249,10 +263,19 @@ export const slotsCommand: Command = {
         hasProfited: false,
       });
 
-      msg3.addField(
-        `- ${outcomeAmount} points`,
-        `Your new total is **${modifiedUser.points}** points`,
-      );
+      const outcomeAmountPoints = responseUtils.formatCurrency({
+        guild,
+        amount: outcomeAmount * -1,
+        useBold: true,
+      });
+
+      const newTotalPoints = responseUtils.formatCurrency({
+        guild,
+        amount: modifiedUser.points,
+        useBold: true,
+      });
+
+      msg3.addField(outcomeAmountPoints, `Your new total is ${newTotalPoints}`);
     }
 
     await timeUtils.sleep(500);

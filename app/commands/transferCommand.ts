@@ -25,6 +25,10 @@ export const transferCommand: Command = {
       return;
     }
 
+    const guild = await dataSources.guildDS.tryGetGuild({
+      guildDiscordId: message.guild.id,
+    });
+
     const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
     });
@@ -75,14 +79,11 @@ export const transferCommand: Command = {
       const embed = responseUtils.insufficientFunds({
         discordUser: message.author,
         user,
+        guild,
       });
 
       return message.channel.send(embed);
     }
-
-    const guild = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild.id,
-    });
 
     const receivingUser = await dataSources.userDS.verifyUser({
       userDiscordId: userMentioned.id,
@@ -93,7 +94,7 @@ export const transferCommand: Command = {
       modifyPoints: transferrableAmount * -1,
     });
 
-    const updatedReceiver = await dataSources.userDS.tryModifyCurrency({
+    await dataSources.userDS.tryModifyCurrency({
       userDiscordId: receivingUser.discordId,
       modifyPoints: transferrableAmount,
     });
@@ -124,18 +125,35 @@ export const transferCommand: Command = {
       hasProfited: false,
     });
 
+    const transferredPoints = responseUtils.formatCurrency({
+      guild,
+      amount: transferrableAmount,
+      useBold: true,
+    });
+
+    const fromUserQuote = responseUtils.quoteUser({
+      user: message.author,
+    });
+
+    const toUserQuote = responseUtils.quoteUser({
+      user: userMentioned,
+    });
+
+    const fromUserNewBalancePoints = responseUtils.formatCurrency({
+      guild,
+      amount: updatedDonor.points,
+      useBold: true,
+    });
+
     const embed = responseUtils
       .positive({ discordUser: message.author })
       .setTitle(":moneybag: Transfer")
       .setDescription(
-        `<@${message.author.id}> gave **${transferrableAmount}** points to <@${userMentioned.id}>`,
+        `${fromUserQuote} gave ${transferredPoints} to ${toUserQuote}`,
       )
       .addField(
         "New balance",
-        [
-          `<@${message.author.id}> ${updatedDonor.points} points`,
-          `<@${userMentioned.id}> ${updatedReceiver.points} points`,
-        ].join("\n"),
+        [`${fromUserQuote} ${fromUserNewBalancePoints}`].join("\n"),
       );
 
     message.channel.send(embed);

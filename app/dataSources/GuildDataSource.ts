@@ -16,6 +16,7 @@ export type GuildTable = {
   discordId: Snowflake;
   prefix: string;
   casinoChannelId: Snowflake | null;
+  currencyPointsDisplayName: string | null;
   createdAt: DateTime;
   updatedAt: DateTime | null;
 };
@@ -54,6 +55,7 @@ export class GuildDataSource extends DataSourceWithContext {
       discordId: row.discordId,
       prefix: row.prefix,
       casinoChannelId: row.casinoChannelId,
+      currencyPointsDisplayName: row.currencyPointsDisplayName,
       createdAt: DateTime.fromJSDate(row.createdAt),
       updatedAt: timeUtils.parseDBTime(row.updatedAt),
     };

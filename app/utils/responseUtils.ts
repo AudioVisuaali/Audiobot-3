@@ -1,6 +1,7 @@
 import { User, MessageEmbed } from "discord.js";
 import { DateTime } from "luxon";
 
+import { GuildTable } from "~/dataSources/GuildDataSource";
 import { UserTable } from "~/dataSources/UserDataSource";
 
 class ResponseUtils {
@@ -43,31 +44,59 @@ class ResponseUtils {
       .setDescription("The amount you gave is not valid");
   }
 
-  insufficientFunds(opts: { discordUser: User; user: UserTable }) {
+  insufficientFunds(opts: {
+    discordUser: User;
+    user: UserTable;
+    guild: GuildTable;
+  }) {
+    const points = this.formatCurrency({
+      guild: opts.guild,
+      amount: opts.user.points,
+      useBold: true,
+    });
+
     return this.createFooter({ user: opts.discordUser })
       .setColor(this.colors.error)
       .setTitle("Insufficient funds")
       .setDescription(
-        `You dont have enough currency. You currently have **${opts.user.points}** points`,
+        `You dont have enough currency. You currently have ${points}`,
       );
   }
 
-  insufficientFundsStock(opts: { discordUser: User; user: UserTable }) {
+  insufficientFundsStock(opts: {
+    discordUser: User;
+    user: UserTable;
+    guild: GuildTable;
+  }) {
+    const points = this.formatCurrency({
+      guild: opts.guild,
+      amount: opts.user.stock,
+      useBold: true,
+    });
+
     return this.createFooter({ user: opts.discordUser })
       .setColor(this.colors.error)
       .setTitle("Insufficient funds")
       .setDescription(
-        `You dont have enough in investments. You currently have **${opts.user.stock}** points invested`,
+        `You dont have enough in investments. You currently have ${points} invested`,
       );
   }
 
-  insufficientMinAmount(opts: { discordUser: User; minAmount: number }) {
+  insufficientMinAmount(opts: {
+    discordUser: User;
+    minAmount: number;
+    guild: GuildTable;
+  }) {
+    const minAmount = this.formatCurrency({
+      guild: opts.guild,
+      amount: opts.minAmount,
+      useBold: true,
+    });
+
     return this.createFooter({ user: opts.discordUser })
       .setColor(this.colors.error)
       .setTitle("Insufficient amount")
-      .setDescription(
-        `Your gambling amount needs to be atleast **${opts.minAmount}** points`,
-      );
+      .setDescription(`Your gambling amount needs to be atleast ${minAmount}`);
   }
 
   specifyGamblingAmount(opts: { discordUser: User }) {
@@ -133,6 +162,52 @@ class ResponseUtils {
     return this.createFooter({ user: opts.discordUser }).setColor(
       this.colors.success,
     );
+  }
+
+  formatCurrency(opts: {
+    guild: GuildTable;
+    amount: number;
+    positivePrefix?: boolean;
+    useBold?: boolean;
+  }) {
+    const amount =
+      opts.positivePrefix && opts.amount >= 0
+        ? `+${opts.amount}`
+        : opts.amount.toString();
+    const currencyPointsDisplayName = this.getPointsDisplayName({
+      guild: opts.guild,
+    });
+
+    const formattedAmount = opts.useBold ? `**${amount}**` : amount;
+
+    return [formattedAmount, currencyPointsDisplayName].join(" ");
+  }
+
+  formatTokens(opts: {
+    amount: number;
+    positivePrefix?: boolean;
+    useBold?: boolean;
+  }) {
+    const amount =
+      opts.positivePrefix && opts.amount >= 0
+        ? `+${opts.amount}`
+        : opts.amount.toString();
+
+    const formattedAmount = opts.useBold ? `**${amount}**` : amount;
+
+    return [formattedAmount, this.getTokenDisplayName()].join(" ");
+  }
+
+  getPointsDisplayName(opts: { guild: GuildTable }) {
+    return opts.guild.currencyPointsDisplayName || "points";
+  }
+
+  getTokenDisplayName() {
+    return "tokens";
+  }
+
+  quoteUser(opts: { user: User }) {
+    return `<@${opts.user.id}>`;
   }
 }
 

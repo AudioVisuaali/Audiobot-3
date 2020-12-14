@@ -2,26 +2,30 @@ import Table from "table-layout";
 
 import { Command } from "~/commands/commands";
 import { CurrencyHistoryTable } from "~/dataSources/CurrencyHistoryDataSource";
+import { GuildTable } from "~/dataSources/GuildDataSource";
 import { DataSources } from "~/dataSources/dataSources";
 import { CurrencyHistoryCurrencyType } from "~/database/types";
 import { responseUtils } from "~/utils/responseUtils";
 
-const formatPrefix = (number: number) =>
-  number < 0 ? number.toString() : `+${number}`;
-
 const formatCurrencyType = (opts: {
   value: number;
   type: CurrencyHistoryCurrencyType;
+  guild: GuildTable;
   usePrefix?: boolean;
 }) => {
-  const formattedValue = opts.usePrefix ? formatPrefix(opts.value) : opts.value;
-
   switch (opts.type) {
     case CurrencyHistoryCurrencyType.POINT:
-      return `${formattedValue} points`;
+      return responseUtils.formatCurrency({
+        guild: opts.guild,
+        positivePrefix: opts.usePrefix,
+        amount: opts.value,
+      });
 
     case CurrencyHistoryCurrencyType.TOKEN:
-      return `${formattedValue} tokens`;
+      return responseUtils.formatTokens({
+        positivePrefix: opts.usePrefix,
+        amount: opts.value,
+      });
 
     default:
       return [opts.value, opts.type].join(" ");
@@ -35,15 +39,16 @@ const tableHeader = {
   metadata: "META",
 };
 
-const historyRow = (row: CurrencyHistoryTable) => ({
+const historyRow = (guild: GuildTable) => (row: CurrencyHistoryTable) => ({
   actionType: row.actionType,
   bet: row.bet
-    ? formatCurrencyType({ value: row.bet, type: row.currencyType })
+    ? formatCurrencyType({ value: row.bet, type: row.currencyType, guild })
     : "",
   outcome: row.outcome
     ? formatCurrencyType({
         value: row.outcome,
         type: row.currencyType,
+        guild,
         usePrefix: true,
       })
     : "",
@@ -109,6 +114,10 @@ export const historyCommand: Command = {
       userDiscordId: message.author.id,
     });
 
+    const guild = await dataSources.guildDS.tryGetGuild({
+      guildDiscordId: message.guild.id,
+    });
+
     const currencyHistories = await getHistoryData({
       dataSources,
       guildId: message.guild.id,
@@ -135,12 +144,22 @@ export const historyCommand: Command = {
 
     const displayHistories = [
       tableHeader,
-      ...currencyHistories.map(historyRow),
+      ...currencyHistories.map(historyRow(guild)),
     ];
 
     const table = new Table(displayHistories);
 
-    const title = `<@${message.author.id}> Your current balance is **${user.points}** points`;
+    const authorQuote = responseUtils.quoteUser({
+      user: message.author,
+    });
+
+    const currentBalancePoints = responseUtils.formatCurrency({
+      guild,
+      amount: user.points,
+      useBold: true,
+    });
+
+    const title = `${authorQuote} Your current balance is ${currentBalancePoints}`;
 
     message.channel.send([title, "```", table.toString(), "```"].join("\n"));
   },
