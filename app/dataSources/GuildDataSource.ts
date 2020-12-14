@@ -114,14 +114,18 @@ export class GuildDataSource extends DataSourceWithContext {
     guildDiscordId: Snowflake;
     newPrefix?: string;
     newCasinoChannelId?: Snowflake | null;
+    modifyCurrencyPointsDisplayName?: string | null;
   }) {
     const updatedGuilds = await this.knex<GuildTableRaw>(Table.GUILDS)
       .where({ discordId: opts.guildDiscordId })
       .update({
         updatedAt: new Date(),
         ...(opts.newPrefix ? { prefix: opts.newPrefix } : {}),
-        ...(opts.newCasinoChannelId
+        ...(opts.newCasinoChannelId !== undefined
           ? { casinoChannelId: opts.newCasinoChannelId }
+          : {}),
+        ...(opts.modifyCurrencyPointsDisplayName !== undefined
+          ? { currencyPointsDisplayName: opts.modifyCurrencyPointsDisplayName }
           : {}),
       })
       .returning("*");

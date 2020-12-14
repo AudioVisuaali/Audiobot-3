@@ -1,5 +1,7 @@
 import { Message } from "discord.js";
 
+import { currencyCommand } from "./currencyCommand";
+
 import { avatarCommand } from "~/commands/avatarCommand";
 import { bitcoinCommand } from "~/commands/bitcoinCommand";
 import { casinoCommand } from "~/commands/casinoCommand";
@@ -98,6 +100,7 @@ export const commands: Command[] = [
   historyCommand,
   statsCommand,
   fingerporiCommand,
+  currencyCommand,
   pingCommand,
 ];
 
