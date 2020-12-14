@@ -96,3 +96,18 @@ export const commands: Command[] = [
   historyCommand,
   pingCommand,
 ];
+
+type SortedModules = {
+  commands: Command[];
+  adminCommands: Command[];
+};
+
+export const sortedModules = commands.reduce<SortedModules>(
+  (prev, curr) => ({
+    commands: curr.isAdmin ? prev.commands : [...prev.commands, curr],
+    adminCommands: curr.isAdmin
+      ? [...prev.adminCommands, curr]
+      : prev.adminCommands,
+  }),
+  { commands: [], adminCommands: [] },
+);

@@ -1,20 +1,5 @@
-import { Command, commands } from "~/commands/commands";
+import { Command, commands, sortedModules } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
-
-type SortedModules = {
-  commands: Command[];
-  adminCommands: Command[];
-};
-
-export const sortedModules = commands.reduce<SortedModules>(
-  (prev, curr) => ({
-    commands: curr.isAdmin ? prev.commands : [...prev.commands, curr],
-    adminCommands: curr.isAdmin
-      ? [...prev.adminCommands, curr]
-      : prev.adminCommands,
-  }),
-  { commands: [], adminCommands: [] },
-);
 
 export const helpCommand: Command = {
   name: "Help",
