@@ -62,12 +62,12 @@ export class UserDataSource extends DataSourceWithContext {
 
     await transaction.raw(
       // eslint-disable-next-line quotes
-      'UPDATE "users" SET "stock" = FLOOR("stockMinCompoundAmount" * 1.01);',
+      'UPDATE "users" SET "stock" = stock + FLOOR("stockMinCompoundAmount" * 1 / 100);',
     );
 
     await transaction.raw(
       // eslint-disable-next-line quotes
-      'UPDATE "users" SET "stockMinCompoundAmount" = "stock";',
+      'UPDATE "users" SET "stockMinCompoundAmount" = stock;',
     );
 
     transaction.commit();

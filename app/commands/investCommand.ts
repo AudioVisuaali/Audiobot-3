@@ -36,7 +36,10 @@ export const investCommand: Command = {
         .positive({ discordUser: message.author })
         .setTitle(":moneybag: Invest")
         .setDescription(description)
-        .addField("Next compound", timeUtils.nextCompoundString(nextCompound))
+        .addField(
+          "Next compound",
+          timeUtils.durationObjectToString(nextCompound),
+        )
         .addField("Invested", `${user.stock} points`, true)
         .addField(
           "Next compound worth",

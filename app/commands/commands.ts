@@ -31,6 +31,7 @@ import { rouletteCommand } from "~/commands/rouletteCommand";
 import { serverCommand } from "~/commands/serverCommand";
 import { slotsCommand } from "~/commands/slotsCommand";
 import { spongebobCommand } from "~/commands/spongebobCommand";
+import { statsCommand } from "~/commands/statsCommand";
 import { stockCommand } from "~/commands/stockCommand";
 import { tokensCommand } from "~/commands/tokensCommand";
 import { transferCommand } from "~/commands/transferCommand";
@@ -94,6 +95,7 @@ export const commands: Command[] = [
   osuCommand,
   casinoCommand,
   historyCommand,
+  statsCommand,
   pingCommand,
 ];
 

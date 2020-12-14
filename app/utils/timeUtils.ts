@@ -10,10 +10,12 @@ class TimeUtils {
   }
 
   getNextCompoundAt() {
-    return DateTime.utc()
-      .startOf("week")
-      .set({ weekday: 2 }) // Tuesday
-      .plus({ week: 1 });
+    const now = DateTime.utc();
+    const thisWeekRefresh = now.startOf("week").plus({ day: 1 }); // start of tuesday
+
+    const isPastCompound = now.valueOf() - thisWeekRefresh.valueOf() > 0;
+
+    return isPastCompound ? thisWeekRefresh.plus({ day: 7 }) : thisWeekRefresh;
   }
 
   msBetweenDates(d1: DateTime, d2: DateTime) {
@@ -26,16 +28,36 @@ class TimeUtils {
       .toObject();
   }
 
-  nextCompoundString(duration: DurationObject) {
+  getDurationFromMS(opts: { ms: number }) {
+    const date = DateTime.utc();
+    const addedDate = date.plus({ milliseconds: opts.ms });
+
+    return this.humanReadableTimeBetweenDates(date, addedDate);
+  }
+
+  durationObjectToString(duration: DurationObject) {
     const seconds = Math.floor(duration.seconds || 0);
     const times = [
-      `${duration.days}d`,
-      `${duration.hours}h`,
-      `${duration.minutes}m`,
-      `${seconds}s`,
+      { count: duration.days, type: "d" },
+      { count: duration.hours, type: "h" },
+      { count: duration.minutes, type: "m" },
+      { count: seconds, type: "s" },
     ];
 
-    return times.join(" ");
+    const checkedNotZero = false;
+    const timesCondensed = times.reduce<string[]>((acc, curr) => {
+      if (curr.count === 0 && !checkedNotZero) {
+        return acc;
+      }
+
+      return [...acc, `${curr.count}${curr.type}`];
+    }, []);
+
+    if (timesCondensed.length === 0) {
+      return "0s";
+    }
+
+    return timesCondensed.join(" ");
   }
 }
 
