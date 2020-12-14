@@ -2,9 +2,7 @@ import Logger from "bunyan";
 import { Client } from "discord.js";
 
 import { statusUtils } from "~/utils/statusUtils";
-
-const sleep = (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time));
+import { timeUtils } from "~/utils/timeUtils";
 
 export const statusWorker = async (opts: {
   client: Client;
@@ -17,6 +15,6 @@ export const statusWorker = async (opts: {
 
     opts.client.user?.setActivity(`Serving ${usersCount} users`);
     opts.logger.info("Updated bot status");
-    await sleep(10000);
+    await timeUtils.sleep(60000);
   }
 };

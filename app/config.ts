@@ -48,6 +48,7 @@ const requireBoolean = (env: string): boolean => {
 
 export const getConfigFromEnv = () => ({
   stdoutLogging: requireBoolean("STDOUT_LOGGING"),
+  isFileLogging: requireBoolean("FILE_LOGGING"),
   isProduction: requireBoolean("PRODUCTION"),
 
   discordAPIKey: requireEnv("DISCORD_API_KEY"),

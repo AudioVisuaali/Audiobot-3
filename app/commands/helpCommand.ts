@@ -1,4 +1,4 @@
-import { Command, modules } from "~/commands/commands";
+import { Command, commands } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 type SortedModules = {
@@ -6,7 +6,7 @@ type SortedModules = {
   adminCommands: Command[];
 };
 
-export const sortedModules = modules.reduce<SortedModules>(
+export const sortedModules = commands.reduce<SortedModules>(
   (prev, curr) => ({
     commands: curr.isAdmin ? prev.commands : [...prev.commands, curr],
     adminCommands: curr.isAdmin
@@ -64,7 +64,7 @@ export const helpCommand: Command = {
 
     const [moduleName] = args;
 
-    const command = modules.find(
+    const command = commands.find(
       (command) =>
         command.command === moduleName ||
         command.aliases.find((alias) => alias === moduleName),

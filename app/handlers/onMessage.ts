@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 
-import { modules } from "~/commands/commands";
+import { commands } from "~/commands/commands";
 import { Context } from "~/context";
 import { inputUtils } from "~/utils/inputUtils";
 
@@ -55,7 +55,7 @@ export const handleMessage: HandleMessage = ({ context }) => async (
     prefix,
   });
 
-  const commandModule = modules.find(
+  const commandModule = commands.find(
     (command) =>
       command.command === commandName || command.aliases.includes(commandName),
   );

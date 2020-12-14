@@ -1,44 +1,43 @@
 import { Message } from "discord.js";
 
-import { avatarCommand } from "./avatarCommand";
-import { bitcoinCommand } from "./bitcoinCommand";
-import { casinoCommand } from "./casinoCommand";
-import { catFactCommand } from "./catFactCommand";
-import { catPictureCommand } from "./catPictureCommand";
-import { chooseCommand } from "./chooseCommand";
-import { chuckNorrisCommand } from "./chuckNorrisCommand";
-import { dadJokeCommand } from "./dadJokeCommand";
-import { dailyCommand } from "./dailyCommand";
-import { diceCommand } from "./diceCommand";
-import { dogFactCommand } from "./dogFactCommand";
-import { dogPictureCommand } from "./dogPictureCommand";
-import { eightBallCommand } from "./eightBallCommand";
-import { genderCommand } from "./genderCommand";
-import { helpCommand } from "./helpCommand";
-import { historyCommand } from "./historyCommand";
-import { investCommand } from "./investCommand";
-import { ipCommand } from "./ipCommand";
-import { lennyfaceCommand } from "./lennyfaceCommand";
-import { numberfactCommand } from "./numberfactCommand";
-import { osuCommand } from "./osuCommand";
-import { pingCommand } from "./pingCommand";
-import { pointsCommand } from "./pointsCommand";
-import { prefixCommand } from "./prefixCommand";
-import { punCommand } from "./punCommand";
-import { reverseCommand } from "./reverseCommand";
-import { rollCommand } from "./rollCommand";
-import { rouletteCommand } from "./rouletteCommand";
-import { serverCommand } from "./serverCommand";
-import { slotsCommand } from "./slotsCommand";
-import { spongebobCommand } from "./spongebobCommand";
-import { stockCommand } from "./stockCommand";
-import { tokensCommand } from "./tokensCommand";
-import { transferCommand } from "./transferCommand";
-import { urbanCommand } from "./urbanCommand";
-import { weatherCommand } from "./weatherCommand";
-import { wikipediaCommand } from "./wikipediaCommand";
-import { yoMamaCommand } from "./yoMamaCommand";
-
+import { avatarCommand } from "~/commands/avatarCommand";
+import { bitcoinCommand } from "~/commands/bitcoinCommand";
+import { casinoCommand } from "~/commands/casinoCommand";
+import { catFactCommand } from "~/commands/catFactCommand";
+import { catPictureCommand } from "~/commands/catPictureCommand";
+import { chooseCommand } from "~/commands/chooseCommand";
+import { chuckNorrisCommand } from "~/commands/chuckNorrisCommand";
+import { dadJokeCommand } from "~/commands/dadJokeCommand";
+import { dailyCommand } from "~/commands/dailyCommand";
+import { diceCommand } from "~/commands/diceCommand";
+import { dogFactCommand } from "~/commands/dogFactCommand";
+import { dogPictureCommand } from "~/commands/dogPictureCommand";
+import { eightBallCommand } from "~/commands/eightBallCommand";
+import { genderCommand } from "~/commands/genderCommand";
+import { helpCommand } from "~/commands/helpCommand";
+import { historyCommand } from "~/commands/historyCommand";
+import { investCommand } from "~/commands/investCommand";
+import { ipCommand } from "~/commands/ipCommand";
+import { lennyfaceCommand } from "~/commands/lennyfaceCommand";
+import { numberfactCommand } from "~/commands/numberfactCommand";
+import { osuCommand } from "~/commands/osuCommand";
+import { pingCommand } from "~/commands/pingCommand";
+import { pointsCommand } from "~/commands/pointsCommand";
+import { prefixCommand } from "~/commands/prefixCommand";
+import { punCommand } from "~/commands/punCommand";
+import { reverseCommand } from "~/commands/reverseCommand";
+import { rollCommand } from "~/commands/rollCommand";
+import { rouletteCommand } from "~/commands/rouletteCommand";
+import { serverCommand } from "~/commands/serverCommand";
+import { slotsCommand } from "~/commands/slotsCommand";
+import { spongebobCommand } from "~/commands/spongebobCommand";
+import { stockCommand } from "~/commands/stockCommand";
+import { tokensCommand } from "~/commands/tokensCommand";
+import { transferCommand } from "~/commands/transferCommand";
+import { urbanCommand } from "~/commands/urbanCommand";
+import { weatherCommand } from "~/commands/weatherCommand";
+import { wikipediaCommand } from "~/commands/wikipediaCommand";
+import { yoMamaCommand } from "~/commands/yoMamaCommand";
 import { Context } from "~/context";
 
 export interface Command {
@@ -57,7 +56,7 @@ export interface Command {
   ) => unknown | Promise<unknown>;
 }
 
-export const modules: Command[] = [
+export const commands: Command[] = [
   helpCommand,
   bitcoinCommand,
   yoMamaCommand,
