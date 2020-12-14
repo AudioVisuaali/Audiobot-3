@@ -28,8 +28,10 @@ export async function up(knex: Knex): Promise<void> {
     .createTable("commands", (table) => {
       table.increments("id").primary().notNullable();
       table.uuid("uuid").notNullable();
-      table.integer("guildId").notNullable().references("guilds.id");
       table.integer("addedBy").notNullable().references("users.id");
+      table.integer("guildId").notNullable().references("guilds.id");
+      table.integer("discordGuildId").notNullable();
+      table.integer("discordUserId").notNullable();
       table.text("command").notNullable();
       table.text("response").notNullable();
       table.integer("timesUsed").notNullable().defaultTo(0);
