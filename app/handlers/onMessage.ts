@@ -4,11 +4,13 @@ import { modules } from "~/commands/commands";
 import { Context } from "~/context";
 import { inputUtils } from "~/utils/inputUtils";
 
-export type HandleMessage = (
-  context: Context,
-) => (message: Message) => Promise<void>;
+export type HandleMessage = (opts: {
+  context: Context;
+}) => (message: Message) => Promise<void>;
 
-export const handleMessage: HandleMessage = (context) => async (message) => {
+export const handleMessage: HandleMessage = ({ context }) => async (
+  message,
+) => {
   if (!message.guild) {
     return;
   }

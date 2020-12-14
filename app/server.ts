@@ -4,8 +4,8 @@ import { Config } from "./config";
 import { createContext } from "./context";
 import { createDataSources } from "./dataSources/dataSources";
 import { createKnex } from "./database/connection";
-import { handleMessage } from "./discord";
 import { handleError } from "./handlers/onError";
+import { handleMessage } from "./handlers/onMessage";
 import { handleOnReady } from "./handlers/onReady";
 import { createLogger } from "./logger";
 import { createServices } from "./services/services";
@@ -27,7 +27,7 @@ export const createServer = ({ config }: { config: Config }) => {
 
   client.on("error", handleError({ logger }));
 
-  client.on("message", handleMessage(context));
+  client.on("message", handleMessage({ context }));
 
   return client;
 };
