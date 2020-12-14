@@ -5,6 +5,7 @@ export enum Table {
   GUILDS = "guilds",
   CURRENCY_HISTORY = "currencyHistory",
   COMMANDS = "commands",
+  BOT_INFO = "botInfo",
 }
 
 export const tableColumn = <T extends Tables>(table: Table, column: keyof T) =>
@@ -74,6 +75,15 @@ export type CurrencyHistoryTableRaw = Readonly<{
   outcome: number | null;
   metadata: string | null;
   hasProfited: boolean;
+  createdAt: Date;
+  updatedAt: Date | null;
+}>;
+
+export type BotInfoTableRaw = Readonly<{
+  id: number;
+  uuid: string;
+  discordBotId: Snowflake;
+  restarts: number;
   createdAt: Date;
   updatedAt: Date | null;
 }>;

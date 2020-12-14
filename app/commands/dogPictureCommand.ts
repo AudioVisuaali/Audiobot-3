@@ -1,5 +1,4 @@
-import { Command } from "discord.js";
-
+import { Command } from "~/commands/commands";
 import { Context } from "~/context";
 import { responseUtils } from "~/utils/responseUtils";
 

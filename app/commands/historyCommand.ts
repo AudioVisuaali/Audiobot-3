@@ -1,6 +1,6 @@
-import { Command } from "discord.js";
 import Table from "table-layout";
 
+import { Command } from "~/commands/commands";
 import { CurrencyHistoryTable } from "~/dataSources/CurrencyHistoryDataSource";
 import { DataSources } from "~/dataSources/dataSources";
 import { CurrencyHistoryCurrencyType } from "~/database/types";

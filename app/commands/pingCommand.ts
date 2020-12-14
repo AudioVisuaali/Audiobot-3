@@ -1,4 +1,4 @@
-import { Command } from "discord.js";
+import { Command } from "~/commands/commands";
 
 export const pingCommand: Command = {
   name: "Ping",

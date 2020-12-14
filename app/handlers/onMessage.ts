@@ -1,7 +1,8 @@
 import { Message } from "discord.js";
 
-import { invokeCommand } from "./commands/commands";
-import { Context } from "./context";
+import { modules } from "~/commands/commands";
+import { Context } from "~/context";
+import { inputUtils } from "~/utils/inputUtils";
 
 export type HandleMessage = (
   context: Context,
@@ -35,8 +36,9 @@ export const handleMessage: HandleMessage = (context) => async (message) => {
     return;
   }
 
-  const guildId = message.guild.id;
-  const prefix = await getServerWithCreate({ context, guildId });
+  const { prefix } = await context.dataSources.guildDS.verifyGuild({
+    guildDiscordId: message.guild.id,
+  });
 
   if (!message.content.startsWith(prefix)) {
     return;
@@ -46,28 +48,18 @@ export const handleMessage: HandleMessage = (context) => async (message) => {
     userDiscordId: message.author.id,
   });
 
-  invokeCommand({
+  const [commandName, ...args] = inputUtils.getMessageCommandAndArgs({
     message,
     prefix,
-    context: context,
-  });
-};
-
-const getServerWithCreate = async (opts: {
-  context: Context;
-  guildId: string;
-}) => {
-  const serverDL = await opts.context.dataSources.guildDS.getGuild({
-    guildDiscordId: opts.guildId,
   });
 
-  if (serverDL) {
-    return serverDL.prefix;
+  const commandModule = modules.find(
+    (command) =>
+      command.command === commandName || command.aliases.includes(commandName),
+  );
+
+  if (!commandModule) {
+    return;
   }
-
-  const server = await opts.context.dataSources.guildDS.verifyGuild({
-    guildDiscordId: opts.guildId,
-  });
-
-  return server.prefix;
+  commandModule.execute(message, args, context);
 };

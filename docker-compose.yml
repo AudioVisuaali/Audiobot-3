@@ -9,3 +9,13 @@ services:
       POSTGRES_PASSWORD: discord-bot
       POSTGRES_USER: discord-bot
       POSTGRES_DB: discord-bot
+
+  temp-db:
+    image: postgres:12-alpine
+    restart: always
+    ports:
+      - 54321:5433
+    environment:
+      POSTGRES_PASSWORD: KEKW
+      POSTGRES_USER: KEKW
+      POSTGRES_DB: KEKW

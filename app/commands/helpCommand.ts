@@ -1,8 +1,20 @@
-import { Command } from "discord.js";
-
-import { modules, sortedModules } from "./commands";
-
+import { Command, modules } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
+
+type SortedModules = {
+  commands: Command[];
+  adminCommands: Command[];
+};
+
+export const sortedModules = modules.reduce<SortedModules>(
+  (prev, curr) => ({
+    commands: curr.isAdmin ? prev.commands : [...prev.commands, curr],
+    adminCommands: curr.isAdmin
+      ? [...prev.adminCommands, curr]
+      : prev.adminCommands,
+  }),
+  { commands: [], adminCommands: [] },
+);
 
 export const helpCommand: Command = {
   name: "Help",

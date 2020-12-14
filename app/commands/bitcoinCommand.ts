@@ -1,5 +1,4 @@
-import { Command } from "discord.js";
-
+import { Command } from "~/commands/commands";
 import { BPICurrency, BPICurrencyType } from "~/services/currencyService";
 import { responseUtils } from "~/utils/responseUtils";
 

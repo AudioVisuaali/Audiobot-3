@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 
-import { mathUtils } from "./mathUtil";
+import { mathUtils } from "~/utils/mathUtil";
 
 class InputUtils {
   public getAmountFromUserInput(opts: {
@@ -56,6 +56,10 @@ class InputUtils {
       }
     }
   };
+
+  public getMessageCommandAndArgs(opts: { message: Message; prefix: string }) {
+    return opts.message.content.slice(opts.prefix.length).trim().split(/ +/);
+  }
 }
 
 export const inputUtils = new InputUtils();

@@ -1,5 +1,4 @@
-import { Command } from "discord.js";
-
+import { Command } from "~/commands/commands";
 import { mathUtils } from "~/utils/mathUtil";
 
 export const rollCommand: Command = {

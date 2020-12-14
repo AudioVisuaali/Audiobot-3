@@ -1,6 +1,6 @@
-import { Command } from "discord.js";
 import { DateTime } from "luxon";
 
+import { Command } from "~/commands/commands";
 import {
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,

@@ -6,8 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   CreateDataSourceOptions,
   DataSourceWithContext,
-} from "./DataSourceWithContext";
-
+} from "~/dataSources/DataSourceWithContext";
 import { Table, GuildTableRaw } from "~/database/types";
 import { timeUtils } from "~/utils/timeUtils";
 

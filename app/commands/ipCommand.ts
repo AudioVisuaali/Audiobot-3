@@ -1,5 +1,4 @@
-import { Command } from "discord.js";
-
+import { Command } from "~/commands/commands";
 import { networkUtils } from "~/utils/networkUtils";
 import { responseUtils } from "~/utils/responseUtils";
 

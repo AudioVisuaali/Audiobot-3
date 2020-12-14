@@ -1,7 +1,7 @@
 /* eslint-disable switch-case/no-case-curly */
-import { Command } from "discord.js";
 import { DateTime } from "luxon";
 
+import { Command } from "~/commands/commands";
 import { inputUtils } from "~/utils/inputUtils";
 import { responseUtils } from "~/utils/responseUtils";
 import { timeUtils } from "~/utils/timeUtils";

@@ -52,6 +52,14 @@ export async function up(knex: Knex): Promise<void> {
       table.boolean("hasProfited").notNullable().defaultTo(false);
       table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
       table.timestamp("updatedAt").nullable();
+    })
+    .createTable("botInfo", (table) => {
+      table.increments("id").primary().notNullable();
+      table.uuid("uuid").notNullable();
+      table.text("discordBotId").notNullable().unique();
+      table.integer("restarts").notNullable().defaultTo(0);
+      table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
+      table.timestamp("updatedAt").nullable();
     });
 }
 
@@ -61,5 +69,6 @@ export async function down(knex: Knex): Promise<void> {
     .dropTableIfExists("commands")
     .dropTableIfExists("users")
     .dropTableIfExists("guilds")
+    .dropTableIfExists("botInfo")
     .raw("DROP EXTENSION IF EXISTS btree_gist;");
 }

@@ -1,4 +1,4 @@
-import { Message, Client, Command } from "discord.js";
+import { Message } from "discord.js";
 
 import { avatarCommand } from "./avatarCommand";
 import { bitcoinCommand } from "./bitcoinCommand";
@@ -41,7 +41,23 @@ import { yoMamaCommand } from "./yoMamaCommand";
 
 import { Context } from "~/context";
 
-export const modules = [
+export interface Command {
+  name: string;
+  command: string;
+  aliases: string[];
+  description: string;
+  syntax: string;
+  examples: string[];
+  isAdmin: boolean;
+
+  execute: (
+    message: Message,
+    args: string[],
+    context: Context,
+  ) => unknown | Promise<unknown>;
+}
+
+export const modules: Command[] = [
   helpCommand,
   bitcoinCommand,
   yoMamaCommand,
@@ -81,59 +97,3 @@ export const modules = [
   historyCommand,
   pingCommand,
 ];
-
-type SortedModules = {
-  commands: Command[];
-  adminCommands: Command[];
-};
-
-export const sortedModules = modules.reduce<SortedModules>(
-  (prev, curr) => ({
-    commands: curr.isAdmin ? prev.commands : [...prev.commands, curr],
-    adminCommands: curr.isAdmin
-      ? [...prev.adminCommands, curr]
-      : prev.adminCommands,
-  }),
-  { commands: [], adminCommands: [] },
-);
-
-export const setClientModules = (opts: { client: Client }) => {
-  for (const command of modules) {
-    opts.client.commands.set(command.command, command);
-  }
-};
-
-export const invokeCommand = (opts: {
-  message: Message;
-  prefix: string;
-  context: Context;
-}) => {
-  const { commands } = opts.message.client;
-  const [commandName, ...args] = getMessageCommandAndArgs({
-    message: opts.message,
-    prefix: opts.prefix,
-  });
-
-  const commandModule =
-    commands.get(commandName) ||
-    commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
-
-  if (!commandModule) {
-    return;
-  }
-
-  try {
-    commandModule.execute(opts.message, args, opts.context);
-  } catch (error) {
-    opts.context.logger.error(
-      "there was an error trying to execute that command",
-      { commandName },
-      error,
-    );
-  }
-};
-
-export const getMessageCommandAndArgs = (opts: {
-  message: Message;
-  prefix: string;
-}) => opts.message.content.slice(opts.prefix.length).trim().split(/ +/);

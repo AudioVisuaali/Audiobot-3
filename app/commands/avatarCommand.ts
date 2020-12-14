@@ -1,5 +1,4 @@
-import { Command } from "discord.js";
-
+import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const avatarCommand: Command = {
