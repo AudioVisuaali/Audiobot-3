@@ -60,7 +60,7 @@ export const fishingCommand: Command = {
 
     const fishingMessage = await message.channel.send(fishingEmbed);
 
-    const fishingDurationMS = mathUtils.getRandomArbitrary(1000, 3000); // 10000, 30000
+    const fishingDurationMS = mathUtils.getRandomArbitrary(100000, 300000);
     await timeUtils.sleep(fishingDurationMS);
 
     fishingMessage.delete();
