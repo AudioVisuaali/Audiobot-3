@@ -12,6 +12,50 @@ enum ReactType {
   Failure = "❌",
 }
 
+type Bait = {
+  emoji: string;
+  name: string;
+  price: number;
+  changeDiscount: number;
+};
+
+const baits: Bait[] = [
+  { emoji: "🪱", name: "Worm", price: 5, changeDiscount: 100 },
+  { emoji: "🍗", name: "Chicken", price: 12, changeDiscount: 200 },
+  { emoji: "🥟", name: "Dumpling", price: 28, changeDiscount: 300 },
+];
+
+const itemGrops = {
+  high: [
+    { emoji: "📀", name: "DVD", value: 200 },
+    { emoji: "💿", name: "CD", value: 150 },
+    { emoji: "🥇", name: "Medal", value: 100 },
+    { emoji: "🐡", name: "Blowfish", value: 80 },
+    { emoji: "🐟", name: "Fish", value: 55 },
+    { emoji: "🐠", name: "Tropical Fish", value: 75 },
+  ],
+  medium: [
+    { emoji: "🍆", name: "Eggplant", value: 20 },
+    { emoji: "🍑", name: "Peach", value: 25 },
+    { emoji: "🍌", name: "Banana", value: 18 },
+    { emoji: "🍕", name: "Pizza", value: 17 },
+    { emoji: "🍘", name: "Rice Cracker", value: 22 },
+  ],
+  low: [
+    { emoji: "⚽", name: "Soccer", value: 1 },
+    { emoji: "👢", name: "Boots", value: 5 },
+    { emoji: "⚰️", name: "Coffin", value: 4 },
+    { emoji: "📎", name: "Paperclip", value: 1 },
+    { emoji: "🔎", name: "Magnifying Glass", value: 5 },
+    { emoji: "🛒", name: "Shopping Cart", value: 5 },
+    { emoji: "🔒", name: "Lock", value: 4 },
+    { emoji: "📐", name: "Triangular Ruler", value: 1 },
+    { emoji: "💩", name: "Poop", value: 2 },
+    { emoji: "👞", name: "Shoe", value: 1 },
+    { emoji: "☂️", name: "Umbrella", value: 4 },
+  ],
+};
+
 const getRandomItemGroup = (discount: number) => {
   const randomValue = mathUtils.getRandomArbitrary(0, 400 - discount);
 
@@ -48,8 +92,8 @@ export const fishingCommand: Command = {
   name: "Fishing",
   command: "fishing",
   aliases: ["fish"],
-  syntax: "",
-  examples: [],
+  syntax: "<?<<baits | bait> | <baitName>>>",
+  examples: ["", "baits", baits[0].name.toLowerCase()],
   isAdmin: false,
   description: "Relaxing fishing",
 
@@ -63,7 +107,7 @@ export const fishingCommand: Command = {
       userDiscordId: message.author.id,
     });
 
-    if (args.length === 1 && args[0] === "baits") {
+    if (args.length === 1 && (args[0] === "baits" || args[0] === "bait")) {
       const embed = responseUtils
         .positive({ discordUser: message.author })
         .setTitle("🎣 Fishing baits")
@@ -247,48 +291,4 @@ export const fishingCommand: Command = {
 
     return message.channel.send(embed);
   },
-};
-
-type Bait = {
-  emoji: string;
-  name: string;
-  price: number;
-  changeDiscount: number;
-};
-
-const baits: Bait[] = [
-  { emoji: "🪱", name: "Worm", price: 5, changeDiscount: 100 },
-  { emoji: "🍗", name: "Chicken", price: 12, changeDiscount: 200 },
-  { emoji: "🥟", name: "Dumpling", price: 28, changeDiscount: 300 },
-];
-
-const itemGrops = {
-  high: [
-    { emoji: "📀", name: "DVD", value: 200 },
-    { emoji: "💿", name: "CD", value: 150 },
-    { emoji: "🥇", name: "Medal", value: 100 },
-    { emoji: "🐡", name: "Blowfish", value: 80 },
-    { emoji: "🐟", name: "Fish", value: 55 },
-    { emoji: "🐠", name: "Tropical Fish", value: 75 },
-  ],
-  medium: [
-    { emoji: "🍆", name: "Eggplant", value: 20 },
-    { emoji: "🍑", name: "Peach", value: 25 },
-    { emoji: "🍌", name: "Banana", value: 18 },
-    { emoji: "🍕", name: "Pizza", value: 17 },
-    { emoji: "🍘", name: "Rice Cracker", value: 22 },
-  ],
-  low: [
-    { emoji: "⚽", name: "Soccer", value: 1 },
-    { emoji: "👢", name: "Boots", value: 5 },
-    { emoji: "⚰️", name: "Coffin", value: 4 },
-    { emoji: "📎", name: "Paperclip", value: 1 },
-    { emoji: "🔎", name: "Magnifying Glass", value: 5 },
-    { emoji: "🛒", name: "Shopping Cart", value: 5 },
-    { emoji: "🔒", name: "Lock", value: 4 },
-    { emoji: "📐", name: "Triangular Ruler", value: 1 },
-    { emoji: "💩", name: "Poop", value: 2 },
-    { emoji: "👞", name: "Shoe", value: 1 },
-    { emoji: "☂️", name: "Umbrella", value: 4 },
-  ],
 };
