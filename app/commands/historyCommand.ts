@@ -89,7 +89,7 @@ export const historyCommand: Command = {
       return message.channel.send(embed);
     }
 
-    const displayHistories = tableUtils.formatHistories({
+    const displayHistories = await tableUtils.formatHistories({
       guild,
       histories: currencyHistories,
       includeHeader: true,

@@ -10,7 +10,7 @@ const getCurrencyHistories = async (opts: {
   discordGuild: Guild;
   args: string[];
 }) => {
-  const param = opts.args.length ? opts.args[0] : "latest";
+  const param = opts.args.length ? opts.args[0] : "win";
 
   switch (param) {
     case "latest":
@@ -31,7 +31,7 @@ const getCurrencyHistories = async (opts: {
         type: "win",
         histories: await opts.dataSources.currencyHistoryDS.getCurrencyHistories(
           { discordGuildId: opts.discordGuild.id },
-          { outcome: "ASC" },
+          { outcome: "DESC" },
         ),
       };
 
@@ -44,7 +44,7 @@ const getCurrencyHistories = async (opts: {
         type: "lost",
         histories: await opts.dataSources.currencyHistoryDS.getCurrencyHistories(
           { discordGuildId: opts.discordGuild.id },
-          { outcome: "DESC" },
+          { outcome: "ASC" },
         ),
       };
   }
@@ -71,7 +71,8 @@ export const topCommand: Command = {
       args,
     });
 
-    const displayHistories = tableUtils.formatHistories({
+    const displayHistories = await tableUtils.formatHistories({
+      withName: { guildMemberManager: message.guild.members },
       includeHeader: true,
       histories,
       guild,
@@ -79,7 +80,7 @@ export const topCommand: Command = {
 
     const table = new Table(displayHistories);
 
-    const title = `📝 Stats for ${message.guild.name} order by: **${type}**`;
+    const title = `📝 Stats for __${message.guild.name}__ in order **${type}**`;
 
     message.channel.send([title, "```", table.toString(), "```"].join("\n"));
   },

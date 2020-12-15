@@ -1,3 +1,5 @@
+import { GuildMemberManager } from "discord.js";
+
 import { responseUtils } from "./responseUtils";
 
 import { CurrencyHistoryTable } from "~/dataSources/CurrencyHistoryDataSource";
@@ -8,12 +10,15 @@ import {
 } from "~/database/types";
 
 class TableUtils {
-  private tableHeader = {
-    actionType: "TYPE",
-    bet: "STAKE",
-    outcome: "OUTCOME",
-    metadata: "META",
-  };
+  private tableHeader(opts?: { withName: boolean }) {
+    return {
+      ...(opts?.withName && { name: "NAME" }),
+      actionType: "TYPE",
+      bet: "STAKE",
+      outcome: "OUTCOME",
+      metadata: "META",
+    };
+  }
 
   getActionTypeDisplay(opts: { actionType: CurrencyHistoryActionType }) {
     switch (opts.actionType) {
@@ -65,13 +70,53 @@ class TableUtils {
     }
   }
 
-  formatHistories = (opts: {
+  async getUser(opts: {
+    guildMemberManager: GuildMemberManager;
+    discordMemberId: string;
+  }) {
+    const member = opts.guildMemberManager.cache.get(opts.discordMemberId);
+
+    if (member) {
+      return member;
+    }
+
+    return await opts.guildMemberManager.fetch(opts.discordMemberId);
+  }
+
+  async getUserUsername(opts: {
+    guildMemberManager: GuildMemberManager;
+    discordUserId: string;
+  }) {
+    const user = await this.getUser({
+      guildMemberManager: opts.guildMemberManager,
+      discordMemberId: opts.discordUserId,
+    });
+
+    if (!user) {
+      return "???";
+    }
+
+    return user.user.username;
+  }
+
+  formatHistories = async (opts: {
     guild: GuildTable;
     histories: CurrencyHistoryTable[];
     includeHeader?: boolean;
+    withName?: {
+      guildMemberManager: GuildMemberManager;
+    };
   }) => {
-    const rows = opts.histories.map((history) => ({
-      actionType: this.getActionTypeDisplay({ actionType: history.actionType }),
+    const rows = opts.histories.map(async (history) => ({
+      ...(opts.withName && {
+        name: await this.getUserUsername({
+          guildMemberManager: opts.withName.guildMemberManager,
+          discordUserId: history.discordUserId,
+        }),
+      }),
+      actionType: this.getActionTypeDisplay({
+        actionType: history.actionType,
+      }),
       bet: history.bet
         ? this.formatCurrencyType({
             value: history.bet,
@@ -90,7 +135,11 @@ class TableUtils {
       metadata: history.metadata ?? "",
     }));
 
-    return opts.includeHeader ? [this.tableHeader, ...rows] : rows;
+    const resolvedRows = await Promise.all(rows);
+
+    return opts.includeHeader
+      ? [this.tableHeader({ withName: !!opts.withName }), ...resolvedRows]
+      : resolvedRows;
   };
 }
 
