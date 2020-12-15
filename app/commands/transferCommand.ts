@@ -118,7 +118,7 @@ export const transferCommand: Command = {
       guildId: guild.id,
       discordUserId: userMentioned.id,
       discordGuildId: message.guild.id,
-      actionType: CurrencyHistoryActionType.ROULETTE,
+      actionType: CurrencyHistoryActionType.TRANSFER,
       currencyType: CurrencyHistoryCurrencyType.POINT,
       bet: null,
       outcome: transferrableAmount,

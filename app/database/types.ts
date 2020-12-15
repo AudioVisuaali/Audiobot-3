@@ -56,6 +56,7 @@ export enum CurrencyHistoryActionType {
   ROULETTE = "roulette",
   DAILY = "daily",
   TRANSFER = "transfer",
+  FISHING = "fishing",
 }
 
 export enum CurrencyHistoryCurrencyType {

@@ -1,6 +1,7 @@
-import { Message } from "discord.js";
+import { Guild, Message } from "discord.js";
 
 import { currencyCommand } from "./currencyCommand";
+import { fishingCommand } from "./fishingCommand";
 
 import { avatarCommand } from "~/commands/avatarCommand";
 import { bitcoinCommand } from "~/commands/bitcoinCommand";
@@ -44,6 +45,10 @@ import { wikipediaCommand } from "~/commands/wikipediaCommand";
 import { yoMamaCommand } from "~/commands/yoMamaCommand";
 import { Context } from "~/context";
 
+interface CustomMessage extends Message {
+  guild: Guild;
+}
+
 export interface Command {
   emoji: string;
   name: string;
@@ -55,7 +60,7 @@ export interface Command {
   isAdmin: boolean;
 
   execute: (
-    message: Message,
+    message: CustomMessage,
     args: string[],
     context: Context,
   ) => Promise<unknown>;
@@ -102,6 +107,7 @@ export const commands: Command[] = [
   statsCommand,
   fingerporiCommand,
   currencyCommand,
+  fishingCommand,
   pingCommand,
 ];
 
