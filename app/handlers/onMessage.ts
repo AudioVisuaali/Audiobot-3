@@ -8,6 +8,13 @@ export type HandleMessage = (opts: {
   context: Context;
 }) => (message: Message) => Promise<void>;
 
+const formatMessageBody = (opts: { message: Message }) => ({
+  authorId: opts.message.author.id,
+  authorName: opts.message.author.username,
+  authorDiscriminator: opts.message.author.discriminator,
+  message: opts.message.content,
+});
+
 const handleMessageWorker = async (opts: {
   message: Message;
   context: Context;
@@ -15,24 +22,25 @@ const handleMessageWorker = async (opts: {
   // Checks for guild
   const message = opts.message as CustomMessage;
   const { context } = opts;
+  context.logger.info("Regular message received");
+
   if (!message.guild) {
-    return;
+    return context.logger.info(
+      "message without guild",
+      formatMessageBody({ message }),
+    );
   }
 
   if (message.author.bot) {
-    return;
+    return context.logger.warn("Bot messaged", formatMessageBody({ message }));
   }
 
   if (message.channel.type === "dm") {
-    return;
+    return context.logger.warn(
+      "User tried to send a dm message",
+      formatMessageBody({ message }),
+    );
   }
-
-  context.logger.info("User sent message", {
-    authorId: message.author.id,
-    authorName: message.author.username,
-    authorDiscriminator: message.author.discriminator,
-    message: message.content,
-  });
 
   const isUserTimedOut = context.services.timeout.isUserTimedOut({
     userDiscordId: message.author.id,
@@ -65,8 +73,16 @@ const handleMessageWorker = async (opts: {
   );
 
   if (!commandModule) {
-    return;
+    return context.logger.info(
+      "User tried invoked a command with invalid moduleName",
+      { ...formatMessageBody({ message }), commandName: commandName },
+    );
   }
+
+  context.logger.info("User invoked a command", {
+    ...formatMessageBody({ message }),
+    module: commandModule.name,
+  });
 
   await commandModule.execute(message, args, context);
 };
