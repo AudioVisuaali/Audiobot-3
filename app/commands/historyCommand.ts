@@ -1,59 +1,9 @@
 import Table from "table-layout";
 
 import { Command } from "~/commands/commands";
-import { CurrencyHistoryTable } from "~/dataSources/CurrencyHistoryDataSource";
-import { GuildTable } from "~/dataSources/GuildDataSource";
 import { DataSources } from "~/dataSources/dataSources";
-import { CurrencyHistoryCurrencyType } from "~/database/types";
 import { responseUtils } from "~/utils/responseUtils";
-
-const formatCurrencyType = (opts: {
-  value: number;
-  type: CurrencyHistoryCurrencyType;
-  guild: GuildTable;
-  usePrefix?: boolean;
-}) => {
-  switch (opts.type) {
-    case CurrencyHistoryCurrencyType.POINT:
-      return responseUtils.formatCurrency({
-        guild: opts.guild,
-        positivePrefix: opts.usePrefix,
-        amount: opts.value,
-      });
-
-    case CurrencyHistoryCurrencyType.TOKEN:
-      return responseUtils.formatTokens({
-        positivePrefix: opts.usePrefix,
-        amount: opts.value,
-      });
-
-    default:
-      return [opts.value, opts.type].join(" ");
-  }
-};
-
-const tableHeader = {
-  actionType: "TYPE",
-  bet: "STAKE",
-  outcome: "OUTCOME",
-  metadata: "META",
-};
-
-const historyRow = (guild: GuildTable) => (row: CurrencyHistoryTable) => ({
-  actionType: row.actionType,
-  bet: row.bet
-    ? formatCurrencyType({ value: row.bet, type: row.currencyType, guild })
-    : "",
-  outcome: row.outcome
-    ? formatCurrencyType({
-        value: row.outcome,
-        type: row.currencyType,
-        guild,
-        usePrefix: true,
-      })
-    : "",
-  metadata: row.metadata ?? "",
-});
+import { tableUtils } from "~/utils/tableUtils";
 
 const getHistoryData = async (opts: {
   dataSources: DataSources;
@@ -68,15 +18,11 @@ const getHistoryData = async (opts: {
     });
   }
 
-  if (opts.args.length !== 2) {
+  if (opts.args.length !== 1) {
     return null;
   }
 
-  if (opts.args[0] !== "top") {
-    return null;
-  }
-
-  switch (opts.args[1]) {
+  switch (opts.args[0]) {
     case "won":
     case "win":
       return await opts.dataSources.currencyHistoryDS.getCurrencyHistories(
@@ -101,8 +47,8 @@ export const historyCommand: Command = {
   name: "History",
   command: "history",
   aliases: ["gambling"],
-  syntax: "<top> <win | lose>",
-  examples: ["", "top win", "top lose"],
+  syntax: "<win | lose>",
+  examples: ["", "win", "lose"],
   isAdmin: false,
   description: "Get your currency history",
 
@@ -143,10 +89,11 @@ export const historyCommand: Command = {
       return message.channel.send(embed);
     }
 
-    const displayHistories = [
-      tableHeader,
-      ...currencyHistories.map(historyRow(guild)),
-    ];
+    const displayHistories = tableUtils.formatHistories({
+      guild,
+      histories: currencyHistories,
+      includeHeader: true,
+    });
 
     const table = new Table(displayHistories);
 

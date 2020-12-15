@@ -2,6 +2,7 @@ import { Guild, Message } from "discord.js";
 
 import { currencyCommand } from "./currencyCommand";
 import { fishingCommand } from "./fishingCommand";
+import { topCommand } from "./topCommand";
 
 import { avatarCommand } from "~/commands/avatarCommand";
 import { bitcoinCommand } from "~/commands/bitcoinCommand";
@@ -45,7 +46,7 @@ import { wikipediaCommand } from "~/commands/wikipediaCommand";
 import { yoMamaCommand } from "~/commands/yoMamaCommand";
 import { Context } from "~/context";
 
-interface CustomMessage extends Message {
+export interface CustomMessage extends Message {
   guild: Guild;
 }
 
@@ -108,6 +109,7 @@ export const commands: Command[] = [
   fingerporiCommand,
   currencyCommand,
   fishingCommand,
+  topCommand,
   pingCommand,
 ];
 

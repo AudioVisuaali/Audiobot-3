@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 
-import { commands } from "~/commands/commands";
+import { commands, CustomMessage } from "~/commands/commands";
 import { Context } from "~/context";
 import { inputUtils } from "~/utils/inputUtils";
 
@@ -12,7 +12,9 @@ const handleMessageWorker = async (opts: {
   message: Message;
   context: Context;
 }) => {
-  const { message, context } = opts;
+  // Checks for guild
+  const message = opts.message as CustomMessage;
+  const { context } = opts;
   if (!message.guild) {
     return;
   }
