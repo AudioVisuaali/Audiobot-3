@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const dadJokeCommand: Command = {
+  emoji: "👨",
   name: "Dad Joke",
   command: "dadjoke",
   aliases: ["dad"],
@@ -15,7 +16,7 @@ export const dadJokeCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle("Dad joke!")
+      .setTitle("👨 Dad joke!")
       .setDescription(dadJoke.attachments[0].text);
 
     message.channel.send(embed);

@@ -5,6 +5,7 @@ const spongebob =
   "https://en.meming.world/images/en/thumb/e/e0/Mocking_SpongeBob.jpg/300px-Mocking_SpongeBob.jpg";
 
 export const spongebobCommand: Command = {
+  emoji: "🧽",
   name: "Spongebob",
   command: "sponbebob",
   aliases: ["retarded"],

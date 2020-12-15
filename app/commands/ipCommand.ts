@@ -3,6 +3,7 @@ import { networkUtils } from "~/utils/networkUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const ipCommand: Command = {
+  emoji: "📶",
   name: "IP info",
   command: "ip",
   aliases: ["domain"],
@@ -20,7 +21,7 @@ export const ipCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle(`Information for ${isIP ? ip : args[0]}`)
+      .setTitle(`🌐 Information for ${isIP ? ip : args[0]}`)
       .addFields(
         {
           name: "City",

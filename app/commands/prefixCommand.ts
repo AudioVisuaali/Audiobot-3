@@ -4,6 +4,7 @@ import { responseUtils } from "~/utils/responseUtils";
 const PREFIX_MAX_LENGTH = 15;
 
 export const prefixCommand: Command = {
+  emoji: "⚛️",
   name: "Prefix",
   command: "prefix",
   aliases: [],

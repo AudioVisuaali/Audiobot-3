@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const pointsCommand: Command = {
+  emoji: "💸",
   name: "Points",
   command: "points",
   aliases: ["memes"],

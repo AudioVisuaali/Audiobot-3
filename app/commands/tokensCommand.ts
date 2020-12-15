@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const tokensCommand: Command = {
+  emoji: "🏆",
   name: "Tokens",
   command: "tokens",
   aliases: [],
@@ -17,7 +18,7 @@ export const tokensCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle(`${user.tokens} tokens`);
+      .setTitle(`🏆 ${user.tokens} tokens`);
 
     message.channel.send(embed);
   },

@@ -24,6 +24,7 @@ const getPrice = (bpi: BPICurrency) => {
 };
 
 export const bitcoinCommand: Command = {
+  emoji: "🪙",
   name: "Bitcoin",
   command: "bitcoin",
   aliases: ["btc"],

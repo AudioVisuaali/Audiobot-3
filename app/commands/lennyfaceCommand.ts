@@ -3,6 +3,7 @@ import { lennyFacesUtils } from "~/utils/lennyFaceUtils";
 import { mathUtils } from "~/utils/mathUtil";
 
 export const lennyfaceCommand: Command = {
+  emoji: "🙃",
   name: "Lennyfaces",
   command: "lennyface",
   aliases: ["lenny"],

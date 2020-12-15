@@ -5,6 +5,7 @@ const urbanLogo =
   "https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-01-11/297387706245_85899a44216ce1604c93_512.jpg";
 
 export const urbanCommand: Command = {
+  emoji: "📚",
   name: "Urban",
   command: "urban",
   aliases: ["urbandictionary", "dictionary"],

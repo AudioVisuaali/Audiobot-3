@@ -3,6 +3,7 @@ import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const numberfactCommand: Command = {
+  emoji: "🔢",
   name: "NumberFact",
   command: "numberfact",
   aliases: ["number"],
@@ -26,7 +27,7 @@ export const numberfactCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle(`Numberfact #${number}`)
+      .setTitle(`🔢 Numberfact #${number}`)
       .setDescription(fact);
 
     message.channel.send(embed);

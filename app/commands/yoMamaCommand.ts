@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const yoMamaCommand: Command = {
+  emoji: "👩",
   name: "Yo mama",
   command: "yomama",
   aliases: ["mama"],

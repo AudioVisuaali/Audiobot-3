@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const osuCommand: Command = {
+  emoji: "🔴",
   name: "Osu",
   command: "osu",
   aliases: [],

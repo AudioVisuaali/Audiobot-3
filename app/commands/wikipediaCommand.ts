@@ -1,6 +1,7 @@
 import { Command } from "~/commands/commands";
 
 export const wikipediaCommand: Command = {
+  emoji: "🌐",
   name: "Wikipedia",
   command: "wikipedia",
   aliases: ["wiki", "pedia"],

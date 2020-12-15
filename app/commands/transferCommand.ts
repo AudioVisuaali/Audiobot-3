@@ -7,6 +7,7 @@ import { inputUtils } from "~/utils/inputUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const transferCommand: Command = {
+  emoji: "💵",
   name: "Transfer",
   command: "transfer",
   aliases: ["give"],
@@ -147,7 +148,7 @@ export const transferCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle(":moneybag: Transfer")
+      .setTitle("💵 Transfer")
       .setDescription(
         `${fromUserQuote} gave ${transferredPoints} to ${toUserQuote}`,
       )

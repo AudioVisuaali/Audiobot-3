@@ -97,6 +97,7 @@ const getHistoryData = async (opts: {
 };
 
 export const historyCommand: Command = {
+  emoji: "📝",
   name: "History",
   command: "history",
   aliases: ["gambling"],
@@ -136,7 +137,7 @@ export const historyCommand: Command = {
     if (!currencyHistories.length) {
       const embed = responseUtils
         .neutral({ discordUser: message.author })
-        .setTitle("No data found ¯\\_(ツ)_/¯")
+        .setTitle("📄 No data found ¯\\_(ツ)_/¯")
         .setDescription("Start by playing minigames or claiming daily bonuses");
 
       return message.channel.send(embed);
@@ -159,7 +160,7 @@ export const historyCommand: Command = {
       useBold: true,
     });
 
-    const title = `${authorQuote} Your current balance is ${currentBalancePoints}`;
+    const title = `📝 ${authorQuote} Your current balance is ${currentBalancePoints}`;
 
     message.channel.send([title, "```", table.toString(), "```"].join("\n"));
   },

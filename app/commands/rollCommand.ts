@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { mathUtils } from "~/utils/mathUtil";
 
 export const rollCommand: Command = {
+  emoji: "🎲",
   name: "Roll",
   command: "roll",
   aliases: [],

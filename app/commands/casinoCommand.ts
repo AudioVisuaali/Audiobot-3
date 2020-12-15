@@ -3,6 +3,7 @@ import { inputUtils } from "~/utils/inputUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const casinoCommand: Command = {
+  emoji: "🎰",
   name: "Casino",
   command: "casino",
   aliases: [],

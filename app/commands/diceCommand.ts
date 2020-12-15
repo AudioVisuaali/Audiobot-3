@@ -3,6 +3,7 @@ import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const diceCommand: Command = {
+  emoji: "🎲",
   name: "Dice",
   command: "dice",
   aliases: [],
@@ -17,7 +18,7 @@ export const diceCommand: Command = {
 
       const embed = responseUtils
         .positive({ discordUser: message.author })
-        .setDescription(`:game_die: Dice rolled ${rolled}`);
+        .setDescription(`🎲 Dice rolled ${rolled}`);
 
       return message.channel.send(embed);
     }
@@ -32,7 +33,7 @@ export const diceCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setDescription(`:game_die: Dice rolled ${rolled}`);
+      .setDescription(`🎲 Dice rolled ${rolled}`);
 
     return message.channel.send(embed);
   },

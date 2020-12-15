@@ -3,6 +3,7 @@ import { responseUtils } from "~/utils/responseUtils";
 import { timeUtils } from "~/utils/timeUtils";
 
 export const statsCommand: Command = {
+  emoji: "🔧",
   name: "Stats",
   command: "stats",
   aliases: [],
@@ -26,7 +27,7 @@ export const statsCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle("Bot status 🔧")
+      .setTitle("🔧 Bot status")
       .setDescription(`Bot has been on for ${uptimeString}`)
       .addField("Restart count", data ? data.restarts : 0);
 

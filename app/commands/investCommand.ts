@@ -10,6 +10,7 @@ const description =
   "Invest your money to get a weekly 1% payback. For your money to get compounded you need to keep your money invested for a week.";
 
 export const investCommand: Command = {
+  emoji: "💰",
   name: "Invest",
   command: "invest",
   aliases: ["bank"],
@@ -52,7 +53,7 @@ export const investCommand: Command = {
 
       const embed = responseUtils
         .positive({ discordUser: message.author })
-        .setTitle(":moneybag: Invest")
+        .setTitle("💰 Invest")
         .setDescription(description)
         .addField(
           "Next compound",
@@ -135,7 +136,7 @@ export const investCommand: Command = {
 
         const embed = responseUtils
           .positive({ discordUser: message.author })
-          .setTitle("Investment")
+          .setTitle("💰 Investment")
           .setDescription(`You invested ${transferAmountPoints}`)
           .addField(
             "New balance",
@@ -210,7 +211,7 @@ export const investCommand: Command = {
 
         const embed = responseUtils
           .positive({ discordUser: message.author })
-          .setTitle("Investment")
+          .setTitle("💰 Investment")
           .setDescription(`You withdrawed ${transferAmountPoints}`)
           .addField(
             "New balance",

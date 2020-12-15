@@ -3,6 +3,7 @@ import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const chooseCommand: Command = {
+  emoji: "❓",
   name: "Choose Option",
   command: "choose",
   aliases: ["option"],
@@ -26,7 +27,7 @@ export const chooseCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle(`I choose ${options[position]}`);
+      .setTitle(`❓ I choose ${options[position]}`);
 
     message.channel.send(embed);
   },

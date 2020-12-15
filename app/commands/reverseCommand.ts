@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const reverseCommand: Command = {
+  emoji: "🔁",
   name: "Reverse",
   command: "reverse",
   aliases: [],

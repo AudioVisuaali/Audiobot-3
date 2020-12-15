@@ -30,6 +30,7 @@ const getDailyFix = (number: number) => {
 };
 
 export const dailyCommand: Command = {
+  emoji: "📅",
   name: "Daily",
   command: "daily",
   aliases: ["kela"],
@@ -104,7 +105,7 @@ export const dailyCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle(`+ ${dailyAmount} memes`)
+      .setTitle(`📅 + ${dailyAmount} memes`)
       .setDescription(
         `You redeemed your daily ${responseUtils.getPointsDisplayName({
           guild,

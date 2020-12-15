@@ -94,6 +94,7 @@ const getStraights = (grid: Grid) => {
 };
 
 export const slotsCommand: Command = {
+  emoji: "🎰",
   name: "Slots",
   command: "slotmachine",
   aliases: ["slots"],
@@ -115,7 +116,7 @@ export const slotsCommand: Command = {
 
       const embed = responseUtils
         .positive({ discordUser: message.author })
-        .setTitle("Slotmachine")
+        .setTitle("🎰 Slotmachine")
         .addField("Multipliers", valuesMessage);
 
       return message.channel.send(embed);

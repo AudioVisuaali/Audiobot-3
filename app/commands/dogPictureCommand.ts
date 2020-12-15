@@ -13,6 +13,7 @@ const getDogPicture = async ({ services }: Context) => {
 };
 
 export const dogPictureCommand: Command = {
+  emoji: "🐕",
   name: "Dog Picture",
   command: "dog",
   aliases: ["dogpicture"],

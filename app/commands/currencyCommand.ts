@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const currencyCommand: Command = {
+  emoji: "💰",
   name: "Currency",
   command: "currency",
   aliases: [],
@@ -67,7 +68,7 @@ export const currencyCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle("You have updated currency name")
+      .setTitle("💲 You have updated currency name")
       .setDescription(description);
 
     return message.channel.send(embed);

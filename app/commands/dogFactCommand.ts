@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const dogFactCommand: Command = {
+  emoji: "🐶",
   name: "Dog Fact",
   command: "dogfact",
   aliases: ["dogf"],

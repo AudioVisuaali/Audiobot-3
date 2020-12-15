@@ -45,6 +45,7 @@ import { yoMamaCommand } from "~/commands/yoMamaCommand";
 import { Context } from "~/context";
 
 export interface Command {
+  emoji: string;
   name: string;
   command: string;
   aliases: string[];

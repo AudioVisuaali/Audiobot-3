@@ -5,6 +5,7 @@ import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const weatherCommand: Command = {
+  emoji: "☁️",
   name: "Weather",
   command: "weather",
   aliases: [],

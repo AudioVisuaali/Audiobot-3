@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const catPictureCommand: Command = {
+  emoji: "🐈",
   name: "Cat Picture",
   command: "cat",
   aliases: ["catpicture"],
@@ -15,7 +16,7 @@ export const catPictureCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle("A wild cat appears!")
+      .setTitle("🐈 A wild cat appears!")
       .setImage(catpicture.file);
 
     message.channel.send(embed);

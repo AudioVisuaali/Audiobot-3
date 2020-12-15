@@ -10,6 +10,7 @@ import { responseUtils } from "~/utils/responseUtils";
 export const ROULETTER_MIN_POT = 10;
 
 export const rouletteCommand: Command = {
+  emoji: "🎮",
   name: "Roulette",
   command: "roulette",
   aliases: [],
@@ -107,7 +108,7 @@ export const rouletteCommand: Command = {
 
       const embed = responseUtils
         .negative({ discordUser: message.author })
-        .setTitle(`:slot_machine: ${gambleAmountPoints}`)
+        .setTitle(`🎮 ${gambleAmountPoints}`)
         .setDescription(
           `You have lost ${gambleAmountPointsBold}, you now have ${userLostPoints}`,
         );

@@ -4,6 +4,7 @@ import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const eightBallCommand: Command = {
+  emoji: "🎱",
   name: "8 Ball",
   command: "eightball",
   aliases: ["8ball"],
@@ -26,7 +27,7 @@ export const eightBallCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setDescription(`:8ball: ${eightBallUtils[randomIndex]}`);
+      .setDescription(`🎱 ${eightBallUtils[randomIndex]}`);
 
     message.channel.send(embed);
   },

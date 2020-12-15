@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const genderCommand: Command = {
+  emoji: "⚧️",
   name: "Gender",
   command: "gender",
   aliases: [],
@@ -27,7 +28,7 @@ export const genderCommand: Command = {
 
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle(`Gender of ${genderResponse.name}`)
+      .setTitle(`🍆 Gender of ${genderResponse.name}`)
       .setDescription(
         `There's a ${genderResponse.probability * 100}% of **${
           genderResponse.name

@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const punCommand: Command = {
+  emoji: "✊",
   name: "Puns",
   command: "pun",
   aliases: [],

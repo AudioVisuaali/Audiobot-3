@@ -2,6 +2,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const stockCommand: Command = {
+  emoji: "📈",
   name: "Stock",
   command: "stock",
   aliases: ["retarded"],
@@ -14,7 +15,7 @@ export const stockCommand: Command = {
     if (!args.length) {
       const embed = responseUtils
         .negative({ discordUser: message.author })
-        .setTitle("Stock")
+        .setTitle("📈 Stock")
         .setDescription("You need to provide a ticker symbol");
 
       return message.channel.send(embed);
@@ -23,7 +24,7 @@ export const stockCommand: Command = {
     if (args[0].length > 10) {
       const embed = responseUtils
         .negative({ discordUser: message.author })
-        .setTitle("Stock")
+        .setTitle("📈 Stock")
         .setDescription("Ticker symbol too long");
 
       return message.channel.send(embed);
@@ -34,7 +35,7 @@ export const stockCommand: Command = {
     if (!stock) {
       const embed = responseUtils
         .negative({ discordUser: message.author })
-        .setTitle("Stock")
+        .setTitle("📈 Stock")
         .setDescription(`Stock not found with ticker symbol ** ${args[0]}**`);
 
       return message.channel.send(embed);

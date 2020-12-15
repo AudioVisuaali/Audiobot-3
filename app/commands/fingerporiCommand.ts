@@ -3,6 +3,7 @@ import { fingerporiUtils } from "~/utils/fingerporiUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
 export const fingerporiCommand: Command = {
+  emoji: "🤔",
   name: "Fingerpori",
   command: "fingerpori",
   aliases: [],
