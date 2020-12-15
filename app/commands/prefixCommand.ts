@@ -8,7 +8,7 @@ export const prefixCommand: Command = {
   name: "Prefix",
   command: "prefix",
   aliases: [],
-  syntax: "<value>",
+  syntax: "set <value>",
   examples: ["#"],
   isAdmin: true,
   description: "Chang the prefix of your server",
