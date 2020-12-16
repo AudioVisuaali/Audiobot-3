@@ -193,7 +193,9 @@ export const rouletteCommand: Command = {
       currencyType: CurrencyHistoryCurrencyType.POINT,
       bet: gambleAmount,
       outcome: modifyPoints,
-      metadata: `Casino +${bonusCurrentPoints} / ${percent}%`,
+      metadata: isInCasinoChannel
+        ? `Casino +${bonusCurrentPoints} / ${percent}%`
+        : null,
       hasProfited: true,
     });
 
