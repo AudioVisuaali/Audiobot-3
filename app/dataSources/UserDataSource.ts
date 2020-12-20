@@ -132,6 +132,7 @@ export class UserDataSource extends DataSourceWithContext {
       .insert({
         uuid: uuidv4(),
         discordId: opts.userDiscordId,
+        guildDiscordId: opts.guildDiscordId,
       })
       .returning("*");
 
@@ -160,11 +161,5 @@ export class UserDataSource extends DataSourceWithContext {
       guildDiscordId: opts.guildDiscordId,
       userDiscordId: opts.userDiscordId,
     });
-  }
-
-  public async getUsers() {
-    const users = await this.knex(Table.USERS);
-
-    return users.map(this.formatRow);
   }
 }
