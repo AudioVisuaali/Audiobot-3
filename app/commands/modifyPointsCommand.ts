@@ -11,7 +11,7 @@ export const modifyPointsCommand: Command = {
   emoji: "💫",
   name: "Modify Points",
   command: "modifyPoints",
-  aliases: ["modifyP"],
+  aliases: ["modifyP", "modifypoints"],
   syntax: "<add | remove> @user <amount>",
   examples: ["add <@user> 10000"],
   isAdmin: false,
