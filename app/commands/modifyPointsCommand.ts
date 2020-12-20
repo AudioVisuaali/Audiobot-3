@@ -12,8 +12,8 @@ export const modifyPointsCommand: Command = {
   name: "Modify Points",
   command: "modifyPoints",
   aliases: ["modifyP", "modifypoints"],
-  syntax: "<add | remove> @user <amount>",
-  examples: ["add <@user> 10000"],
+  syntax: "<add | remove> <@user> <amount>",
+  examples: ["add @user 10000"],
   isAdmin: false,
   description: "Modify users currency",
 
