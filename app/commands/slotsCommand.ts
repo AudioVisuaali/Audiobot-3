@@ -197,6 +197,7 @@ export const slotsCommand: Command = {
     const outcomeAmount = Math.floor(gamblingAmount * multiplier);
     const modifiedUser = await dataSources.userDS.tryModifyCurrency({
       userDiscordId: message.author.id,
+      guildDiscordId: message.guild.id,
       modifyPoints: hasWon ? outcomeAmount : outcomeAmount * -1,
     });
 

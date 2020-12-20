@@ -87,16 +87,19 @@ export const transferCommand: Command = {
     }
 
     const receivingUser = await dataSources.userDS.verifyUser({
+      guildDiscordId: message.guild.id,
       userDiscordId: userMentioned.id,
     });
 
     const updatedDonor = await dataSources.userDS.tryModifyCurrency({
       userDiscordId: message.author.id,
+      guildDiscordId: message.guild.id,
       modifyPoints: transferrableAmount * -1,
     });
 
     await dataSources.userDS.tryModifyCurrency({
       userDiscordId: receivingUser.discordId,
+      guildDiscordId: message.guild.id,
       modifyPoints: transferrableAmount,
     });
 

@@ -17,6 +17,7 @@ export type UserTableRaw = Readonly<{
   id: number;
   uuid: string;
   discordId: Snowflake;
+  guildDiscordId: Snowflake;
   points: number;
   stock: number;
   stockMinCompoundAmount: number;

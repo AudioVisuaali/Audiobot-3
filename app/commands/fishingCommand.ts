@@ -222,6 +222,7 @@ export const fishingCommand: Command = {
 
     if (reactionCollection.get(ReactType.Success)) {
       const updatedUser = await dataSources.userDS.tryModifyCurrency({
+        guildDiscordId: message.guild.id,
         userDiscordId: message.author.id,
         modifyPoints: fishingItem.value,
       });

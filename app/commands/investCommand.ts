@@ -114,6 +114,7 @@ export const investCommand: Command = {
 
         const updatedUser = await dataSources.userDS.tryModifyCurrency({
           userDiscordId: message.author.id,
+          guildDiscordId: message.guild.id,
           modifyPoints: transferAmount * -1,
           modifyStock: transferAmount,
         });
@@ -180,6 +181,7 @@ export const investCommand: Command = {
           user.stock - transferAmount < user.stockMinCompoundAmount;
 
         const updatedUser = await dataSources.userDS.tryModifyCurrency({
+          guildDiscordId: message.guild.id,
           userDiscordId: message.author.id,
           modifyPoints: transferAmount,
           modifyStock: transferAmount * -1,

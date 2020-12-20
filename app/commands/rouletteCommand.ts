@@ -86,6 +86,7 @@ export const rouletteCommand: Command = {
     if (!hasWon) {
       const userLost = await dataSources.userDS.tryModifyCurrency({
         userDiscordId: message.author.id,
+        guildDiscordId: message.guild.id,
         modifyPoints: gambleAmount * -1,
       });
 
@@ -139,6 +140,7 @@ export const rouletteCommand: Command = {
 
     const userWon = await dataSources.userDS.tryModifyCurrency({
       userDiscordId: message.author.id,
+      guildDiscordId: message.guild.id,
       modifyPoints,
     });
 

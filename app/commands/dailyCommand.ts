@@ -77,6 +77,7 @@ export const dailyCommand: Command = {
 
     const dailyAmount = dailyAmountBase * multiplier;
     const userUpdated = await dataSources.userDS.tryModifyCurrency({
+      guildDiscordId: message.guild.id,
       userDiscordId: message.author.id,
       modifyPoints: dailyAmount,
       updateDailyClaimed: true,

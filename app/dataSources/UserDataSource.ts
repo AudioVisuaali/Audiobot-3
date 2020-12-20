@@ -10,6 +10,7 @@ export type UserTable = {
   id: number;
   UUID: string;
   discordId: Snowflake;
+  guildDiscordId: Snowflake;
   points: number;
   stock: number;
   stockMinCompoundAmount: number;
@@ -26,6 +27,7 @@ export class UserDataSource extends DataSourceWithContext {
       id: row.id,
       UUID: row.uuid,
       discordId: row.discordId,
+      guildDiscordId: row.guildDiscordId,
       points: row.points,
       stock: row.stock,
       stockMinCompoundAmount: row.stockMinCompoundAmount,
@@ -37,9 +39,15 @@ export class UserDataSource extends DataSourceWithContext {
     };
   }
 
-  public async getUser(opts: { userDiscordId: Snowflake }) {
+  public async getUser(opts: {
+    userDiscordId: Snowflake;
+    guildDiscordId: Snowflake;
+  }) {
     const user = await this.knex<UserTableRaw>(Table.USERS)
-      .where({ discordId: opts.userDiscordId })
+      .where({
+        discordId: opts.userDiscordId,
+        guildDiscordId: opts.guildDiscordId,
+      })
       .first();
 
     return user ? this.formatRow(user) : null;
@@ -75,6 +83,7 @@ export class UserDataSource extends DataSourceWithContext {
 
   public async tryModifyCurrency(opts: {
     userDiscordId: Snowflake;
+    guildDiscordId: Snowflake;
     modifyPoints?: number;
     modifyStock?: number;
     modifyTokens?: number;
@@ -84,7 +93,10 @@ export class UserDataSource extends DataSourceWithContext {
     const user = await this.tryGetUser({ userDiscordId: opts.userDiscordId });
 
     const updatedUsers = await this.knex<UserTableRaw>(Table.USERS)
-      .where({ discordId: opts.userDiscordId })
+      .where({
+        discordId: opts.userDiscordId,
+        guildDiscordId: opts.guildDiscordId,
+      })
       .update({
         updatedAt: new Date(),
         ...(opts.modifyStockMinCompoundAmount
@@ -112,7 +124,10 @@ export class UserDataSource extends DataSourceWithContext {
     return this.formatRow(updatedUsers[0]);
   }
 
-  public async createUser(opts: { userDiscordId: Snowflake }) {
+  public async createUser(opts: {
+    userDiscordId: Snowflake;
+    guildDiscordId: Snowflake;
+  }) {
     const servers = await this.knex<UserTableRaw>(Table.USERS)
       .insert({
         uuid: uuidv4(),
@@ -128,14 +143,21 @@ export class UserDataSource extends DataSourceWithContext {
     return this.formatRow(servers[0]);
   }
 
-  public async verifyUser(opts: { userDiscordId: Snowflake }) {
-    const user = await this.getUser({ userDiscordId: opts.userDiscordId });
+  public async verifyUser(opts: {
+    userDiscordId: Snowflake;
+    guildDiscordId: Snowflake;
+  }) {
+    const user = await this.getUser({
+      userDiscordId: opts.userDiscordId,
+      guildDiscordId: opts.guildDiscordId,
+    });
 
     if (user) {
       return user;
     }
 
     return await this.createUser({
+      guildDiscordId: opts.guildDiscordId,
       userDiscordId: opts.userDiscordId,
     });
   }

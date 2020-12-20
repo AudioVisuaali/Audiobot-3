@@ -60,6 +60,7 @@ const handleMessageWorker = async (opts: {
 
   await context.dataSources.userDS.verifyUser({
     userDiscordId: message.author.id,
+    guildDiscordId: message.guild.id,
   });
 
   const [commandName, ...args] = inputUtils.getMessageCommandAndArgs({
