@@ -40,6 +40,9 @@ class TableUtils {
       case CurrencyHistoryActionType.TRANSFER:
         return "Transfer";
 
+      case CurrencyHistoryActionType.OWNER_MODIFY:
+        return "Server owner";
+
       default:
         return opts.actionType;
     }

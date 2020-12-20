@@ -59,6 +59,7 @@ export enum CurrencyHistoryActionType {
   TRANSFER = "transfer",
   FISHING = "fishing",
   FISHING_BAIT = "fishingBait",
+  OWNER_MODIFY = "ownerModify",
 }
 
 export enum CurrencyHistoryCurrencyType {

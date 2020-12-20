@@ -2,6 +2,7 @@ import { Guild, Message } from "discord.js";
 
 import { currencyCommand } from "./currencyCommand";
 import { fishingCommand } from "./fishingCommand";
+import { modifyPointsCommand } from "./modifyPointsCommand";
 import { topCommand } from "./topCommand";
 
 import { avatarCommand } from "~/commands/avatarCommand";
@@ -110,6 +111,7 @@ export const commands: Command[] = [
   currencyCommand,
   fishingCommand,
   topCommand,
+  modifyPointsCommand,
   pingCommand,
 ];
 

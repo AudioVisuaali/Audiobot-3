@@ -18,6 +18,7 @@ export const pointsCommand: Command = {
 
     const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
+      guildDiscordId: message.guild.id,
     });
 
     const guild = await dataSources.guildDS.tryGetGuild({

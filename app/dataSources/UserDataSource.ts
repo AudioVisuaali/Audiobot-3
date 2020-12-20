@@ -53,9 +53,15 @@ export class UserDataSource extends DataSourceWithContext {
     return user ? this.formatRow(user) : null;
   }
 
-  public async tryGetUser(opts: { userDiscordId: Snowflake }) {
+  public async tryGetUser(opts: {
+    userDiscordId: Snowflake;
+    guildDiscordId: Snowflake;
+  }) {
     const user = await this.knex<UserTableRaw>(Table.USERS)
-      .where({ discordId: opts.userDiscordId })
+      .where({
+        discordId: opts.userDiscordId,
+        guildDiscordId: opts.guildDiscordId,
+      })
       .first();
 
     if (!user) {
@@ -90,7 +96,10 @@ export class UserDataSource extends DataSourceWithContext {
     modifyStockMinCompoundAmount?: number;
     updateDailyClaimed?: boolean;
   }) {
-    const user = await this.tryGetUser({ userDiscordId: opts.userDiscordId });
+    const user = await this.tryGetUser({
+      userDiscordId: opts.userDiscordId,
+      guildDiscordId: opts.guildDiscordId,
+    });
 
     const updatedUsers = await this.knex<UserTableRaw>(Table.USERS)
       .where({

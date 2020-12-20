@@ -14,6 +14,7 @@ export const tokensCommand: Command = {
   async execute(message, _, { dataSources }) {
     const user = await dataSources.userDS.tryGetUser({
       userDiscordId: message.author.id,
+      guildDiscordId: message.guild.id,
     });
 
     const embed = responseUtils
