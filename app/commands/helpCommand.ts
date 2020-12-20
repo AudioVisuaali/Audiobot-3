@@ -28,7 +28,7 @@ export const helpCommand: Command = {
   emoji: "📖",
   name: "Help",
   command: "help",
-  aliases: ["heelp"],
+  aliases: ["heelp", "commands"],
   syntax: "<command?>",
   examples: ["", "help"],
   isAdmin: false,
