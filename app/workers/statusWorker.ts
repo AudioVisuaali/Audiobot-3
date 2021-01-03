@@ -9,11 +9,13 @@ export const statusWorker = async (opts: {
   logger: Logger;
 }) => {
   while (true) {
-    const { usersCount } = statusUtils.getTotalServersAndUsers({
+    const { usersCount, serversCount } = statusUtils.getTotalServersAndUsers({
       client: opts.client,
     });
 
-    opts.client.user?.setActivity(`Serving ${usersCount} users`);
+    opts.client.user?.setActivity(
+      `Serving ${usersCount} users on ${serversCount} servers`,
+    );
     opts.logger.info("Updated bot status");
     await timeUtils.sleep(60000);
   }
