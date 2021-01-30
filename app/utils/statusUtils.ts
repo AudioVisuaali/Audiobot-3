@@ -17,7 +17,7 @@ class StatusUtils {
 
     opts.client.guilds.cache.forEach((guild) => {
       serversCount += 1;
-      usersCount += guild.memberCount;
+      usersCount += guild.memberCount ?? 0;
     });
 
     return { serversCount, usersCount };
