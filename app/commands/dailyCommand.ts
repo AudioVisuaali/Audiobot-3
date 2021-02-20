@@ -105,13 +105,15 @@ export const dailyCommand: Command = {
       useBold: true,
     });
 
+    const currencyName = responseUtils.getPointsDisplayName({
+      guild,
+    });
+
     const embed = responseUtils
       .positive({ discordUser: message.author })
-      .setTitle(`📅 + ${dailyAmount} memes`)
+      .setTitle(`📅 + ${dailyAmount} ${currencyName}`)
       .setDescription(
-        `You redeemed your daily ${responseUtils.getPointsDisplayName({
-          guild,
-        })}${extra}! You now have ${currentPoints}`,
+        `You redeemed your daily ${currencyName}${extra}! You now have ${currentPoints}`,
       );
 
     return await message.channel.send(embed);
