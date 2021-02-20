@@ -119,7 +119,7 @@ export const slotsCommand: Command = {
         .setTitle("🎰 Slotmachine")
         .addField("Multipliers", valuesMessage);
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const user = await dataSources.userDS.tryGetUser({
@@ -141,7 +141,7 @@ export const slotsCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     // VALUE TOO LOW
@@ -152,7 +152,7 @@ export const slotsCommand: Command = {
         guild,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     // NOT ENOUGH MONEY
@@ -163,7 +163,7 @@ export const slotsCommand: Command = {
         guild,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const isInCasinoChannel = guild.casinoChannelId
@@ -240,7 +240,7 @@ export const slotsCommand: Command = {
 
       const mappedMultipliers = matchesAll.map(formatMultiplier);
       msg3.addField("Multiplier", mappedMultipliers.join("\n"));
-      dataSources.currencyHistoryDS.addCurrencyHistory({
+      await dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
         discordGuildId: message.guild.id,
@@ -253,7 +253,7 @@ export const slotsCommand: Command = {
         hasProfited: true,
       });
     } else {
-      dataSources.currencyHistoryDS.addCurrencyHistory({
+      await dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
         discordGuildId: message.guild.id,

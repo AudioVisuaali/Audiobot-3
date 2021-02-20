@@ -12,7 +12,7 @@ export const diceCommand: Command = {
   isAdmin: false,
   description: "Roll the dice",
 
-  execute(message, args) {
+  async execute(message, args) {
     if (args.length === 0) {
       const rolled = mathUtils.getRandomArbitrary(1, 6);
 
@@ -20,13 +20,13 @@ export const diceCommand: Command = {
         .positive({ discordUser: message.author })
         .setDescription(`🎲 Dice rolled ${rolled}`);
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const maxValue = mathUtils.parseStringToNumber(args[0]);
 
     if (maxValue === null) {
-      return message.channel.send(":game_die: **| Invalid number**");
+      return await message.channel.send(":game_die: **| Invalid number**");
     }
 
     const rolled = mathUtils.getRandomArbitrary(1, maxValue);
@@ -35,6 +35,6 @@ export const diceCommand: Command = {
       .positive({ discordUser: message.author })
       .setDescription(`🎲 Dice rolled ${rolled}`);
 
-    return message.channel.send(embed);
+    return await message.channel.send(embed);
   },
 };

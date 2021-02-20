@@ -33,6 +33,6 @@ export const urbanCommand: Command = {
       .addField(":thumbsup:", first.thumbs_up, true)
       .addField(":thumbsdown:", first.thumbs_down, true);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

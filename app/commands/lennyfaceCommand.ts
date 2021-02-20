@@ -18,6 +18,6 @@ export const lennyfaceCommand: Command = {
       lennyFacesUtils.length - 1,
     );
 
-    message.channel.send(lennyFacesUtils[randomPosition]);
+    await message.channel.send(lennyFacesUtils[randomPosition]);
   },
 };

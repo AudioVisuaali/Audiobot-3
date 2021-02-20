@@ -29,6 +29,6 @@ export const eightBallCommand: Command = {
       .positive({ discordUser: message.author })
       .setDescription(`🎱 ${eightBallUtils[randomIndex]}`);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

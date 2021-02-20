@@ -54,6 +54,6 @@ export const stockCommand: Command = {
       .addField("Volume", Volume.value, true)
       .addField("Market Cap", MarketCap.value, true);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

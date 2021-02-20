@@ -21,6 +21,6 @@ export const tokensCommand: Command = {
       .positive({ discordUser: message.author })
       .setTitle(`🏆 ${user.tokens} tokens`);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

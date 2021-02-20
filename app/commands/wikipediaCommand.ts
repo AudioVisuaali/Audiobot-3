@@ -11,6 +11,6 @@ export const wikipediaCommand: Command = {
   description: "Search on wikipedia",
 
   async execute(message) {
-    message.channel.send("Pong");
+    await message.channel.send("Pong");
   },
 };

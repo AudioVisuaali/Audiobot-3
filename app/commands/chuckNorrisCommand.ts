@@ -18,6 +18,6 @@ export const chuckNorrisCommand: Command = {
       .positive({ discordUser: message.author })
       .setDescription(chuckNorris.value.joke);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

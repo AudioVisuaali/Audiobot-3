@@ -104,7 +104,7 @@ export const transferCommand: Command = {
       modifyPoints: transferrableAmount,
     });
 
-    dataSources.currencyHistoryDS.addCurrencyHistory({
+    await dataSources.currencyHistoryDS.addCurrencyHistory({
       userId: user.id,
       guildId: guild.id,
       discordUserId: message.author.id,
@@ -117,7 +117,7 @@ export const transferCommand: Command = {
       hasProfited: false,
     });
 
-    dataSources.currencyHistoryDS.addCurrencyHistory({
+    await dataSources.currencyHistoryDS.addCurrencyHistory({
       userId: receivingUser.id,
       guildId: guild.id,
       discordUserId: userMentioned.id,
@@ -161,6 +161,6 @@ export const transferCommand: Command = {
         [`${fromUserQuote} ${fromUserNewBalancePoints}`].join("\n"),
       );
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

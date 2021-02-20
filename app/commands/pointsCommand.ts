@@ -49,6 +49,6 @@ export const pointsCommand: Command = {
         `You have ${userPoints} and have invested ${userStockPoints}`,
       );
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

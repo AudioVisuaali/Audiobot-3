@@ -30,6 +30,6 @@ export const spongebobCommand: Command = {
       .setThumbnail(spongebob)
       .setDescription(letter);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

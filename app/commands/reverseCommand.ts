@@ -18,6 +18,6 @@ export const reverseCommand: Command = {
       .positive({ discordUser: message.author })
       .setDescription(letter);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

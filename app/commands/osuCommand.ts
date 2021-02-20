@@ -51,6 +51,6 @@ export const osuCommand: Command = {
         ].join(" / "),
       );
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

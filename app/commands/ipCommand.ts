@@ -50,6 +50,6 @@ export const ipCommand: Command = {
         },
       );
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

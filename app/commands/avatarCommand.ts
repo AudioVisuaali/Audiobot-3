@@ -20,6 +20,6 @@ export const avatarCommand: Command = {
           message.author.defaultAvatarURL,
       );
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

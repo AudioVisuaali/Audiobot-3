@@ -21,7 +21,7 @@ export const genderCommand: Command = {
     });
 
     if (!genderResponse.gender) {
-      return message.channel.send(
+      return await message.channel.send(
         `No data was found for ${genderResponse.name}!`,
       );
     }
@@ -35,6 +35,6 @@ export const genderCommand: Command = {
         }** being a ${genderResponse.gender}!`,
       );
 
-    return message.channel.send(embed);
+    return await message.channel.send(embed);
   },
 };

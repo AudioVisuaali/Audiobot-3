@@ -23,7 +23,7 @@ export const casinoCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     if (args.length < 1) {
@@ -47,7 +47,7 @@ export const casinoCommand: Command = {
           .setTitle("Admin / Casino")
           .setDescription("Casino room has ben succesfully removed");
 
-        return message.channel.send(embed);
+        return await message.channel.send(embed);
       }
 
       // eslint-disable-next-line switch-case/no-case-curly
@@ -60,7 +60,7 @@ export const casinoCommand: Command = {
             guild.casinoChannelId ? `<#${guild.casinoChannelId}>` : "_None_",
           );
 
-        return message.channel.send(embed);
+        return await message.channel.send(embed);
       }
 
       // eslint-disable-next-line switch-case/no-case-curly
@@ -70,7 +70,7 @@ export const casinoCommand: Command = {
             discordUser: message.author,
           });
 
-          return message.channel.send(embed);
+          return await message.channel.send(embed);
         }
 
         const channelMention = inputUtils.getChannelMention({
@@ -83,7 +83,7 @@ export const casinoCommand: Command = {
             discordUser: message.author,
           });
 
-          return message.channel.send(embed);
+          return await message.channel.send(embed);
         }
 
         if (channelMention.guild.id !== message.guild.id) {
@@ -91,7 +91,7 @@ export const casinoCommand: Command = {
             discordUser: message.author,
           });
 
-          return message.channel.send(embed);
+          return await message.channel.send(embed);
         }
 
         const modifiedGuild = await dataSources.guildDS.modifyGuild({
@@ -110,7 +110,7 @@ export const casinoCommand: Command = {
               : modifiedGuild.casinoChannelId,
           );
 
-        return message.channel.send(embed);
+        return await message.channel.send(embed);
       }
     }
   },

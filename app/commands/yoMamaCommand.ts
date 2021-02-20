@@ -18,6 +18,6 @@ export const yoMamaCommand: Command = {
       .positive({ discordUser: message.author })
       .setDescription(joke);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

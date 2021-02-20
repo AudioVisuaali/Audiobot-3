@@ -18,6 +18,6 @@ export const punCommand: Command = {
       .positive({ discordUser: message.author })
       .setDescription(pun.Pun);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

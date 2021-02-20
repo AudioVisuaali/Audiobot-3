@@ -19,6 +19,6 @@ export const fingerporiCommand: Command = {
       .positive({ discordUser: message.author })
       .setImage(fingerporiURL);
 
-    return message.channel.send(embed);
+    return await message.channel.send(embed);
   },
 };

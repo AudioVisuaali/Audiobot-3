@@ -130,7 +130,7 @@ export const fishingCommand: Command = {
           }),
         );
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const bait = args.length ? getBaitDiscount(args[0]) : null;
@@ -140,7 +140,7 @@ export const fishingCommand: Command = {
         .invalidParameter({ discordUser: message.author })
         .setDescription(`Bait **${args[0]}** was not found`);
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     if (bait) {
@@ -149,10 +149,10 @@ export const fishingCommand: Command = {
           .insufficientFunds({ discordUser: message.author, guild, user })
           .setDescription("You dont have currency to purchase the bait");
 
-        return message.channel.send(embed);
+        return await message.channel.send(embed);
       }
 
-      dataSources.currencyHistoryDS.addCurrencyHistory({
+      await dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
         discordGuildId: message.guild.id,
@@ -180,7 +180,7 @@ export const fishingCommand: Command = {
     const fishingDurationMS = mathUtils.getRandomArbitrary(100000, 30000);
     await timeUtils.sleep(fishingDurationMS);
 
-    fishingMessage.delete();
+    await fishingMessage.delete();
 
     const fishingItem = getRandomItem(bait?.changeDiscount);
 
@@ -203,8 +203,8 @@ export const fishingCommand: Command = {
 
     const sellMessage = await message.channel.send(sellEmbed);
 
-    sellMessage.react(ReactType.Success);
-    sellMessage.react(ReactType.Failure);
+    await sellMessage.react(ReactType.Success);
+    await sellMessage.react(ReactType.Failure);
 
     const reactionCollection = await sellMessage.awaitReactions(
       (reaction) =>
@@ -213,7 +213,7 @@ export const fishingCommand: Command = {
       { max: 1, time: 15000 },
     );
 
-    sellMessage.delete();
+    await sellMessage.delete();
 
     const fishingItemPoints = responseUtils.formatCurrency({
       guild,
@@ -228,7 +228,7 @@ export const fishingCommand: Command = {
         modifyPoints: fishingItem.value,
       });
 
-      dataSources.currencyHistoryDS.addCurrencyHistory({
+      await dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
         discordGuildId: message.guild.id,
@@ -261,7 +261,7 @@ export const fishingCommand: Command = {
         embed.addField("Bait", bait.emoji, true);
       }
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     if (reactionCollection.get(ReactType.Failure)) {
@@ -277,7 +277,7 @@ export const fishingCommand: Command = {
         embed.addField("Bait", bait.emoji, true);
       }
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const embed = responseUtils
@@ -291,6 +291,6 @@ export const fishingCommand: Command = {
       embed.addField("Bait", bait.emoji, true);
     }
 
-    return message.channel.send(embed);
+    return await message.channel.send(embed);
   },
 };

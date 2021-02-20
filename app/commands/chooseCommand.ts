@@ -20,7 +20,7 @@ export const chooseCommand: Command = {
         .negative({ discordUser: message.author })
         .setDescription("You need to provide options");
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const position = mathUtils.getRandomArbitrary(0, options.length - 1);
@@ -29,6 +29,6 @@ export const chooseCommand: Command = {
       .positive({ discordUser: message.author })
       .setTitle(`❓ I choose ${options[position]}`);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

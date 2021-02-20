@@ -45,7 +45,7 @@ export const dailyCommand: Command = {
     }
 
     if (args.length !== 0) {
-      return message.channel.send("Invalid parameters");
+      return await message.channel.send("Invalid parameters");
     }
 
     const guild = await dataSources.guildDS.tryGetGuild({
@@ -67,7 +67,7 @@ export const dailyCommand: Command = {
           availableAt: dailyAvailableTime,
         });
 
-        return message.channel.send(embed);
+        return await message.channel.send(embed);
       }
     }
 
@@ -86,7 +86,7 @@ export const dailyCommand: Command = {
 
     const extra = explainer ? `, __${explainer}__` : "";
 
-    dataSources.currencyHistoryDS.addCurrencyHistory({
+    await dataSources.currencyHistoryDS.addCurrencyHistory({
       userId: user.id,
       guildId: guild.id,
       discordUserId: message.author.id,
@@ -114,6 +114,6 @@ export const dailyCommand: Command = {
         })}${extra}! You now have ${currentPoints}`,
       );
 
-    return message.channel.send(embed);
+    return await message.channel.send(embed);
   },
 };

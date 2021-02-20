@@ -19,6 +19,6 @@ export const dadJokeCommand: Command = {
       .setTitle("👨 Dad joke!")
       .setDescription(dadJoke.attachments[0].text);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

@@ -35,6 +35,6 @@ export const serverCommand: Command = {
       embed.setThumbnail(serverUrl);
     }
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

@@ -30,6 +30,6 @@ export const numberfactCommand: Command = {
       .setTitle(`🔢 Numberfact #${number}`)
       .setDescription(fact);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

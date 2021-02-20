@@ -31,7 +31,7 @@ export const currencyCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     switch (args[0]) {
@@ -71,6 +71,6 @@ export const currencyCommand: Command = {
       .setTitle("💲 You have updated currency name")
       .setDescription(description);
 
-    return message.channel.send(embed);
+    return await message.channel.send(embed);
   },
 };

@@ -34,6 +34,6 @@ export const dogPictureCommand: Command = {
       .setTitle("A wild dog appears!")
       .setImage(dogPicture.url);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

@@ -32,7 +32,7 @@ export const prefixCommand: Command = {
         .setTitle("Prefix")
         .addField("Change your prefix by", `${prefix}prefix <value>`);
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const newPrefix = args.join(" ");
@@ -46,7 +46,7 @@ export const prefixCommand: Command = {
         )
         .addField("Your prefix is too long", newPrefix);
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     await dataSources.guildDS.modifyGuild({
@@ -60,6 +60,6 @@ export const prefixCommand: Command = {
       .addField("Your new prefix", newPrefix)
       .addField("Example usage", `${newPrefix}prefix`);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

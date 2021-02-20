@@ -63,6 +63,6 @@ export const weatherCommand: Command = {
         true,
       );
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

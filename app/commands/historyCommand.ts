@@ -78,7 +78,7 @@ export const historyCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     if (!currencyHistories.length) {
@@ -87,7 +87,7 @@ export const historyCommand: Command = {
         .setTitle("📄 No data found ¯\\_(ツ)_/¯")
         .setDescription("Start by playing minigames or claiming daily bonuses");
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const displayHistories = await tableUtils.formatHistories({
@@ -110,6 +110,8 @@ export const historyCommand: Command = {
 
     const title = `📝 ${authorQuote} Your current balance is ${currentBalancePoints}`;
 
-    message.channel.send([title, "```", table.toString(), "```"].join("\n"));
+    await message.channel.send(
+      [title, "```", table.toString(), "```"].join("\n"),
+    );
   },
 };

@@ -82,6 +82,8 @@ export const topCommand: Command = {
 
     const title = `📝 Stats for __${message.guild.name}__ in order **${type}**`;
 
-    message.channel.send([title, "```", table.toString(), "```"].join("\n"));
+    await message.channel.send(
+      [title, "```", table.toString(), "```"].join("\n"),
+    );
   },
 };

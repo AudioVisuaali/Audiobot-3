@@ -11,6 +11,6 @@ export const pingCommand: Command = {
   description: "Ping!",
 
   async execute(message) {
-    message.channel.send("🏓 Pong");
+    await message.channel.send("🏓 Pong");
   },
 };

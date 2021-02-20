@@ -61,7 +61,7 @@ export const helpCommand: Command = {
           .setTitle(`📖 Help => ${name}`)
           .setDescription(`Could not find module: ${args[0]}`);
 
-        return message.channel.send(embed);
+        return await message.channel.send(embed);
       }
 
       const examples = command.examples.length
@@ -81,7 +81,7 @@ export const helpCommand: Command = {
         embed.addField("Aliases", command.aliases.join("\n"));
       }
 
-      message.channel.send(embed);
+      await message.channel.send(embed);
     }
 
     if (pageIndexCode !== null) {
@@ -104,7 +104,7 @@ export const helpCommand: Command = {
           .invalidParameter({ discordUser: message.author })
           .setDescription("Invalid page index");
 
-        return message.channel.send(embed);
+        return await message.channel.send(embed);
       }
 
       const startIndex = (pageIndex - 1) * COMMAND_AMOUNT_PER_PAGE;
@@ -141,7 +141,7 @@ export const helpCommand: Command = {
         embed.addField("Next page", `⏩ ${prefix}help ${pageIndex + 1}`, false);
       }
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
   },
 };

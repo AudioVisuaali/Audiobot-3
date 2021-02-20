@@ -19,6 +19,6 @@ export const catFactCommand: Command = {
       .setTitle("Random cat fact!")
       .setDescription(catfact.fact);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

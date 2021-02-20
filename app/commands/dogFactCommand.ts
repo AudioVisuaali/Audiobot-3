@@ -19,6 +19,6 @@ export const dogFactCommand: Command = {
       .setTitle("Random dog fact!")
       .setDescription(dogfact.facts[0]);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

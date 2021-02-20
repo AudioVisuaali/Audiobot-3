@@ -24,7 +24,7 @@ export const modifyPointsCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     if (args.length !== 3) {
@@ -32,7 +32,7 @@ export const modifyPointsCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const mentionedUser = inputUtils.getUserMention({
@@ -45,7 +45,7 @@ export const modifyPointsCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const amount = mathUtils.parseStringToNumber(args[2]);
@@ -55,7 +55,7 @@ export const modifyPointsCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const user = await dataSources.userDS.tryGetUser({
@@ -70,7 +70,7 @@ export const modifyPointsCommand: Command = {
         .invalidCurrency({ discordUser: message.author })
         .setDescription("Users new currency cannot be negative");
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const guild = await dataSources.guildDS.tryGetGuild({
@@ -94,7 +94,7 @@ export const modifyPointsCommand: Command = {
         .invalidParameter({ discordUser: message.author })
         .setDescription(`You can only add from ${minPonts} to ${maxPonts}`);
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     if (!["add", "remove"].includes(args[0])) {
@@ -102,7 +102,7 @@ export const modifyPointsCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const modifiedUser = await dataSources.userDS.tryModifyCurrency({
@@ -136,6 +136,6 @@ export const modifyPointsCommand: Command = {
       .setDescription(responseUtils.quoteUser({ user: mentionedUser }))
       .addField("New balance", newBalancePoints);
 
-    return message.channel.send(embed);
+    return await message.channel.send(embed);
   },
 };

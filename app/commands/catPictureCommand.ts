@@ -19,6 +19,6 @@ export const catPictureCommand: Command = {
       .setTitle("🐈 A wild cat appears!")
       .setImage(catpicture.file);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

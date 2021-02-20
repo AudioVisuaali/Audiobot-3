@@ -31,6 +31,6 @@ export const statsCommand: Command = {
       .setDescription(`Bot has been on for ${uptimeString}`)
       .addField("Restart count", data ? data.restarts : 0);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };

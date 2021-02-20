@@ -63,7 +63,7 @@ export const investCommand: Command = {
         .addField("Invested", userInvestedPoints, true)
         .addField("Next compound worth", nextCompoundPoints, true);
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     if (args.length !== 2) {
@@ -71,7 +71,7 @@ export const investCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     if (
@@ -83,7 +83,7 @@ export const investCommand: Command = {
           "Invalid action name. You can only **remove** or **add*",
         );
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     switch (args[0]) {
@@ -100,7 +100,7 @@ export const investCommand: Command = {
             discordUser: message.author,
           });
 
-          return message.channel.send(embed);
+          return await message.channel.send(embed);
         }
 
         if (transferAmount > user.points) {
@@ -110,7 +110,7 @@ export const investCommand: Command = {
             guild,
           });
 
-          return message.channel.send(embed);
+          return await message.channel.send(embed);
         }
 
         const updatedUser = await dataSources.userDS.tryModifyCurrency({
@@ -148,7 +148,7 @@ export const investCommand: Command = {
             ].join("\n"),
           );
 
-        return message.channel.send(embed);
+        return await message.channel.send(embed);
       }
 
       // eslint-disable-next-line switch-case/no-case-curly
@@ -165,7 +165,7 @@ export const investCommand: Command = {
             discordUser: message.author,
           });
 
-          return message.channel.send(embed);
+          return await message.channel.send(embed);
         }
 
         if (transferAmount > user.stock) {
@@ -175,7 +175,7 @@ export const investCommand: Command = {
             guild,
           });
 
-          return message.channel.send(embed);
+          return await message.channel.send(embed);
         }
 
         const minCompoundChanges =
@@ -224,7 +224,7 @@ export const investCommand: Command = {
             ].join("\n"),
           );
 
-        return message.channel.send(embed);
+        return await message.channel.send(embed);
       }
     }
   },

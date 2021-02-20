@@ -24,17 +24,17 @@ export const rollCommand: Command = {
 
     switch (numbers.length) {
       case 0:
-        return message.channel.send(
+        return await message.channel.send(
           `**:game_die: ${mathUtils.getRandomArbitrary(0, 99)}**`,
         );
 
       case 1:
-        return message.channel.send(
+        return await message.channel.send(
           `**:game_die: ${mathUtils.getRandomArbitrary(0, numbers[0])}**`,
         );
 
       case 2:
-        return message.channel.send(
+        return await message.channel.send(
           `**:game_die: ${mathUtils.getRandomArbitrary(
             numbers[0],
             numbers[1],

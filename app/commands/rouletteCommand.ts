@@ -35,7 +35,7 @@ export const rouletteCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const guild = await dataSources.guildDS.tryGetGuild({
@@ -57,7 +57,7 @@ export const rouletteCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     // VALUE TOO LOW
@@ -66,7 +66,7 @@ export const rouletteCommand: Command = {
         discordUser: message.author,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     // NOT ENOUGH MONEY
@@ -77,7 +77,7 @@ export const rouletteCommand: Command = {
         guild,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     // Rigged
@@ -115,7 +115,7 @@ export const rouletteCommand: Command = {
           `You have lost ${gambleAmountPointsBold}, you now have ${userLostPoints}`,
         );
 
-      dataSources.currencyHistoryDS.addCurrencyHistory({
+      await dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
         discordUserId: message.author.id,
@@ -128,7 +128,7 @@ export const rouletteCommand: Command = {
         hasProfited: false,
       });
 
-      return message.channel.send(embed);
+      return await message.channel.send(embed);
     }
 
     const { percent, bonusCurrent } = mathUtils.getBonusCount({
@@ -187,7 +187,7 @@ export const rouletteCommand: Command = {
       amount: bonusCurrent,
     });
 
-    dataSources.currencyHistoryDS.addCurrencyHistory({
+    await dataSources.currencyHistoryDS.addCurrencyHistory({
       userId: user.id,
       guildId: guild.id,
       discordUserId: message.author.id,
@@ -202,6 +202,6 @@ export const rouletteCommand: Command = {
       hasProfited: true,
     });
 
-    return message.channel.send(embed);
+    return await message.channel.send(embed);
   },
 };

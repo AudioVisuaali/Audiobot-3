@@ -49,6 +49,6 @@ export const bitcoinCommand: Command = {
       .setThumbnail(btcLogoUrl)
       .addFields(...bpis);
 
-    message.channel.send(embed);
+    await message.channel.send(embed);
   },
 };
