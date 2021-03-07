@@ -1,28 +1,16 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
-export const pointsCommand: Command = {
-  emoji: "💸",
-  name: "Points",
-  command: "points",
-  aliases: ["memes"],
-  syntax: "",
-  examples: [],
-  isAdmin: false,
-  description: "Your current financial status",
-
-  async execute(message, _, { dataSources }) {
-    if (!message.guild) {
-      return;
-    }
-
-    const user = await dataSources.userDS.tryGetUser({
-      userDiscordId: message.author.id,
-      guildDiscordId: message.guild.id,
+class PointsCommand extends AbstractCommand {
+  async execute() {
+    const user = await this.dataSources.userDS.tryGetUser({
+      userDiscordId: this.message.author.id,
+      guildDiscordId: this.message.guild.id,
     });
 
-    const guild = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild?.id,
+    const guild = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild?.id,
     });
 
     const totalPoints = responseUtils.formatCurrency({
@@ -43,12 +31,30 @@ export const pointsCommand: Command = {
     });
 
     const embed = responseUtils
-      .positive({ discordUser: message.author })
+      .positive({ discordUser: this.message.author })
       .setTitle(totalPoints)
       .setDescription(
-        `You have ${userPoints} and have invested ${userStockPoints}`,
+        this.formatMessage("commandPointsDescription", {
+          userPoints,
+          investedPoints: userStockPoints,
+        }),
       );
 
-    await message.channel.send(embed);
+    await this.message.channel.send(embed);
+  }
+}
+
+export const pointsCommand: Command = {
+  emoji: "💸",
+  name: "Points",
+  command: "points",
+  aliases: ["memes"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
+  description: "Your current financial status",
+
+  getCommand(payload) {
+    return new PointsCommand(payload);
   },
 };

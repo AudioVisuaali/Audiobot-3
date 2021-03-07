@@ -1,6 +1,33 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
+
+class ChooseCommand extends AbstractCommand {
+  getOptions() {
+    return this.args.join("").split("|");
+  }
+
+  async execute() {
+    const options = this.getOptions();
+
+    if (options.length === 0) {
+      const embed = responseUtils
+        .negative({ discordUser: this.message.author })
+        .setDescription("You need to provide options");
+
+      return await this.message.channel.send(embed);
+    }
+
+    const position = mathUtils.getRandomArbitrary(0, options.length - 1);
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle(`❓ I choose ${options[position]}`);
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const chooseCommand: Command = {
   emoji: "❓",
@@ -12,23 +39,7 @@ export const chooseCommand: Command = {
   isAdmin: false,
   description: "Choose a random option",
 
-  async execute(message, args) {
-    const options = args.join("").split("|");
-
-    if (options.length === 0) {
-      const embed = responseUtils
-        .negative({ discordUser: message.author })
-        .setDescription("You need to provide options");
-
-      return await message.channel.send(embed);
-    }
-
-    const position = mathUtils.getRandomArbitrary(0, options.length - 1);
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setTitle(`❓ I choose ${options[position]}`);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new ChooseCommand(payload);
   },
 };

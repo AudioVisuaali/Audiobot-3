@@ -1,5 +1,6 @@
 import Table from "table-layout";
 
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { DataSources } from "~/dataSources/dataSources";
 import { responseUtils } from "~/utils/responseUtils";
@@ -42,52 +43,39 @@ const getHistoryData = async (opts: {
   return null;
 };
 
-export const historyCommand: Command = {
-  emoji: "📝",
-  name: "History",
-  command: "history",
-  aliases: ["gambling"],
-  syntax: "<win | lose>",
-  examples: ["", "win", "lose"],
-  isAdmin: false,
-  description: "Get your currency history",
-
-  async execute(message, args, { dataSources }) {
-    if (!message.guild) {
-      return;
-    }
-
-    const user = await dataSources.userDS.tryGetUser({
-      userDiscordId: message.author.id,
-      guildDiscordId: message.guild.id,
+class HistoryCommand extends AbstractCommand {
+  async execute() {
+    const user = await this.dataSources.userDS.tryGetUser({
+      userDiscordId: this.message.author.id,
+      guildDiscordId: this.message.guild.id,
     });
 
-    const guild = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild.id,
+    const guild = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild.id,
     });
 
     const currencyHistories = await getHistoryData({
-      dataSources,
-      guildId: message.guild.id,
-      authorId: message.author.id,
-      args,
+      dataSources: this.dataSources,
+      guildId: this.message.guild.id,
+      authorId: this.message.author.id,
+      args: this.args,
     });
 
     if (currencyHistories === null) {
       const embed = responseUtils.invalidParameter({
-        discordUser: message.author,
+        discordUser: this.message.author,
       });
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     if (!currencyHistories.length) {
       const embed = responseUtils
-        .neutral({ discordUser: message.author })
+        .neutral({ discordUser: this.message.author })
         .setTitle("📄 No data found ¯\\_(ツ)_/¯")
         .setDescription("Start by playing minigames or claiming daily bonuses");
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     const displayHistories = await tableUtils.formatHistories({
@@ -99,7 +87,7 @@ export const historyCommand: Command = {
     const table = new Table(displayHistories);
 
     const authorQuote = responseUtils.quoteUser({
-      user: message.author,
+      user: this.message.author,
     });
 
     const currentBalancePoints = responseUtils.formatCurrency({
@@ -110,8 +98,23 @@ export const historyCommand: Command = {
 
     const title = `📝 ${authorQuote} Your current balance is ${currentBalancePoints}`;
 
-    await message.channel.send(
+    await this.message.channel.send(
       [title, "```", table.toString(), "```"].join("\n"),
     );
+  }
+}
+
+export const historyCommand: Command = {
+  emoji: "📝",
+  name: "History",
+  command: "history",
+  aliases: ["gambling"],
+  syntax: "<win | lose>",
+  examples: ["", "win", "lose"],
+  isAdmin: false,
+  description: "Get your currency history",
+
+  getCommand(payload) {
+    return new HistoryCommand(payload);
   },
 };

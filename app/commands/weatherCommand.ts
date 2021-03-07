@@ -1,23 +1,15 @@
 import { DateTime } from "luxon";
 
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
-export const weatherCommand: Command = {
-  emoji: "☁️",
-  name: "Weather",
-  command: "weather",
-  aliases: [],
-  syntax: "<query>",
-  examples: ["UK", "US"],
-  isAdmin: false,
-  description: "Search places for weather",
+class WeatherCommand extends AbstractCommand {
+  async execute() {
+    const query = this.args.join(" ");
 
-  async execute(message, args, { services }) {
-    const query = args.join(" ");
-
-    const weather = await services.stats.getWeather({ query });
+    const weather = await this.services.stats.getWeather({ query });
 
     const sunrise = DateTime.fromSeconds(weather.sys.sunrise).toLocaleString(
       DateTime.TIME_24_SIMPLE,
@@ -42,27 +34,66 @@ export const weatherCommand: Command = {
     });
 
     const embed = responseUtils
-      .positive({ discordUser: message.author })
+      .positive({ discordUser: this.message.author })
       .setTitle(`${weather.name}, ${weather.sys.country}`)
       .setDescription(
         weather.weather
           .map((weat) => `${weat.main}, ${weat.description}`)
           .join("\n"),
       )
-      .addField("Current Temp", `${currentC} °C / ${currentF} °F`, true)
-      .addField("Max Temp", `${maxC} °C / ${maxF} °F`, true)
-      .addField("Min Temp", `${minC} °C / ${minF} °F`, true)
-      .addField("Wind speed", `${weather.wind.speed} m/s`, true)
-      .addField("Humidity", `${weather.main.humidity} %`, true)
-      .addField("Pressure", `${weather.main.pressure} hPa`, true)
-      .addField("Sunrise", sunrise, true)
-      .addField("Sunset", sunset, true)
       .addField(
-        "Long / Lat",
+        this.formatMessage("commandWeatherCurrentTemp"),
+        `${currentC} °C / ${currentF} °F`,
+        true,
+      )
+      .addField(
+        this.formatMessage("commandWeatherMaxTemp"),
+        `${maxC} °C / ${maxF} °F`,
+        true,
+      )
+      .addField(
+        this.formatMessage("commandWeatherMinTemp"),
+        `${minC} °C / ${minF} °F`,
+        true,
+      )
+      .addField(
+        this.formatMessage("commandWeatherWindSpeed"),
+        `${weather.wind.speed} m/s`,
+        true,
+      )
+      .addField(
+        this.formatMessage("commandWeatherHumidity"),
+        `${weather.main.humidity} %`,
+        true,
+      )
+      .addField(
+        this.formatMessage("commandWeatherPressure"),
+        `${weather.main.pressure} hPa`,
+        true,
+      )
+      .addField(this.formatMessage("commandWeatherSunrise"), sunrise, true)
+      .addField(this.formatMessage("commandWeatherSunset"), sunset, true)
+      .addField(
+        this.formatMessage("commandWeatherLongLat"),
         `${weather.coord.lon} / ${weather.coord.lat}`,
         true,
       );
 
-    await message.channel.send(embed);
+    await this.message.channel.send(embed);
+  }
+}
+
+export const weatherCommand: Command = {
+  emoji: "☁️",
+  name: "Weather",
+  command: "weather",
+  aliases: [],
+  syntax: "<query>",
+  examples: ["UK", "US"],
+  isAdmin: false,
+  description: "Search places for weather",
+
+  getCommand(payload) {
+    return new WeatherCommand(payload);
   },
 };

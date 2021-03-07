@@ -1,5 +1,18 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
+
+class PunCommand extends AbstractCommand {
+  async execute() {
+    const pun = await this.services.jokes.getPun();
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setDescription(pun.Pun);
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const punCommand: Command = {
   emoji: "✊",
@@ -11,13 +24,7 @@ export const punCommand: Command = {
   isAdmin: false,
   description: "Get a random pun",
 
-  async execute(message, _, { services }) {
-    const pun = await services.jokes.getPun();
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setDescription(pun.Pun);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new PunCommand(payload);
   },
 };

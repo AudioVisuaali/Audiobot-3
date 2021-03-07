@@ -1,3 +1,4 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import {
   Command,
   sortedModules,
@@ -24,29 +25,16 @@ const getPageOrName = (args: string[]) => {
   };
 };
 
-export const helpCommand: Command = {
-  emoji: "📖",
-  name: "Help",
-  command: "help",
-  aliases: ["heelp", "commands"],
-  syntax: "<command?>",
-  examples: ["", "help"],
-  isAdmin: false,
-  description: "Help menu",
-
+class HelpCommand extends AbstractCommand {
   // eslint-disable-next-line max-statements
-  async execute(message, args, { dataSources }) {
-    if (!message.guild) {
-      return;
-    }
+  async execute() {
+    const isOwner = this.message.guild.ownerID === this.message.author.id;
 
-    const isOwner = message.guild.ownerID === message.author.id;
-
-    const { prefix } = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild.id,
+    const { prefix } = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild.id,
     });
 
-    const { pageIndex: pageIndexCode, name } = getPageOrName(args);
+    const { pageIndex: pageIndexCode, name } = getPageOrName(this.args);
 
     if (name) {
       const command = allCommands.find(
@@ -57,11 +45,11 @@ export const helpCommand: Command = {
 
       if (!command) {
         const embed = responseUtils
-          .negative({ discordUser: message.author })
+          .negative({ discordUser: this.message.author })
           .setTitle(`📖 Help => ${name}`)
-          .setDescription(`Could not find module: ${args[0]}`);
+          .setDescription(`Could not find module: ${this.args[0]}`);
 
-        return await message.channel.send(embed);
+        return await this.message.channel.send(embed);
       }
 
       const examples = command.examples.length
@@ -71,7 +59,7 @@ export const helpCommand: Command = {
         : `${prefix}${command.command}`;
 
       const embed = responseUtils
-        .positive({ discordUser: message.author })
+        .positive({ discordUser: this.message.author })
         .setTitle(`📖 Help => ${command.name}`)
         .setDescription(command.description)
         .addField("Syntax", `${prefix}${command.command} ${command.syntax}`)
@@ -81,7 +69,7 @@ export const helpCommand: Command = {
         embed.addField("Aliases", command.aliases.join("\n"));
       }
 
-      await message.channel.send(embed);
+      await this.message.channel.send(embed);
     }
 
     if (pageIndexCode !== null) {
@@ -101,10 +89,10 @@ export const helpCommand: Command = {
 
       if (pageIndex < 1 || pageIndex > lastPageIndex) {
         const embed = responseUtils
-          .invalidParameter({ discordUser: message.author })
+          .invalidParameter({ discordUser: this.message.author })
           .setDescription("Invalid page index");
 
-        return await message.channel.send(embed);
+        return await this.message.channel.send(embed);
       }
 
       const startIndex = (pageIndex - 1) * COMMAND_AMOUNT_PER_PAGE;
@@ -113,7 +101,7 @@ export const helpCommand: Command = {
         .slice(0, COMMAND_AMOUNT_PER_PAGE);
 
       const embed = responseUtils
-        .positive({ discordUser: message.author })
+        .positive({ discordUser: this.message.author })
         .setTitle(`📖 Help > Page ${pageIndex}`)
         .setDescription(
           `You can get more info by doing ${prefix}help <command>`,
@@ -141,7 +129,22 @@ export const helpCommand: Command = {
         embed.addField("Next page", `⏩ ${prefix}help ${pageIndex + 1}`, false);
       }
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
+  }
+}
+
+export const helpCommand: Command = {
+  emoji: "📖",
+  name: "Help",
+  command: "help",
+  aliases: ["heelp", "commands"],
+  syntax: "<command?>",
+  examples: ["", "help"],
+  isAdmin: false,
+  description: "Help menu",
+
+  getCommand(payload) {
+    return new HelpCommand(payload);
   },
 };

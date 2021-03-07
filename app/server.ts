@@ -27,5 +27,11 @@ export const createServer = ({ config }: { config: Config }) => {
   client.on("message", handleMessage({ context }));
   client.on("error", handleError({ logger }));
 
-  return client;
+  return {
+    async login(discordApiKey: string) {
+      await dataSources.botInfoDS.testConnection();
+
+      return client.login(discordApiKey);
+    },
+  };
 };

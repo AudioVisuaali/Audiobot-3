@@ -1,5 +1,18 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
+
+class ReverseCommand extends AbstractCommand {
+  async execute() {
+    const letter = this.args.join(" ").split("").reverse().join("");
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setDescription(letter);
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const reverseCommand: Command = {
   emoji: "🔁",
@@ -11,13 +24,7 @@ export const reverseCommand: Command = {
   isAdmin: false,
   description: "Reverse anything",
 
-  async execute(message, args) {
-    const letter = args.join(" ").split("").reverse().join("");
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setDescription(letter);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new ReverseCommand(payload);
   },
 };

@@ -1,5 +1,4 @@
-import { Guild, Message } from "discord.js";
-
+import { AbstractCommand } from "./AbstractCommand";
 import { currencyCommand } from "./currencyCommand";
 import { fishingCommand } from "./fishingCommand";
 import { modifyPointsCommand } from "./modifyPointsCommand";
@@ -45,11 +44,7 @@ import { urbanCommand } from "~/commands/urbanCommand";
 import { weatherCommand } from "~/commands/weatherCommand";
 import { wikipediaCommand } from "~/commands/wikipediaCommand";
 import { yoMamaCommand } from "~/commands/yoMamaCommand";
-import { Context } from "~/context";
-
-export interface CustomMessage extends Message {
-  guild: Guild;
-}
+import { CommandPayload } from "~/handlers/onMessage";
 
 export interface Command {
   emoji: string;
@@ -61,11 +56,7 @@ export interface Command {
   examples: string[];
   isAdmin: boolean;
 
-  execute: (
-    message: CustomMessage,
-    args: string[],
-    context: Context,
-  ) => Promise<unknown>;
+  getCommand: (payload: CommandPayload) => AbstractCommand;
 }
 
 export const commands: Command[] = [

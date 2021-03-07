@@ -1,3 +1,4 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { BPICurrency, BPICurrencyType } from "~/services/currencyService";
 import { responseUtils } from "~/utils/responseUtils";
@@ -5,23 +6,44 @@ import { responseUtils } from "~/utils/responseUtils";
 const btcLogoUrl =
   "http://icons.iconarchive.com/icons/froyoshark/enkel/256/Bitcoin-icon.png";
 
-const getPrice = (bpi: BPICurrency) => {
-  const rate = bpi.rate_float.toFixed(2);
+class BitcoinCommand extends AbstractCommand {
+  async execute() {
+    const bitcoinData = await this.services.currency.getBitcoinData();
 
-  switch (bpi.code) {
-    case BPICurrencyType.USD:
-      return `$${rate}`;
+    const bpis = Object.values(bitcoinData.bpi).map((bpi) => ({
+      name: `${bpi.code}`,
+      value: this.getPrice(bpi),
+      inline: true,
+    }));
 
-    case BPICurrencyType.EUR:
-      return `${rate}€`;
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setColor("#f99e1a")
+      .setTitle(this.formatMessage("commandBitcoinTitle"))
+      .setThumbnail(btcLogoUrl)
+      .addFields(...bpis);
 
-    case BPICurrencyType.GBP:
-      return `${rate}£`;
-
-    default:
-      return rate;
+    await this.message.channel.send(embed);
   }
-};
+
+  getPrice(bpi: BPICurrency) {
+    const rate = bpi.rate_float.toFixed(2);
+
+    switch (bpi.code) {
+      case BPICurrencyType.USD:
+        return `$${rate}`;
+
+      case BPICurrencyType.EUR:
+        return `${rate}€`;
+
+      case BPICurrencyType.GBP:
+        return `${rate}£`;
+
+      default:
+        return rate;
+    }
+  }
+}
 
 export const bitcoinCommand: Command = {
   emoji: "🪙",
@@ -33,22 +55,7 @@ export const bitcoinCommand: Command = {
   isAdmin: false,
   description: "Bitcoin's current value",
 
-  async execute(message, _, { services }) {
-    const bitcoinData = await services.currency.getBitcoinData();
-
-    const bpis = Object.values(bitcoinData.bpi).map((bpi) => ({
-      name: `${bpi.code}`,
-      value: getPrice(bpi),
-      inline: true,
-    }));
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setColor("#f99e1a")
-      .setTitle("Bitcoin is worth")
-      .setThumbnail(btcLogoUrl)
-      .addFields(...bpis);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new BitcoinCommand(payload);
   },
 };

@@ -1,6 +1,46 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 import { timeUtils } from "~/utils/timeUtils";
+
+class StatsCommand extends AbstractCommand {
+  getUptimeString() {
+    const uptimeObject = timeUtils.getDurationFromMS({
+      ms: this.message.client.uptime || 0,
+    });
+
+    return timeUtils.durationObjectToString(uptimeObject);
+  }
+
+  async getBotInfo() {
+    if (this.message.client.user) {
+      return await this.dataSources.botInfoDS.getBotInfo({
+        discordBotId: this.message.client.user?.id,
+      });
+    }
+
+    return null;
+  }
+
+  async execute() {
+    const data = await this.getBotInfo();
+
+    const uptimeString = this.getUptimeString();
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle(this.formatMessage("commandStatsTitle"))
+      .setDescription(
+        this.formatMessage("commandStatsDescription", { uptime: uptimeString }),
+      )
+      .addField(
+        this.formatMessage("commandStatsFieldRestartCount"),
+        data ? data.restarts : 0,
+      );
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const statsCommand: Command = {
   emoji: "🔧",
@@ -12,25 +52,7 @@ export const statsCommand: Command = {
   isAdmin: false,
   description: "Gives the status of the bot",
 
-  async execute(message, _, { dataSources }) {
-    const data = message.client.user
-      ? await dataSources.botInfoDS.getBotInfo({
-          discordBotId: message.client.user?.id,
-        })
-      : null;
-
-    const uptimeObject = timeUtils.getDurationFromMS({
-      ms: message.client.uptime || 0,
-    });
-
-    const uptimeString = timeUtils.durationObjectToString(uptimeObject);
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setTitle("🔧 Bot status")
-      .setDescription(`Bot has been on for ${uptimeString}`)
-      .addField("Restart count", data ? data.restarts : 0);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new StatsCommand(payload);
   },
 };

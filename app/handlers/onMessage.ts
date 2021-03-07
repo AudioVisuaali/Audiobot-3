@@ -1,12 +1,13 @@
-import { Message } from "discord.js";
+import { Guild, Message } from "discord.js";
 
-import { commands, CustomMessage } from "~/commands/commands";
+import { commands } from "~/commands/commands";
 import { Context } from "~/context";
+import {
+  FormatMessageFunction,
+  formatMessageSetLocale,
+  Locales,
+} from "~/translations/formatter";
 import { inputUtils } from "~/utils/inputUtils";
-
-export type HandleMessage = (opts: {
-  context: Context;
-}) => (message: Message) => Promise<void>;
 
 const formatMessageBody = (opts: { message: Message }) => ({
   authorId: opts.message.author.id,
@@ -14,6 +15,20 @@ const formatMessageBody = (opts: { message: Message }) => ({
   authorDiscriminator: opts.message.author.discriminator,
   message: opts.message.content,
 });
+
+export interface CustomMessage extends Message {
+  guild: Guild;
+}
+
+export type ContextWithTranslation = Context & {
+  formatMessage: FormatMessageFunction;
+};
+
+export type CommandPayload = {
+  message: CustomMessage;
+  args: string[];
+  context: ContextWithTranslation;
+};
 
 const handleMessageWorker = async (opts: {
   message: Message;
@@ -85,8 +100,21 @@ const handleMessageWorker = async (opts: {
     module: commandModule.name,
   });
 
-  await commandModule.execute(message, args, context);
+  const commandClass = commandModule.getCommand({
+    message,
+    args,
+    context: {
+      ...context,
+      formatMessage: formatMessageSetLocale(Locales.En),
+    },
+  });
+
+  await commandClass.execute();
 };
+
+export type HandleMessage = (opts: {
+  context: Context;
+}) => (message: Message) => Promise<void>;
 
 export const handleMessage: HandleMessage = ({ context }) => async (
   message: Message,

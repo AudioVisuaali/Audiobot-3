@@ -1,4 +1,11 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+
+class PingCommand extends AbstractCommand {
+  async execute() {
+    await this.message.channel.send(this.formatMessage("commandPingReply"));
+  }
+}
 
 export const pingCommand: Command = {
   emoji: "🏓",
@@ -10,7 +17,7 @@ export const pingCommand: Command = {
   isAdmin: false,
   description: "Ping!",
 
-  async execute(message) {
-    await message.channel.send("🏓 Pong");
+  getCommand(payload) {
+    return new PingCommand(payload);
   },
 };

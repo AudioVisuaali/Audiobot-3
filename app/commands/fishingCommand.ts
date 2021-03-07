@@ -1,3 +1,4 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import {
   CurrencyHistoryActionType,
@@ -87,30 +88,24 @@ const getBaitDiscount = (baitName: string) => {
   return bait ?? null;
 };
 
-export const fishingCommand: Command = {
-  emoji: "🎣",
-  name: "Fishing",
-  command: "fishing",
-  aliases: ["fish"],
-  syntax: "<?<<baits | bait> | <baitName>>>",
-  examples: ["", "baits", baits[0].name.toLowerCase()],
-  isAdmin: false,
-  description: "Relaxing fishing",
-
+class FishingCommand extends AbstractCommand {
   // eslint-disable-next-line max-statements, complexity
-  async execute(message, args, { dataSources }) {
-    const guild = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild.id,
+  async execute() {
+    const guild = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild.id,
     });
 
-    const user = await dataSources.userDS.tryGetUser({
-      userDiscordId: message.author.id,
-      guildDiscordId: message.guild.id,
+    const user = await this.dataSources.userDS.tryGetUser({
+      userDiscordId: this.message.author.id,
+      guildDiscordId: this.message.guild.id,
     });
 
-    if (args.length === 1 && (args[0] === "baits" || args[0] === "bait")) {
+    if (
+      this.args.length === 1 &&
+      (this.args[0] === "baits" || this.args[0] === "bait")
+    ) {
       const embed = responseUtils
-        .positive({ discordUser: message.author })
+        .positive({ discordUser: this.message.author })
         .setTitle("🎣 Fishing baits")
         .setDescription(
           `Use baits to increase your change of getting a valuable drop. To use baits use **${guild.prefix}fishing <baitName>**`,
@@ -130,33 +125,33 @@ export const fishingCommand: Command = {
           }),
         );
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
-    const bait = args.length ? getBaitDiscount(args[0]) : null;
+    const bait = this.args.length ? getBaitDiscount(this.args[0]) : null;
 
-    if (args[0] && !bait) {
+    if (this.args[0] && !bait) {
       const embed = responseUtils
-        .invalidParameter({ discordUser: message.author })
-        .setDescription(`Bait **${args[0]}** was not found`);
+        .invalidParameter({ discordUser: this.message.author })
+        .setDescription(`Bait **${this.args[0]}** was not found`);
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     if (bait) {
       if (user.points < bait.price) {
         const embed = responseUtils
-          .insufficientFunds({ discordUser: message.author, guild, user })
+          .insufficientFunds({ discordUser: this.message.author, guild, user })
           .setDescription("You dont have currency to purchase the bait");
 
-        return await message.channel.send(embed);
+        return await this.message.channel.send(embed);
       }
 
-      await dataSources.currencyHistoryDS.addCurrencyHistory({
+      await this.dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
-        discordGuildId: message.guild.id,
-        discordUserId: message.author.id,
+        discordGuildId: this.message.guild.id,
+        discordUserId: this.message.author.id,
         actionType: CurrencyHistoryActionType.FISHING_BAIT,
         currencyType: CurrencyHistoryCurrencyType.POINT,
         bet: null,
@@ -167,15 +162,15 @@ export const fishingCommand: Command = {
     }
 
     const fishingEmbed = responseUtils
-      .neutral({ discordUser: message.author })
-      .setTitle(`🎣 ${message.author.username} is fishing`)
+      .neutral({ discordUser: this.message.author })
+      .setTitle(`🎣 ${this.message.author.username} is fishing`)
       .setDescription("Please wait untill you catch a fish...");
 
     if (bait) {
       fishingEmbed.addField("Bait", bait.emoji);
     }
 
-    const fishingMessage = await message.channel.send(fishingEmbed);
+    const fishingMessage = await this.message.channel.send(fishingEmbed);
 
     const fishingDurationMS = mathUtils.getRandomArbitrary(100000, 30000);
     await timeUtils.sleep(fishingDurationMS);
@@ -191,9 +186,9 @@ export const fishingCommand: Command = {
     });
 
     const sellEmbed = responseUtils
-      .positive({ discordUser: message.author })
+      .positive({ discordUser: this.message.author })
       .setTitle(
-        `🎣 **${message.author.username}** caught a ${fishingItem.emoji}`,
+        `🎣 **${this.message.author.username}** caught a ${fishingItem.emoji}`,
       )
       .setDescription(`Do you want to sell it for ${sellForPoints}`);
 
@@ -201,14 +196,14 @@ export const fishingCommand: Command = {
       sellEmbed.addField("Bait", bait.emoji, true);
     }
 
-    const sellMessage = await message.channel.send(sellEmbed);
+    const sellMessage = await this.message.channel.send(sellEmbed);
 
     await sellMessage.react(ReactType.Success);
     await sellMessage.react(ReactType.Failure);
 
     const reactionCollection = await sellMessage.awaitReactions(
       (reaction) =>
-        reaction.users.cache.get(message.author.id) &&
+        reaction.users.cache.get(this.message.author.id) &&
         [ReactType.Success, ReactType.Failure].includes(reaction.emoji.name),
       { max: 1, time: 15000 },
     );
@@ -222,17 +217,17 @@ export const fishingCommand: Command = {
     });
 
     if (reactionCollection.get(ReactType.Success)) {
-      const updatedUser = await dataSources.userDS.tryModifyCurrency({
-        guildDiscordId: message.guild.id,
-        userDiscordId: message.author.id,
+      const updatedUser = await this.dataSources.userDS.tryModifyCurrency({
+        guildDiscordId: this.message.guild.id,
+        userDiscordId: this.message.author.id,
         modifyPoints: fishingItem.value,
       });
 
-      await dataSources.currencyHistoryDS.addCurrencyHistory({
+      await this.dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
-        discordGuildId: message.guild.id,
-        discordUserId: message.author.id,
+        discordGuildId: this.message.guild.id,
+        discordUserId: this.message.author.id,
         actionType: CurrencyHistoryActionType.FISHING,
         currencyType: CurrencyHistoryCurrencyType.POINT,
         bet: null,
@@ -250,8 +245,10 @@ export const fishingCommand: Command = {
       });
 
       const embed = responseUtils
-        .positive({ discordUser: message.author })
-        .setTitle(`🎣 ${message.author.username} sold ${fishingItem.emoji}`)
+        .positive({ discordUser: this.message.author })
+        .setTitle(
+          `🎣 ${this.message.author.username} sold ${fishingItem.emoji}`,
+        )
         .setDescription(
           `You gained ${fishingItemPoints} for selling ${fishingItem.emoji}`,
         )
@@ -261,15 +258,17 @@ export const fishingCommand: Command = {
         embed.addField("Bait", bait.emoji, true);
       }
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     if (reactionCollection.get(ReactType.Failure)) {
       const embed = responseUtils
-        .neutral({ discordUser: message.author })
-        .setTitle(`🎣 ${message.author.username} found ${fishingItem.emoji}`)
+        .neutral({ discordUser: this.message.author })
+        .setTitle(
+          `🎣 ${this.message.author.username} found ${fishingItem.emoji}`,
+        )
         .setDescription(
-          `**${message.author.username}** decided not to sell found item`,
+          `**${this.message.author.username}** decided not to sell found item`,
         )
         .addField("Item value", fishingItemPoints, true);
 
@@ -277,13 +276,13 @@ export const fishingCommand: Command = {
         embed.addField("Bait", bait.emoji, true);
       }
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     const embed = responseUtils
-      .negative({ discordUser: message.author })
+      .negative({ discordUser: this.message.author })
       .setTitle(
-        `🎣  ${message.author.username} missed on item ${fishingItem.emoji}`,
+        `🎣  ${this.message.author.username} missed on item ${fishingItem.emoji}`,
       )
       .addField("Item value", fishingItemPoints, true);
 
@@ -291,6 +290,21 @@ export const fishingCommand: Command = {
       embed.addField("Bait", bait.emoji, true);
     }
 
-    return await message.channel.send(embed);
+    return await this.message.channel.send(embed);
+  }
+}
+
+export const fishingCommand: Command = {
+  emoji: "🎣",
+  name: "Fishing",
+  command: "fishing",
+  aliases: ["fish"],
+  syntax: "<?<<baits | bait> | <baitName>>>",
+  examples: ["", "baits", baits[0].name.toLowerCase()],
+  isAdmin: false,
+  description: "Relaxing fishing",
+
+  getCommand(payload) {
+    return new FishingCommand(payload);
   },
 };

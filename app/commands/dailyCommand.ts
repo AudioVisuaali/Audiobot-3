@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import {
   CurrencyHistoryActionType,
@@ -29,32 +30,19 @@ const getDailyFix = (number: number) => {
   };
 };
 
-export const dailyCommand: Command = {
-  emoji: "📅",
-  name: "Daily",
-  command: "daily",
-  aliases: ["kela"],
-  syntax: "",
-  examples: [],
-  isAdmin: false,
-  description: "Get your daily fix",
-
-  async execute(message, args, { dataSources }) {
-    if (!message.guild) {
-      return;
+class DailyCommand extends AbstractCommand {
+  async execute() {
+    if (this.args.length !== 0) {
+      return await this.message.channel.send("Invalid parameters");
     }
 
-    if (args.length !== 0) {
-      return await message.channel.send("Invalid parameters");
-    }
-
-    const guild = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild.id,
+    const guild = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild.id,
     });
 
-    const user = await dataSources.userDS.tryGetUser({
-      userDiscordId: message.author.id,
-      guildDiscordId: message.guild.id,
+    const user = await this.dataSources.userDS.tryGetUser({
+      userDiscordId: this.message.author.id,
+      guildDiscordId: this.message.guild.id,
     });
 
     if (user.dailyRetrieved) {
@@ -63,11 +51,11 @@ export const dailyCommand: Command = {
 
       if (dailyAvailableTime.valueOf() > currentTime.valueOf()) {
         const embed = responseUtils.cooldown({
-          discordUser: message.author,
+          discordUser: this.message.author,
           availableAt: dailyAvailableTime,
         });
 
-        return await message.channel.send(embed);
+        return await this.message.channel.send(embed);
       }
     }
 
@@ -77,20 +65,20 @@ export const dailyCommand: Command = {
     const { multiplier, explainer } = getDailyFix(luckinessProbability);
 
     const dailyAmount = dailyAmountBase * multiplier;
-    const userUpdated = await dataSources.userDS.tryModifyCurrency({
-      guildDiscordId: message.guild.id,
-      userDiscordId: message.author.id,
+    const userUpdated = await this.dataSources.userDS.tryModifyCurrency({
+      guildDiscordId: this.message.guild.id,
+      userDiscordId: this.message.author.id,
       modifyPoints: dailyAmount,
       updateDailyClaimed: true,
     });
 
     const extra = explainer ? `, __${explainer}__` : "";
 
-    await dataSources.currencyHistoryDS.addCurrencyHistory({
+    await this.dataSources.currencyHistoryDS.addCurrencyHistory({
       userId: user.id,
       guildId: guild.id,
-      discordUserId: message.author.id,
-      discordGuildId: message.guild.id,
+      discordUserId: this.message.author.id,
+      discordGuildId: this.message.guild.id,
       actionType: CurrencyHistoryActionType.DAILY,
       currencyType: CurrencyHistoryCurrencyType.POINT,
       bet: null,
@@ -110,12 +98,27 @@ export const dailyCommand: Command = {
     });
 
     const embed = responseUtils
-      .positive({ discordUser: message.author })
+      .positive({ discordUser: this.message.author })
       .setTitle(`📅 + ${dailyAmount} ${currencyName}`)
       .setDescription(
         `You redeemed your daily ${currencyName}${extra}! You now have ${currentPoints}`,
       );
 
-    return await message.channel.send(embed);
+    return await this.message.channel.send(embed);
+  }
+}
+
+export const dailyCommand: Command = {
+  emoji: "📅",
+  name: "Daily",
+  command: "daily",
+  aliases: ["kela"],
+  syntax: "",
+  examples: [],
+  isAdmin: false,
+  description: "Get your daily fix",
+
+  getCommand(payload) {
+    return new DailyCommand(payload);
   },
 };

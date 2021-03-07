@@ -14,7 +14,6 @@ export type BotInfoTable = {
   createdAt: DateTime;
   updatedAt: DateTime | null;
 };
-
 export class BotInfoDataSource extends DataSourceWithContext {
   private formatRow(row: BotInfoTableRaw): BotInfoTable {
     return {
@@ -25,6 +24,10 @@ export class BotInfoDataSource extends DataSourceWithContext {
       createdAt: DateTime.fromJSDate(row.createdAt),
       updatedAt: timeUtils.parseDBTime(row.updatedAt),
     };
+  }
+
+  async testConnection() {
+    await this.knex.raw("SELECT 1 + 1 as result;");
   }
 
   public async modifyBotInfo(opts: {

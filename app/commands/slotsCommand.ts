@@ -1,3 +1,4 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import {
   CurrencyHistoryActionType,
@@ -93,81 +94,68 @@ const getStraights = (grid: Grid) => {
   return matches;
 };
 
-export const slotsCommand: Command = {
-  emoji: "🎰",
-  name: "Slots",
-  command: "slotmachine",
-  aliases: ["slots"],
-  syntax: "<amount>",
-  examples: ["50", "third", "35%"],
-  isAdmin: false,
-  description: "Gamble your money with slots",
-
+class SlotsCommand extends AbstractCommand {
   // eslint-disable-next-line max-statements
-  async execute(message, args, { dataSources }) {
-    if (!message.guild) {
-      return;
-    }
-
-    if (args.length === 0) {
+  async execute() {
+    if (this.args.length === 0) {
       const valuesMessage = Object.values(fruits)
         .map((fruit) => `${fruit.emoji} ${fruit.multiplier}x`)
         .join("\n");
 
       const embed = responseUtils
-        .positive({ discordUser: message.author })
+        .positive({ discordUser: this.message.author })
         .setTitle("🎰 Slotmachine")
         .addField("Multipliers", valuesMessage);
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
-    const user = await dataSources.userDS.tryGetUser({
-      userDiscordId: message.author.id,
-      guildDiscordId: message.guild.id,
+    const user = await this.dataSources.userDS.tryGetUser({
+      userDiscordId: this.message.author.id,
+      guildDiscordId: this.message.guild.id,
     });
 
-    const guild = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild.id,
+    const guild = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild.id,
     });
 
     const gamblingAmount = await inputUtils.getAmountFromUserInput({
-      input: args[0],
+      input: this.args[0],
       currentPoints: user.points,
     });
 
     if (!gamblingAmount) {
       const embed = responseUtils.invalidCurrency({
-        discordUser: message.author,
+        discordUser: this.message.author,
       });
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     // VALUE TOO LOW
     if (gamblingAmount < SLOTS_MIN_AMOUNT) {
       const embed = responseUtils.insufficientMinAmount({
-        discordUser: message.author,
+        discordUser: this.message.author,
         minAmount: SLOTS_MIN_AMOUNT,
         guild,
       });
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     // NOT ENOUGH MONEY
     if (user.points < gamblingAmount) {
       const embed = responseUtils.insufficientFunds({
-        discordUser: message.author,
+        discordUser: this.message.author,
         user,
         guild,
       });
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     const isInCasinoChannel = guild.casinoChannelId
-      ? guild.casinoChannelId === message.channel.id
+      ? guild.casinoChannelId === this.message.channel.id
       : false;
 
     const gridv1 = createGrid();
@@ -175,11 +163,11 @@ export const slotsCommand: Command = {
     const gridv3 = createGrid();
 
     const msg1 = responseUtils
-      .neutral({ discordUser: message.author })
+      .neutral({ discordUser: this.message.author })
       .setTitle("=== SLOTS ===")
       .setDescription(createEmbedBody(gridv1));
     const msg2 = responseUtils
-      .neutral({ discordUser: message.author })
+      .neutral({ discordUser: this.message.author })
       .setTitle("=== SLOTS ===")
       .setDescription(createEmbedBody(gridv2));
 
@@ -196,20 +184,20 @@ export const slotsCommand: Command = {
       : 1;
 
     const outcomeAmount = Math.floor(gamblingAmount * multiplier);
-    const modifiedUser = await dataSources.userDS.tryModifyCurrency({
-      userDiscordId: message.author.id,
-      guildDiscordId: message.guild.id,
+    const modifiedUser = await this.dataSources.userDS.tryModifyCurrency({
+      userDiscordId: this.message.author.id,
+      guildDiscordId: this.message.guild.id,
       modifyPoints: hasWon ? outcomeAmount : outcomeAmount * -1,
     });
 
-    const sentMessage = await message.channel.send(msg1);
+    const sentMessage = await this.message.channel.send(msg1);
 
     await timeUtils.sleep(500);
     await sentMessage.edit({ embed: msg2 });
 
     const msg3Base = hasWon
-      ? responseUtils.positive({ discordUser: message.author })
-      : responseUtils.negative({ discordUser: message.author });
+      ? responseUtils.positive({ discordUser: this.message.author })
+      : responseUtils.negative({ discordUser: this.message.author });
 
     const msg3 = msg3Base
       .setTitle("=== SLOTS ===")
@@ -240,11 +228,11 @@ export const slotsCommand: Command = {
 
       const mappedMultipliers = matchesAll.map(formatMultiplier);
       msg3.addField("Multiplier", mappedMultipliers.join("\n"));
-      await dataSources.currencyHistoryDS.addCurrencyHistory({
+      await this.dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
-        discordGuildId: message.guild.id,
-        discordUserId: message.author.id,
+        discordGuildId: this.message.guild.id,
+        discordUserId: this.message.author.id,
         actionType: CurrencyHistoryActionType.SLOTS,
         currencyType: CurrencyHistoryCurrencyType.POINT,
         bet: gamblingAmount,
@@ -253,11 +241,11 @@ export const slotsCommand: Command = {
         hasProfited: true,
       });
     } else {
-      await dataSources.currencyHistoryDS.addCurrencyHistory({
+      await this.dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
-        discordGuildId: message.guild.id,
-        discordUserId: message.author.id,
+        discordGuildId: this.message.guild.id,
+        discordUserId: this.message.author.id,
         actionType: CurrencyHistoryActionType.SLOTS,
         currencyType: CurrencyHistoryCurrencyType.POINT,
         bet: gamblingAmount,
@@ -283,5 +271,20 @@ export const slotsCommand: Command = {
 
     await timeUtils.sleep(500);
     await sentMessage.edit({ embed: msg3 });
+  }
+}
+
+export const slotsCommand: Command = {
+  emoji: "🎰",
+  name: "Slots",
+  command: "slotmachine",
+  aliases: ["slots"],
+  syntax: "<amount>",
+  examples: ["50", "third", "35%"],
+  isAdmin: false,
+  description: "Gamble your money with slots",
+
+  getCommand(payload) {
+    return new SlotsCommand(payload);
   },
 };

@@ -1,6 +1,18 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { lennyFacesUtils } from "~/utils/lennyFaceUtils";
 import { mathUtils } from "~/utils/mathUtil";
+
+class LennyfaceCommand extends AbstractCommand {
+  async execute() {
+    const randomPosition = mathUtils.getRandomArbitrary(
+      0,
+      lennyFacesUtils.length - 1,
+    );
+
+    await this.message.channel.send(lennyFacesUtils[randomPosition]);
+  }
+}
 
 export const lennyfaceCommand: Command = {
   emoji: "🙃",
@@ -12,12 +24,7 @@ export const lennyfaceCommand: Command = {
   isAdmin: false,
   description: "Get a random lenny face",
 
-  async execute(message) {
-    const randomPosition = mathUtils.getRandomArbitrary(
-      0,
-      lennyFacesUtils.length - 1,
-    );
-
-    await message.channel.send(lennyFacesUtils[randomPosition]);
+  getCommand(payload) {
+    return new LennyfaceCommand(payload);
   },
 };

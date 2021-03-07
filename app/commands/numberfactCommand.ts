@@ -1,6 +1,34 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
+
+class NumberFactCommand extends AbstractCommand {
+  async execute() {
+    if (this.args.length === 0) {
+      return this.message.channel.send(
+        this.formatMessage("errorNoNumberWasProvided"),
+      );
+    }
+
+    const number = mathUtils.parseStringToNumber(this.args[0]);
+
+    if (number === null) {
+      return this.message.channel.send(
+        this.formatMessage("errorInvalidNumber"),
+      );
+    }
+
+    const fact = await this.services.stats.getNumerFact({ number });
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle(this.formatMessage("commandNumberFactTitle", { number }))
+      .setDescription(fact);
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const numberfactCommand: Command = {
   emoji: "🔢",
@@ -12,24 +40,7 @@ export const numberfactCommand: Command = {
   isAdmin: false,
   description: "Get facts for numbers",
 
-  async execute(message, args, { services }) {
-    if (args.length === 0) {
-      return message.channel.send("No number was provided");
-    }
-
-    const number = mathUtils.parseStringToNumber(args[0]);
-
-    if (number === null) {
-      return message.channel.send("Invalid number");
-    }
-
-    const fact = await services.stats.getNumerFact({ number });
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setTitle(`🔢 Numberfact #${number}`)
-      .setDescription(fact);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new NumberFactCommand(payload);
   },
 };

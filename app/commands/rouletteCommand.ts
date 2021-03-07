@@ -1,3 +1,4 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import {
   CurrencyHistoryActionType,
@@ -9,75 +10,62 @@ import { responseUtils } from "~/utils/responseUtils";
 
 export const ROULETTER_MIN_POT = 10;
 
-export const rouletteCommand: Command = {
-  emoji: "🎮",
-  name: "Roulette",
-  command: "roulette",
-  aliases: [],
-  syntax: "<amount>",
-  examples: ["50", "half", "60%"],
-  isAdmin: false,
-  description: "Gamble your money in roulette",
-
+class RouletteCommand extends AbstractCommand {
   // eslint-disable-next-line max-statements
-  async execute(message, args, { dataSources }) {
-    if (!message.guild) {
-      return;
-    }
-
-    const user = await dataSources.userDS.tryGetUser({
-      userDiscordId: message.author.id,
-      guildDiscordId: message.guild.id,
+  async execute() {
+    const user = await this.dataSources.userDS.tryGetUser({
+      userDiscordId: this.message.author.id,
+      guildDiscordId: this.message.guild.id,
     });
 
-    if (args.length === 0) {
+    if (this.args.length === 0) {
       const embed = responseUtils.specifyGamblingAmount({
-        discordUser: message.author,
+        discordUser: this.message.author,
       });
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
-    const guild = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild.id,
+    const guild = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild.id,
     });
 
     const isInCasinoChannel = guild.casinoChannelId
-      ? guild.casinoChannelId === message.channel.id
+      ? guild.casinoChannelId === this.message.channel.id
       : false;
 
     const gambleAmount = await inputUtils.getAmountFromUserInput({
-      input: args[0],
+      input: this.args[0],
       currentPoints: user.points,
     });
 
     // INVALID INPUT
     if (!gambleAmount) {
       const embed = responseUtils.invalidCurrency({
-        discordUser: message.author,
+        discordUser: this.message.author,
       });
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     // VALUE TOO LOW
     if (user.points < ROULETTER_MIN_POT) {
       const embed = responseUtils.invalidCurrency({
-        discordUser: message.author,
+        discordUser: this.message.author,
       });
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     // NOT ENOUGH MONEY
     if (user.points < gambleAmount) {
       const embed = responseUtils.insufficientFunds({
-        discordUser: message.author,
+        discordUser: this.message.author,
         user,
         guild,
       });
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     // Rigged
@@ -85,21 +73,20 @@ export const rouletteCommand: Command = {
     const hasWon = isInCasinoChannel ? winNumber < 42 : winNumber < 49;
 
     if (!hasWon) {
-      const userLost = await dataSources.userDS.tryModifyCurrency({
-        userDiscordId: message.author.id,
-        guildDiscordId: message.guild.id,
+      const userLost = await this.dataSources.userDS.tryModifyCurrency({
+        userDiscordId: this.message.author.id,
+        guildDiscordId: this.message.guild.id,
         modifyPoints: gambleAmount * -1,
       });
 
-      const gambleAmountPoints = responseUtils.formatCurrency({
+      const gambleAmountPointsLost = responseUtils.formatCurrency({
         guild,
         amount: gambleAmount * -1,
       });
 
-      const gambleAmountPointsBold = responseUtils.formatCurrency({
+      const gambleAmountPoints = responseUtils.formatCurrency({
         guild,
         amount: gambleAmount,
-        useBold: true,
       });
 
       const userLostPoints = responseUtils.formatCurrency({
@@ -109,17 +96,24 @@ export const rouletteCommand: Command = {
       });
 
       const embed = responseUtils
-        .negative({ discordUser: message.author })
-        .setTitle(`🎮 ${gambleAmountPoints}`)
+        .negative({ discordUser: this.message.author })
+        .setTitle(
+          this.formatMessage("commandRouletteLostTitle", {
+            gambleAmount: gambleAmountPointsLost,
+          }),
+        )
         .setDescription(
-          `You have lost ${gambleAmountPointsBold}, you now have ${userLostPoints}`,
+          this.formatMessage("commandRouletteLostDescription", {
+            gambleAmounts: gambleAmountPoints,
+            userLostPoints: userLostPoints,
+          }),
         );
 
-      await dataSources.currencyHistoryDS.addCurrencyHistory({
+      await this.dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
-        discordUserId: message.author.id,
-        discordGuildId: message.guild.id,
+        discordUserId: this.message.author.id,
+        discordGuildId: this.message.guild.id,
         actionType: CurrencyHistoryActionType.ROULETTE,
         currencyType: CurrencyHistoryCurrencyType.POINT,
         bet: gambleAmount,
@@ -128,7 +122,7 @@ export const rouletteCommand: Command = {
         hasProfited: false,
       });
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     const { percent, bonusCurrent } = mathUtils.getBonusCount({
@@ -139,9 +133,9 @@ export const rouletteCommand: Command = {
       ? gambleAmount + bonusCurrent
       : gambleAmount;
 
-    const userWon = await dataSources.userDS.tryModifyCurrency({
-      userDiscordId: message.author.id,
-      guildDiscordId: message.guild.id,
+    const userWon = await this.dataSources.userDS.tryModifyCurrency({
+      userDiscordId: this.message.author.id,
+      guildDiscordId: this.message.guild.id,
       modifyPoints,
     });
 
@@ -151,23 +145,19 @@ export const rouletteCommand: Command = {
       positivePrefix: true,
     });
 
-    const modifyPointsPointsBold = responseUtils.formatCurrency({
-      guild,
-      amount: modifyPoints,
-      useBold: true,
-    });
-
     const userWonPoints = responseUtils.formatCurrency({
       guild,
       amount: userWon.points,
-      useBold: true,
     });
 
     const embed = responseUtils
-      .positive({ discordUser: message.author })
+      .positive({ discordUser: this.message.author })
       .setTitle(modifyPointsPoints)
       .setDescription(
-        `You have won ${modifyPointsPointsBold}, you now have ${userWonPoints}`,
+        this.formatMessage("commandRouletteWinDescription", {
+          gambleAmount: modifyPointsPoints,
+          userWonPoints: userWonPoints,
+        }),
       );
 
     if (isInCasinoChannel) {
@@ -177,7 +167,7 @@ export const rouletteCommand: Command = {
       });
 
       embed.addField(
-        "Casino addition :confetti_ball:",
+        this.formatMessage("commandRouletteWinCasinoAddition"),
         `+ ${bonusPoints} / ${percent}%`,
       );
     }
@@ -187,11 +177,11 @@ export const rouletteCommand: Command = {
       amount: bonusCurrent,
     });
 
-    await dataSources.currencyHistoryDS.addCurrencyHistory({
+    await this.dataSources.currencyHistoryDS.addCurrencyHistory({
       userId: user.id,
       guildId: guild.id,
-      discordUserId: message.author.id,
-      discordGuildId: message.guild.id,
+      discordUserId: this.message.author.id,
+      discordGuildId: this.message.guild.id,
       actionType: CurrencyHistoryActionType.ROULETTE,
       currencyType: CurrencyHistoryCurrencyType.POINT,
       bet: gambleAmount,
@@ -202,6 +192,21 @@ export const rouletteCommand: Command = {
       hasProfited: true,
     });
 
-    return await message.channel.send(embed);
+    return await this.message.channel.send(embed);
+  }
+}
+
+export const rouletteCommand: Command = {
+  emoji: "🎮",
+  name: "Roulette",
+  command: "roulette",
+  aliases: [],
+  syntax: "<amount>",
+  examples: ["50", "half", "60%"],
+  isAdmin: false,
+  description: "Gamble your money in roulette",
+
+  getCommand(payload) {
+    return new RouletteCommand(payload);
   },
 };

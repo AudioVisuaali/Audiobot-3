@@ -1,6 +1,7 @@
 /* eslint-disable switch-case/no-case-curly */
 import { DateTime } from "luxon";
 
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { inputUtils } from "~/utils/inputUtils";
 import { responseUtils } from "~/utils/responseUtils";
@@ -9,32 +10,19 @@ import { timeUtils } from "~/utils/timeUtils";
 const description =
   "Invest your money to get a weekly 1% payback. For your money to get compounded you need to keep your money invested for a week.";
 
-export const investCommand: Command = {
-  emoji: "💰",
-  name: "Invest",
-  command: "invest",
-  aliases: ["bank"],
-  syntax: "<<add|put|deposit> | <take|withdraw|remove>> <amount>",
-  examples: ["", "add 500", "deposit 50%", "take 200", "remove half"],
-  isAdmin: false,
-  description,
-
+class InvestCommand extends AbstractCommand {
   // eslint-disable-next-line complexity, max-statements
-  async execute(message, args, { dataSources }) {
-    if (!message.guild) {
-      return;
-    }
-
-    const user = await dataSources.userDS.tryGetUser({
-      userDiscordId: message.author.id,
-      guildDiscordId: message.guild.id,
+  async execute() {
+    const user = await this.dataSources.userDS.tryGetUser({
+      userDiscordId: this.message.author.id,
+      guildDiscordId: this.message.guild.id,
     });
 
-    const guild = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild.id,
+    const guild = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild.id,
     });
 
-    if (args.length === 0) {
+    if (this.args.length === 0) {
       const nextCompoundAt = timeUtils.getNextCompoundAt();
       const now = DateTime.utc();
       const nextCompound = timeUtils.humanReadableTimeBetweenDates(
@@ -53,7 +41,7 @@ export const investCommand: Command = {
       });
 
       const embed = responseUtils
-        .positive({ discordUser: message.author })
+        .positive({ discordUser: this.message.author })
         .setTitle("💰 Invest")
         .setDescription(description)
         .addField(
@@ -63,59 +51,61 @@ export const investCommand: Command = {
         .addField("Invested", userInvestedPoints, true)
         .addField("Next compound worth", nextCompoundPoints, true);
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
-    if (args.length !== 2) {
+    if (this.args.length !== 2) {
       const embed = responseUtils.invalidAmountOfArguments({
-        discordUser: message.author,
+        discordUser: this.message.author,
       });
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
     if (
-      !["add", "put", "deposit", "take", "withdraw", "remove"].includes(args[0])
+      !["add", "put", "deposit", "take", "withdraw", "remove"].includes(
+        this.args[0],
+      )
     ) {
       const embed = responseUtils
-        .invalidParameter({ discordUser: message.author })
+        .invalidParameter({ discordUser: this.message.author })
         .setDescription(
           "Invalid action name. You can only **remove** or **add*",
         );
 
-      return await message.channel.send(embed);
+      return await this.message.channel.send(embed);
     }
 
-    switch (args[0]) {
+    switch (this.args[0]) {
       case "put":
       case "add":
       case "deposit": {
         const transferAmount = inputUtils.getAmountFromUserInput({
-          input: args[1],
+          input: this.args[1],
           currentPoints: user.points,
         });
 
         if (!transferAmount) {
           const embed = responseUtils.invalidCurrency({
-            discordUser: message.author,
+            discordUser: this.message.author,
           });
 
-          return await message.channel.send(embed);
+          return await this.message.channel.send(embed);
         }
 
         if (transferAmount > user.points) {
           const embed = responseUtils.insufficientFunds({
-            discordUser: message.author,
+            discordUser: this.message.author,
             user,
             guild,
           });
 
-          return await message.channel.send(embed);
+          return await this.message.channel.send(embed);
         }
 
-        const updatedUser = await dataSources.userDS.tryModifyCurrency({
-          userDiscordId: message.author.id,
-          guildDiscordId: message.guild.id,
+        const updatedUser = await this.dataSources.userDS.tryModifyCurrency({
+          userDiscordId: this.message.author.id,
+          guildDiscordId: this.message.guild.id,
           modifyPoints: transferAmount * -1,
           modifyStock: transferAmount,
         });
@@ -137,7 +127,7 @@ export const investCommand: Command = {
         });
 
         const embed = responseUtils
-          .positive({ discordUser: message.author })
+          .positive({ discordUser: this.message.author })
           .setTitle("💰 Investment")
           .setDescription(`You invested ${transferAmountPoints}`)
           .addField(
@@ -148,7 +138,7 @@ export const investCommand: Command = {
             ].join("\n"),
           );
 
-        return await message.channel.send(embed);
+        return await this.message.channel.send(embed);
       }
 
       // eslint-disable-next-line switch-case/no-case-curly
@@ -156,34 +146,34 @@ export const investCommand: Command = {
       case "withdraw":
       case "remove": {
         const transferAmount = inputUtils.getAmountFromUserInput({
-          input: args[1],
+          input: this.args[1],
           currentPoints: user.stock,
         });
 
         if (!transferAmount) {
           const embed = responseUtils.invalidCurrency({
-            discordUser: message.author,
+            discordUser: this.message.author,
           });
 
-          return await message.channel.send(embed);
+          return await this.message.channel.send(embed);
         }
 
         if (transferAmount > user.stock) {
           const embed = responseUtils.insufficientFundsStock({
-            discordUser: message.author,
+            discordUser: this.message.author,
             user,
             guild,
           });
 
-          return await message.channel.send(embed);
+          return await this.message.channel.send(embed);
         }
 
         const minCompoundChanges =
           user.stock - transferAmount < user.stockMinCompoundAmount;
 
-        const updatedUser = await dataSources.userDS.tryModifyCurrency({
-          guildDiscordId: message.guild.id,
-          userDiscordId: message.author.id,
+        const updatedUser = await this.dataSources.userDS.tryModifyCurrency({
+          guildDiscordId: this.message.guild.id,
+          userDiscordId: this.message.author.id,
           modifyPoints: transferAmount,
           modifyStock: transferAmount * -1,
           ...(minCompoundChanges
@@ -213,7 +203,7 @@ export const investCommand: Command = {
         });
 
         const embed = responseUtils
-          .positive({ discordUser: message.author })
+          .positive({ discordUser: this.message.author })
           .setTitle("💰 Investment")
           .setDescription(`You withdrawed ${transferAmountPoints}`)
           .addField(
@@ -224,8 +214,23 @@ export const investCommand: Command = {
             ].join("\n"),
           );
 
-        return await message.channel.send(embed);
+        return await this.message.channel.send(embed);
       }
     }
+  }
+}
+
+export const investCommand: Command = {
+  emoji: "💰",
+  name: "Invest",
+  command: "invest",
+  aliases: ["bank"],
+  syntax: "<<add|put|deposit> | <take|withdraw|remove>> <amount>",
+  examples: ["", "add 500", "deposit 50%", "take 200", "remove half"],
+  isAdmin: false,
+  description,
+
+  getCommand(payload) {
+    return new InvestCommand(payload);
   },
 };

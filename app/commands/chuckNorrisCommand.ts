@@ -1,5 +1,18 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
+
+class ChuckNorrisCommand extends AbstractCommand {
+  async execute() {
+    const chuckNorris = await this.services.jokes.getChuckNorrisJoke();
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setDescription(chuckNorris.value.joke);
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const chuckNorrisCommand: Command = {
   emoji: "👨🏻",
@@ -11,13 +24,7 @@ export const chuckNorrisCommand: Command = {
   isAdmin: false,
   description: "Get a random Chuck Norris joke",
 
-  async execute(message, _, { services }) {
-    const chuckNorris = await services.jokes.getChuckNorrisJoke();
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setDescription(chuckNorris.value.joke);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new ChuckNorrisCommand(payload);
   },
 };

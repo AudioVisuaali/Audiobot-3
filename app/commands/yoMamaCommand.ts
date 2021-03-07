@@ -1,5 +1,18 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
+
+class YoMamaCommand extends AbstractCommand {
+  async execute() {
+    const joke = await this.services.jokes.getYoMamaJoke();
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setDescription(joke);
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const yoMamaCommand: Command = {
   emoji: "👩",
@@ -11,13 +24,7 @@ export const yoMamaCommand: Command = {
   isAdmin: false,
   description: "Yo mama so fat",
 
-  async execute(message, _, { services }) {
-    const joke = await services.jokes.getYoMamaJoke();
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setDescription(joke);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new YoMamaCommand(payload);
   },
 };

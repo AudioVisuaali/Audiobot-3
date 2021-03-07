@@ -1,54 +1,74 @@
-import { Guild } from "discord.js";
 import Table from "table-layout";
 
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
-import { DataSources } from "~/dataSources/dataSources";
 import { tableUtils } from "~/utils/tableUtils";
 
-const getCurrencyHistories = async (opts: {
-  dataSources: DataSources;
-  discordGuild: Guild;
-  args: string[];
-}) => {
-  const param = opts.args.length ? opts.args[0] : "win";
+class TopCommand extends AbstractCommand {
+  async execute() {
+    const guild = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild.id,
+    });
 
-  switch (param) {
-    case "latest":
-    case "newest":
-    case "new":
-      return {
-        type: "newest",
-        histories: await opts.dataSources.currencyHistoryDS.getCurrencyHistories(
-          { discordGuildId: opts.discordGuild.id },
-        ),
-      };
+    const { type, histories } = await this.getCurrencyHistories();
 
-    case "won":
-    case "wons":
-    case "win":
-    case "wins":
-      return {
-        type: "win",
-        histories: await opts.dataSources.currencyHistoryDS.getCurrencyHistories(
-          { discordGuildId: opts.discordGuild.id },
-          { outcome: "DESC" },
-        ),
-      };
+    const displayHistories = await tableUtils.formatHistories({
+      withName: { guildMemberManager: this.message.guild.members },
+      includeHeader: true,
+      histories,
+      guild,
+    });
 
-    case "lose":
-    case "loses":
-    case "lost":
-    case "defeat":
-    default:
-      return {
-        type: "lost",
-        histories: await opts.dataSources.currencyHistoryDS.getCurrencyHistories(
-          { discordGuildId: opts.discordGuild.id },
-          { outcome: "ASC" },
-        ),
-      };
+    const table = new Table(displayHistories);
+
+    const title = `📝 Stats for __${this.message.guild.name}__ in order **${type}**`;
+
+    await this.message.channel.send(
+      [title, "```", table.toString(), "```"].join("\n"),
+    );
   }
-};
+
+  async getCurrencyHistories() {
+    const param = this.args.length ? this.args[0] : "win";
+
+    switch (param) {
+      case "latest":
+      case "newest":
+      case "new":
+        return {
+          type: "newest",
+          histories: await this.dataSources.currencyHistoryDS.getCurrencyHistories(
+            { discordGuildId: this.message.guild.id },
+          ),
+        };
+
+      case "won":
+      case "wons":
+      case "win":
+      case "wins":
+        return {
+          type: "win",
+          histories: await this.dataSources.currencyHistoryDS.getCurrencyHistories(
+            { discordGuildId: this.message.guild.id },
+            { outcome: "DESC" },
+          ),
+        };
+
+      case "lose":
+      case "loses":
+      case "lost":
+      case "defeat":
+      default:
+        return {
+          type: "lost",
+          histories: await this.dataSources.currencyHistoryDS.getCurrencyHistories(
+            { discordGuildId: this.message.guild.id },
+            { outcome: "ASC" },
+          ),
+        };
+    }
+  }
+}
 
 export const topCommand: Command = {
   emoji: "📊",
@@ -60,30 +80,7 @@ export const topCommand: Command = {
   isAdmin: false,
   description: "Get history of economy on the server",
 
-  async execute(message, args, { dataSources }) {
-    const guild = await dataSources.guildDS.tryGetGuild({
-      guildDiscordId: message.guild.id,
-    });
-
-    const { type, histories } = await getCurrencyHistories({
-      dataSources,
-      discordGuild: message.guild,
-      args,
-    });
-
-    const displayHistories = await tableUtils.formatHistories({
-      withName: { guildMemberManager: message.guild.members },
-      includeHeader: true,
-      histories,
-      guild,
-    });
-
-    const table = new Table(displayHistories);
-
-    const title = `📝 Stats for __${message.guild.name}__ in order **${type}**`;
-
-    await message.channel.send(
-      [title, "```", table.toString(), "```"].join("\n"),
-    );
+  getCommand(payload) {
+    return new TopCommand(payload);
   },
 };

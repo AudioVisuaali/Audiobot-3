@@ -1,4 +1,11 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+
+class WikipediaCommand extends AbstractCommand {
+  async execute() {
+    await this.message.channel.send("Pong");
+  }
+}
 
 export const wikipediaCommand: Command = {
   emoji: "🌐",
@@ -10,7 +17,7 @@ export const wikipediaCommand: Command = {
   isAdmin: false,
   description: "Search on wikipedia",
 
-  async execute(message) {
-    await message.channel.send("Pong");
+  getCommand(payload) {
+    return new WikipediaCommand(payload);
   },
 };

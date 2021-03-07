@@ -1,27 +1,21 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { networkUtils } from "~/utils/networkUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
-export const ipCommand: Command = {
-  emoji: "📶",
-  name: "IP info",
-  command: "ip",
-  aliases: ["domain"],
-  syntax: "<ip | domain>",
-  examples: ["8.8.8.8"],
-  isAdmin: false,
-  description: "Ip related information",
+class IpCommand extends AbstractCommand {
+  async execute() {
+    const isIP = networkUtils.validateIPaddress(this.args[0]);
 
-  async execute(message, args, { services }) {
-    const isIP = networkUtils.validateIPaddress(args[0]);
+    const ip = isIP
+      ? this.args[0]
+      : await networkUtils.getIPOfDomain(this.args[0]);
 
-    const ip = isIP ? args[0] : await networkUtils.getIPOfDomain(args[0]);
-
-    const ipData = await services.ip.getIpData({ ip });
+    const ipData = await this.services.ip.getIpData({ ip });
 
     const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setTitle(`🌐 Information for ${isIP ? ip : args[0]}`)
+      .positive({ discordUser: this.message.author })
+      .setTitle(`🌐 Information for ${isIP ? ip : this.args[0]}`)
       .addFields(
         {
           name: "City",
@@ -50,6 +44,21 @@ export const ipCommand: Command = {
         },
       );
 
-    await message.channel.send(embed);
+    await this.message.channel.send(embed);
+  }
+}
+
+export const ipCommand: Command = {
+  emoji: "📶",
+  name: "IP info",
+  command: "ip",
+  aliases: ["domain"],
+  syntax: "<ip | domain>",
+  examples: ["8.8.8.8"],
+  isAdmin: false,
+  description: "Ip related information",
+
+  getCommand(payload) {
+    return new IpCommand(payload);
   },
 };

@@ -1,7 +1,31 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { eightBallUtils } from "~/utils/eightBallUtils";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
+
+class EightBallCommand extends AbstractCommand {
+  getQuestion() {
+    return this.args.join(" ");
+  }
+
+  async execute() {
+    if (this.getQuestion().length < 8) {
+      return;
+    }
+
+    const randomIndex = mathUtils.getRandomArbitrary(
+      0,
+      eightBallUtils.length - 1,
+    );
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setDescription(`🎱 ${eightBallUtils[randomIndex]}`);
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const eightBallCommand: Command = {
   emoji: "🎱",
@@ -13,22 +37,7 @@ export const eightBallCommand: Command = {
   isAdmin: false,
   description: "8 ball responses your question",
 
-  async execute(message, args) {
-    const question = args.join(" ");
-
-    if (question.length < 8) {
-      return;
-    }
-
-    const randomIndex = mathUtils.getRandomArbitrary(
-      0,
-      eightBallUtils.length - 1,
-    );
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setDescription(`🎱 ${eightBallUtils[randomIndex]}`);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new EightBallCommand(payload);
   },
 };

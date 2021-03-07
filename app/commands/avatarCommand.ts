@@ -1,5 +1,24 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
+
+class AvatarCommand extends AbstractCommand {
+  async execute() {
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle(
+        this.formatMessage("commandAvatarTitle", {
+          username: this.message.author.username,
+        }),
+      )
+      .setImage(
+        this.message.author.avatarURL({ size: 2048 }) ||
+          this.message.author.defaultAvatarURL,
+      );
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const avatarCommand: Command = {
   emoji: "📷",
@@ -11,15 +30,7 @@ export const avatarCommand: Command = {
   isAdmin: false,
   description: "Shows requesters avatar",
 
-  async execute(message) {
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setTitle(`📷 ${message.author.username}'s profile picture`)
-      .setImage(
-        message.author.avatarURL({ size: 2048 }) ||
-          message.author.defaultAvatarURL,
-      );
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new AvatarCommand(payload);
   },
 };

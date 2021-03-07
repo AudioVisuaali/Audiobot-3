@@ -1,5 +1,19 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
+
+class CatFactCommand extends AbstractCommand {
+  async execute() {
+    const catfact = await this.services.animal.getCatFact();
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle(this.formatMessage("commandCatFactTitle"))
+      .setDescription(catfact.fact);
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const catFactCommand: Command = {
   emoji: "🐱",
@@ -11,14 +25,7 @@ export const catFactCommand: Command = {
   isAdmin: false,
   description: "Get a random catfact",
 
-  async execute(message, _, { services }) {
-    const catfact = await services.animal.getCatFact();
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setTitle("Random cat fact!")
-      .setDescription(catfact.fact);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new CatFactCommand(payload);
   },
 };

@@ -15,6 +15,7 @@
     "database:migrate:down": "knex migrate:down"
   },
   "dependencies": {
+    "@types/i18n": "^0.13.0",
     "@types/luxon": "^1.25.0",
     "apollo-datasource": "^0.7.2",
     "apollo-server-express": "^2.19.0",
@@ -25,6 +26,7 @@
     "dataloader": "^2.0.0",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
+    "i18next": "^19.9.1",
     "knex": "^0.21.12",
     "luxon": "^1.25.0",
     "node-osu": "^2.2.0",

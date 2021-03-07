@@ -1,5 +1,23 @@
+import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
+
+class TokensCommand extends AbstractCommand {
+  async execute() {
+    const user = await this.dataSources.userDS.tryGetUser({
+      userDiscordId: this.message.author.id,
+      guildDiscordId: this.message.guild.id,
+    });
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle(
+        this.formatMessage("commandTokensTitle", { tokens: user.tokens }),
+      );
+
+    await this.message.channel.send(embed);
+  }
+}
 
 export const tokensCommand: Command = {
   emoji: "🏆",
@@ -11,16 +29,7 @@ export const tokensCommand: Command = {
   isAdmin: false,
   description: "Your tokens currently",
 
-  async execute(message, _, { dataSources }) {
-    const user = await dataSources.userDS.tryGetUser({
-      userDiscordId: message.author.id,
-      guildDiscordId: message.guild.id,
-    });
-
-    const embed = responseUtils
-      .positive({ discordUser: message.author })
-      .setTitle(`🏆 ${user.tokens} tokens`);
-
-    await message.channel.send(embed);
+  getCommand(payload) {
+    return new TokensCommand(payload);
   },
 };
