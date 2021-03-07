@@ -1,5 +1,5 @@
 import Logger from "bunyan";
-import Knex from "knex";
+import { Knex } from "knex";
 
 import { Config } from "~/config";
 
