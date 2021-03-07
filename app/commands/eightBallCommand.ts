@@ -5,23 +5,31 @@ import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
 class EightBallCommand extends AbstractCommand {
-  getQuestion() {
+  private getQuestion() {
     return this.args.join(" ");
   }
 
-  async execute() {
-    if (this.getQuestion().length < 8) {
-      return;
-    }
+  private isValidQuestion() {
+    return this.getQuestion().length > 8;
+  }
 
+  private getRandomEightBall() {
     const randomIndex = mathUtils.getRandomArbitrary(
       0,
       eightBallUtils.length - 1,
     );
 
+    return eightBallUtils[randomIndex];
+  }
+
+  public async execute() {
+    if (this.isValidQuestion()) {
+      return;
+    }
+
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
-      .setDescription(`🎱 ${eightBallUtils[randomIndex]}`);
+      .setDescription(`🎱 ${this.getRandomEightBall()}`);
 
     await this.message.channel.send(embed);
   }

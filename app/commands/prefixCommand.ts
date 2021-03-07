@@ -5,7 +5,7 @@ import { responseUtils } from "~/utils/responseUtils";
 const PREFIX_MAX_LENGTH = 15;
 
 class PrefixCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     if (this.message.guild.ownerID !== this.message.author.id) {
       return;
     }

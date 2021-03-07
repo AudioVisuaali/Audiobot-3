@@ -31,7 +31,7 @@ const getDailyFix = (number: number) => {
 };
 
 class DailyCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     if (this.args.length !== 0) {
       return await this.message.channel.send("Invalid parameters");
     }

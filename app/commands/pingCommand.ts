@@ -2,7 +2,7 @@ import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 
 class PingCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     await this.message.channel.send(this.formatMessage("commandPingReply"));
   }
 }

@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class GenderCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     if (this.args.length === 0) {
       return;
     }

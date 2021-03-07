@@ -26,57 +26,68 @@ const getPageOrName = (args: string[]) => {
 };
 
 class HelpCommand extends AbstractCommand {
-  // eslint-disable-next-line max-statements
-  async execute() {
-    const isOwner = this.message.guild.ownerID === this.message.author.id;
+  private async handleCommandResponse(params: {
+    commandName: string;
+    prefix: string;
+  }) {
+    const command = allCommands.find(
+      (command) =>
+        command.command === params.commandName ||
+        command.aliases.find((alias) => alias === params.commandName),
+    );
+
+    if (!command) {
+      const embed = responseUtils
+        .negative({ discordUser: this.message.author })
+        .setTitle(`📖 Help => ${params.commandName}`)
+        .setDescription(`Could not find module: ${this.args[0]}`);
+
+      return await this.message.channel.send(embed);
+    }
+
+    const examples = command.examples.length
+      ? command.examples
+          .map((example) => `${params.prefix}${command.command} ${example}`)
+          .join("\n")
+      : `${params.prefix}${command.command}`;
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle(`📖 Help => ${command.name}`)
+      .setDescription(command.description)
+      .addField(
+        "Syntax",
+        `${params.prefix}${command.command} ${command.syntax}`,
+      )
+      .addField("Examples", examples);
+
+    if (command.aliases.length) {
+      embed.addField("Aliases", command.aliases.join("\n"));
+    }
+
+    await this.message.channel.send(embed);
+  }
+
+  private isServerOwner() {
+    return this.message.guild.ownerID === this.message.author.id;
+  }
+
+  public async execute() {
+    const { pageIndex: pageIndexCode, name } = getPageOrName(this.args);
 
     const { prefix } = await this.dataSources.guildDS.tryGetGuild({
       guildDiscordId: this.message.guild.id,
     });
 
-    const { pageIndex: pageIndexCode, name } = getPageOrName(this.args);
-
     if (name) {
-      const command = allCommands.find(
-        (command) =>
-          command.command === name ||
-          command.aliases.find((alias) => alias === name),
-      );
-
-      if (!command) {
-        const embed = responseUtils
-          .negative({ discordUser: this.message.author })
-          .setTitle(`📖 Help => ${name}`)
-          .setDescription(`Could not find module: ${this.args[0]}`);
-
-        return await this.message.channel.send(embed);
-      }
-
-      const examples = command.examples.length
-        ? command.examples
-            .map((example) => `${prefix}${command.command} ${example}`)
-            .join("\n")
-        : `${prefix}${command.command}`;
-
-      const embed = responseUtils
-        .positive({ discordUser: this.message.author })
-        .setTitle(`📖 Help => ${command.name}`)
-        .setDescription(command.description)
-        .addField("Syntax", `${prefix}${command.command} ${command.syntax}`)
-        .addField("Examples", examples);
-
-      if (command.aliases.length) {
-        embed.addField("Aliases", command.aliases.join("\n"));
-      }
-
-      await this.message.channel.send(embed);
+      return this.handleCommandResponse({ commandName: name, prefix });
     }
 
     if (pageIndexCode !== null) {
       const pageIndex = pageIndexCode;
       const { commands, adminCommands } = sortedModules;
 
-      const combinesCommands = isOwner
+      const combinesCommands = this.isServerOwner()
         ? [...commands, ...adminCommands]
         : commands;
 

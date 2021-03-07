@@ -4,7 +4,7 @@ import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
 class NumberFactCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     if (this.args.length === 0) {
       return this.message.channel.send(
         this.formatMessage("errorNoNumberWasProvided"),

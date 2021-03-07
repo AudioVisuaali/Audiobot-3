@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class YoMamaCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     const joke = await this.services.jokes.getYoMamaJoke();
 
     const embed = responseUtils

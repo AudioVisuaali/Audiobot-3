@@ -4,7 +4,7 @@ import { responseUtils } from "~/utils/responseUtils";
 import { timeUtils } from "~/utils/timeUtils";
 
 class StatsCommand extends AbstractCommand {
-  getUptimeString() {
+  private getUptimeString() {
     const uptimeObject = timeUtils.getDurationFromMS({
       ms: this.message.client.uptime || 0,
     });
@@ -12,7 +12,7 @@ class StatsCommand extends AbstractCommand {
     return timeUtils.durationObjectToString(uptimeObject);
   }
 
-  async getBotInfo() {
+  private async getBotInfo() {
     if (this.message.client.user) {
       return await this.dataSources.botInfoDS.getBotInfo({
         discordBotId: this.message.client.user?.id,
@@ -22,7 +22,7 @@ class StatsCommand extends AbstractCommand {
     return null;
   }
 
-  async execute() {
+  public async execute() {
     const data = await this.getBotInfo();
 
     const uptimeString = this.getUptimeString();

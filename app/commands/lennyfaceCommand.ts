@@ -4,13 +4,15 @@ import { lennyFacesUtils } from "~/utils/lennyFaceUtils";
 import { mathUtils } from "~/utils/mathUtil";
 
 class LennyfaceCommand extends AbstractCommand {
-  async execute() {
-    const randomPosition = mathUtils.getRandomArbitrary(
-      0,
-      lennyFacesUtils.length - 1,
-    );
+  private getRandomLennyFace() {
+    const facesMaxLength = lennyFacesUtils.length - 1;
+    const randomPosition = mathUtils.getRandomArbitrary(0, facesMaxLength);
 
-    await this.message.channel.send(lennyFacesUtils[randomPosition]);
+    return lennyFacesUtils[randomPosition];
+  }
+
+  public async execute() {
+    await this.message.channel.send(this.getRandomLennyFace());
   }
 }
 

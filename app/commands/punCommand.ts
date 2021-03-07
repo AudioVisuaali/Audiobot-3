@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class PunCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     const pun = await this.services.jokes.getPun();
 
     const embed = responseUtils

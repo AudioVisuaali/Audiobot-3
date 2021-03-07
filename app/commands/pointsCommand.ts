@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class PointsCommand extends AbstractCommand {
-  async execute() {
+  private async getUserAndGuild() {
     const user = await this.dataSources.userDS.tryGetUser({
       userDiscordId: this.message.author.id,
       guildDiscordId: this.message.guild.id,
@@ -12,6 +12,12 @@ class PointsCommand extends AbstractCommand {
     const guild = await this.dataSources.guildDS.tryGetGuild({
       guildDiscordId: this.message.guild?.id,
     });
+
+    return { user, guild };
+  }
+
+  public async execute() {
+    const { user, guild } = await this.getUserAndGuild();
 
     const totalPoints = responseUtils.formatCurrency({
       guild,

@@ -90,7 +90,7 @@ const getBaitDiscount = (baitName: string) => {
 
 class FishingCommand extends AbstractCommand {
   // eslint-disable-next-line max-statements, complexity
-  async execute() {
+  public async execute() {
     const guild = await this.dataSources.guildDS.tryGetGuild({
       guildDiscordId: this.message.guild.id,
     });

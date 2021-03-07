@@ -7,23 +7,27 @@ const btcLogoUrl =
   "http://icons.iconarchive.com/icons/froyoshark/enkel/256/Bitcoin-icon.png";
 
 class BitcoinCommand extends AbstractCommand {
-  async execute() {
-    const bitcoinData = await this.services.currency.getBitcoinData();
-
-    const bpis = Object.values(bitcoinData.bpi).map((bpi) => ({
-      name: `${bpi.code}`,
-      value: this.getPrice(bpi),
-      inline: true,
-    }));
+  public async execute() {
+    const currentPrices = await this.getCurrentPrices();
 
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
       .setColor("#f99e1a")
       .setTitle(this.formatMessage("commandBitcoinTitle"))
       .setThumbnail(btcLogoUrl)
-      .addFields(...bpis);
+      .addFields(...currentPrices);
 
     await this.message.channel.send(embed);
+  }
+
+  private async getCurrentPrices() {
+    const bitcoinData = await this.services.currency.getBitcoinData();
+
+    return Object.values(bitcoinData.bpi).map((bpi) => ({
+      name: `${bpi.code}`,
+      value: this.getPrice(bpi),
+      inline: true,
+    }));
   }
 
   getPrice(bpi: BPICurrency) {

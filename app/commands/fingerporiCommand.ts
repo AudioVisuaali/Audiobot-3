@@ -4,7 +4,7 @@ import { fingerporiUtils } from "~/utils/fingerporiUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
 class FingerporiCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     const fingerporiURL = fingerporiUtils.getRandomFingerPori();
 
     const embed = responseUtils

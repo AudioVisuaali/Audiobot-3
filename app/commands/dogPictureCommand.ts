@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class DogPictureCommand extends AbstractCommand {
-  async getDogPicture() {
+  private async getDogPicture() {
     for (let i = 0; i < 5; i++) {
       const dogPicture = await this.services.animal.getDogPicture();
 
@@ -13,7 +13,7 @@ class DogPictureCommand extends AbstractCommand {
     }
   }
 
-  async execute() {
+  public async execute() {
     const dogPicture = await this.getDogPicture();
 
     if (!dogPicture) {

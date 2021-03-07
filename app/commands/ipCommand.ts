@@ -4,45 +4,37 @@ import { networkUtils } from "~/utils/networkUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
 class IpCommand extends AbstractCommand {
-  async execute() {
+  private async createFields(params: { ip: string }) {
+    const ipData = await this.services.ip.getIpData({ ip: params.ip });
+
+    return [
+      { name: "City", value: ipData.city, inline: true },
+      { name: "Region", value: ipData.region, inline: true },
+      { name: "Country", value: ipData.country, inline: true },
+      { name: "Location", value: ipData.loc, inline: true },
+      { name: "IP", value: ipData.ip, inline: true },
+    ];
+  }
+
+  private async getIP() {
     const isIP = networkUtils.validateIPaddress(this.args[0]);
 
-    const ip = isIP
-      ? this.args[0]
-      : await networkUtils.getIPOfDomain(this.args[0]);
+    if (isIP) {
+      return this.args[0];
+    }
 
-    const ipData = await this.services.ip.getIpData({ ip });
+    return await networkUtils.getIPOfDomain(this.args[0]);
+  }
+
+  public async execute() {
+    const ip = await this.getIP();
+
+    const fields = await this.createFields({ ip });
 
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
-      .setTitle(`🌐 Information for ${isIP ? ip : this.args[0]}`)
-      .addFields(
-        {
-          name: "City",
-          value: ipData.city,
-          inline: true,
-        },
-        {
-          name: "Region",
-          value: ipData.region,
-          inline: true,
-        },
-        {
-          name: "Country",
-          value: ipData.country,
-          inline: true,
-        },
-        {
-          name: "Location",
-          value: ipData.loc,
-          inline: true,
-        },
-        {
-          name: "IP",
-          value: ipData.ip,
-          inline: true,
-        },
-      );
+      .setTitle(`🌐 Information for ${this.args[0]}`)
+      .addFields(...fields);
 
     await this.message.channel.send(embed);
   }

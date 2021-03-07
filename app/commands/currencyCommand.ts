@@ -3,11 +3,55 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class CurrencyCommand extends AbstractCommand {
-  isOwner() {
+  private isOwner() {
     return this.message.author.id === this.message.guild.ownerID;
   }
 
-  async execute() {
+  private isValidActionName() {
+    return ["reset", "set"].includes(this.args[0]);
+  }
+
+  private createEmbedTitle() {
+    return responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle("💲 You have updated currency name");
+  }
+
+  private async handleCurrencyReset() {
+    await this.dataSources.guildDS.modifyGuild({
+      guildDiscordId: this.message.guild.id,
+      modifyCurrencyPointsDisplayName: null,
+    });
+
+    const embed = this.createEmbedTitle().setDescription(
+      "You have reset currency name to **points**",
+    );
+
+    return await this.message.channel.send(embed);
+  }
+
+  private async handleCurrencySet() {
+    if (this.args.length !== 2) {
+      return false;
+    }
+
+    const guild = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild.id,
+    });
+
+    await this.dataSources.guildDS.modifyGuild({
+      guildDiscordId: this.message.guild.id,
+      modifyCurrencyPointsDisplayName: this.args[1],
+    });
+
+    const embed = this.createEmbedTitle().setDescription(
+      `You have set the currency name to **${guild.currencyPointsDisplayName}**`,
+    );
+
+    return await this.message.channel.send(embed);
+  }
+
+  public async execute() {
     if (this.args.length < 1) {
       return;
     }
@@ -16,7 +60,7 @@ class CurrencyCommand extends AbstractCommand {
       return;
     }
 
-    if (!["reset", "set"].includes(this.args[0])) {
+    if (!this.isValidActionName()) {
       const embed = responseUtils.invalidParameter({
         discordUser: this.message.author,
       });
@@ -25,43 +69,12 @@ class CurrencyCommand extends AbstractCommand {
     }
 
     switch (this.args[0]) {
-      // eslint-disable-next-line switch-case/newline-between-switch-case
       case "reset":
-        await this.dataSources.guildDS.modifyGuild({
-          guildDiscordId: this.message.guild.id,
-          modifyCurrencyPointsDisplayName: null,
-        });
-        break;
+        return await this.handleCurrencyReset();
 
-      // eslint-disable-next-line switch-case/no-case-curly
-      case "set": {
-        if (this.args.length !== 2) {
-          return;
-        }
-
-        await this.dataSources.guildDS.modifyGuild({
-          guildDiscordId: this.message.guild.id,
-          modifyCurrencyPointsDisplayName: this.args[1],
-        });
-        break;
-      }
+      case "set":
+        return await this.handleCurrencySet();
     }
-
-    const guild = await this.dataSources.guildDS.tryGetGuild({
-      guildDiscordId: this.message.guild.id,
-    });
-
-    const description =
-      this.args[0] === "reset"
-        ? "You have reset currency name to **points**"
-        : `You have set the currency name to **${guild.currencyPointsDisplayName}**`;
-
-    const embed = responseUtils
-      .positive({ discordUser: this.message.author })
-      .setTitle("💲 You have updated currency name")
-      .setDescription(description);
-
-    return await this.message.channel.send(embed);
   }
 }
 

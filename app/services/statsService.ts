@@ -64,7 +64,7 @@ type WikipediaResponse = {
   };
 };
 
-type OsuResponse = {
+export type OsuResponse = {
   accuracy: string;
   count50: string;
   count100: string;
@@ -139,7 +139,7 @@ type StockResult = {
   };
 };
 
-type WeatherResponse = {
+export type WeatherResponse = {
   base: string;
   clouds: { all: number };
   cod: number;

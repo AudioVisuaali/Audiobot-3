@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class TokensCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     const user = await this.dataSources.userDS.tryGetUser({
       userDiscordId: this.message.author.id,
       guildDiscordId: this.message.guild.id,

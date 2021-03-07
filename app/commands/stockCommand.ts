@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class StockCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     if (!this.args.length) {
       const embed = responseUtils
         .negative({ discordUser: this.message.author })

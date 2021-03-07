@@ -4,13 +4,55 @@ import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { tableUtils } from "~/utils/tableUtils";
 
+enum CommandType {
+  Latest = "latest",
+  Newest = "newest",
+  New = "new",
+
+  Won = "won",
+  Wons = "wons",
+  Win = "win",
+  Wins = "wins",
+
+  Lose = "lose",
+  Loses = "loses",
+  Lost = "lost",
+  Defeat = "defeat",
+}
+
 class TopCommand extends AbstractCommand {
-  async execute() {
+  private getCommandType() {
+    const param = this.args.length ? this.args[0] : "win";
+
+    switch (param) {
+      case CommandType.Latest:
+      case CommandType.Newest:
+      case CommandType.New:
+        return CommandType.Newest;
+
+      case CommandType.Lose:
+      case CommandType.Loses:
+      case CommandType.Lost:
+      case CommandType.Defeat:
+        return CommandType.Lost;
+
+      case CommandType.Won:
+      case CommandType.Wons:
+      case CommandType.Win:
+      case CommandType.Wins:
+      default:
+        return CommandType.Win;
+    }
+  }
+
+  public async execute() {
     const guild = await this.dataSources.guildDS.tryGetGuild({
       guildDiscordId: this.message.guild.id,
     });
 
-    const { type, histories } = await this.getCurrencyHistories();
+    const commandType = this.getCommandType();
+
+    const histories = await this.getCurrencyHistories({ type: commandType });
 
     const displayHistories = await tableUtils.formatHistories({
       withName: { guildMemberManager: this.message.guild.members },
@@ -20,52 +62,33 @@ class TopCommand extends AbstractCommand {
     });
 
     const table = new Table(displayHistories);
-
-    const title = `📝 Stats for __${this.message.guild.name}__ in order **${type}**`;
+    const title = `📝 Stats for __${this.message.guild.name}__ in order **${commandType}**`;
 
     await this.message.channel.send(
       [title, "```", table.toString(), "```"].join("\n"),
     );
   }
 
-  async getCurrencyHistories() {
-    const param = this.args.length ? this.args[0] : "win";
+  async getCurrencyHistories(params: {
+    type: CommandType.Newest | CommandType.Win | CommandType.Lost;
+  }) {
+    switch (params.type) {
+      case CommandType.Newest:
+        return await this.dataSources.currencyHistoryDS.getCurrencyHistories({
+          discordGuildId: this.message.guild.id,
+        });
 
-    switch (param) {
-      case "latest":
-      case "newest":
-      case "new":
-        return {
-          type: "newest",
-          histories: await this.dataSources.currencyHistoryDS.getCurrencyHistories(
-            { discordGuildId: this.message.guild.id },
-          ),
-        };
+      case CommandType.Win:
+        return await this.dataSources.currencyHistoryDS.getCurrencyHistories(
+          { discordGuildId: this.message.guild.id },
+          { outcome: "DESC" },
+        );
 
-      case "won":
-      case "wons":
-      case "win":
-      case "wins":
-        return {
-          type: "win",
-          histories: await this.dataSources.currencyHistoryDS.getCurrencyHistories(
-            { discordGuildId: this.message.guild.id },
-            { outcome: "DESC" },
-          ),
-        };
-
-      case "lose":
-      case "loses":
-      case "lost":
-      case "defeat":
-      default:
-        return {
-          type: "lost",
-          histories: await this.dataSources.currencyHistoryDS.getCurrencyHistories(
-            { discordGuildId: this.message.guild.id },
-            { outcome: "ASC" },
-          ),
-        };
+      case CommandType.Lost:
+        return await this.dataSources.currencyHistoryDS.getCurrencyHistories(
+          { discordGuildId: this.message.guild.id },
+          { outcome: "ASC" },
+        );
     }
   }
 }

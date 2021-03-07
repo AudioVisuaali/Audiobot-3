@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class ReverseCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     const letter = this.args.join(" ").split("").reverse().join("");
 
     const embed = responseUtils

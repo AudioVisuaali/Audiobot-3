@@ -4,7 +4,7 @@ import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
 class DiceCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     if (this.args.length === 0) {
       const rolled = mathUtils.getRandomArbitrary(1, 6);
 

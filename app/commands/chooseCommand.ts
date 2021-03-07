@@ -4,11 +4,11 @@ import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
 class ChooseCommand extends AbstractCommand {
-  getOptions() {
+  private getOptions() {
     return this.args.join("").split("|");
   }
 
-  async execute() {
+  public async execute() {
     const options = this.getOptions();
 
     if (options.length === 0) {

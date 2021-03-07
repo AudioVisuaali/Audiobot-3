@@ -2,36 +2,15 @@ import { DateTime } from "luxon";
 
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { WeatherResponse } from "~/services/statsService";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
 class WeatherCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     const query = this.args.join(" ");
 
     const weather = await this.services.stats.getWeather({ query });
-
-    const sunrise = DateTime.fromSeconds(weather.sys.sunrise).toLocaleString(
-      DateTime.TIME_24_SIMPLE,
-    );
-    const sunset = DateTime.fromSeconds(weather.sys.sunset).toLocaleString(
-      DateTime.TIME_24_SIMPLE,
-    );
-
-    const currentC = mathUtils.kelvinToCelsius({ kelvin: weather.main.temp });
-    const currentF = mathUtils.kelvinToFahrenheit({
-      kelvin: weather.main.temp,
-    });
-
-    const maxC = mathUtils.kelvinToCelsius({ kelvin: weather.main.temp_max });
-    const maxF = mathUtils.kelvinToFahrenheit({
-      kelvin: weather.main.temp_max,
-    });
-
-    const minC = mathUtils.kelvinToCelsius({ kelvin: weather.main.temp_min });
-    const minF = mathUtils.kelvinToFahrenheit({
-      kelvin: weather.main.temp_min,
-    });
 
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
@@ -41,45 +20,87 @@ class WeatherCommand extends AbstractCommand {
           .map((weat) => `${weat.main}, ${weat.description}`)
           .join("\n"),
       )
-      .addField(
-        this.formatMessage("commandWeatherCurrentTemp"),
-        `${currentC} °C / ${currentF} °F`,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandWeatherMaxTemp"),
-        `${maxC} °C / ${maxF} °F`,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandWeatherMinTemp"),
-        `${minC} °C / ${minF} °F`,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandWeatherWindSpeed"),
-        `${weather.wind.speed} m/s`,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandWeatherHumidity"),
-        `${weather.main.humidity} %`,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandWeatherPressure"),
-        `${weather.main.pressure} hPa`,
-        true,
-      )
-      .addField(this.formatMessage("commandWeatherSunrise"), sunrise, true)
-      .addField(this.formatMessage("commandWeatherSunset"), sunset, true)
-      .addField(
-        this.formatMessage("commandWeatherLongLat"),
-        `${weather.coord.lon} / ${weather.coord.lat}`,
-        true,
-      );
+      .addFields(...this.generatePrivateFields({ weather }));
 
     await this.message.channel.send(embed);
+  }
+
+  private generatePrivateFields(params: { weather: WeatherResponse }) {
+    const sunrise = DateTime.fromSeconds(
+      params.weather.sys.sunrise,
+    ).toLocaleString(DateTime.TIME_24_SIMPLE);
+    const sunset = DateTime.fromSeconds(
+      params.weather.sys.sunset,
+    ).toLocaleString(DateTime.TIME_24_SIMPLE);
+
+    const currentC = mathUtils.kelvinToCelsius({
+      kelvin: params.weather.main.temp,
+    });
+    const currentF = mathUtils.kelvinToFahrenheit({
+      kelvin: params.weather.main.temp,
+    });
+
+    const maxC = mathUtils.kelvinToCelsius({
+      kelvin: params.weather.main.temp_max,
+    });
+    const maxF = mathUtils.kelvinToFahrenheit({
+      kelvin: params.weather.main.temp_max,
+    });
+
+    const minC = mathUtils.kelvinToCelsius({
+      kelvin: params.weather.main.temp_min,
+    });
+    const minF = mathUtils.kelvinToFahrenheit({
+      kelvin: params.weather.main.temp_min,
+    });
+
+    return [
+      {
+        name: this.formatMessage("commandWeatherCurrentTemp"),
+        value: `${currentC} °C / ${currentF} °F`,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandWeatherMaxTemp"),
+        value: `${maxC} °C / ${maxF} °F`,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandWeatherMinTemp"),
+        value: `${minC} °C / ${minF} °F`,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandWeatherWindSpeed"),
+        value: `${params.weather.wind.speed} m/s`,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandWeatherHumidity"),
+        value: `${params.weather.main.humidity} %`,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandWeatherPressure"),
+        value: `${params.weather.main.pressure} hPa`,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandWeatherSunrise"),
+        value: sunrise,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandWeatherSunset"),
+        value: sunset,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandWeatherLongLat"),
+        value: `${params.weather.coord.lon} / ${params.weather.coord.lat}`,
+        inline: true,
+      },
+    ];
   }
 }
 

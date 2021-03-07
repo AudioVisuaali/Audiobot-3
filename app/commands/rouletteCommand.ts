@@ -12,7 +12,7 @@ export const ROULETTER_MIN_POT = 10;
 
 class RouletteCommand extends AbstractCommand {
   // eslint-disable-next-line max-statements
-  async execute() {
+  public async execute() {
     const user = await this.dataSources.userDS.tryGetUser({
       userDiscordId: this.message.author.id,
       guildDiscordId: this.message.guild.id,

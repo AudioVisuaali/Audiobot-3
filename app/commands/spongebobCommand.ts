@@ -6,7 +6,7 @@ const spongebob =
   "https://en.meming.world/images/en/thumb/e/e0/Mocking_SpongeBob.jpg/300px-Mocking_SpongeBob.jpg";
 
 class SpongeBobCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     const letter = this.args
       .join(" ")
       .split("")

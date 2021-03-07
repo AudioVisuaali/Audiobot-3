@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class CatPictureCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     const catpicture = await this.services.animal.getCatPicture();
 
     const embed = responseUtils

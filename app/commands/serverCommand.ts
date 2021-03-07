@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class ServerCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
       .setAuthor(

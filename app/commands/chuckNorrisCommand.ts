@@ -3,7 +3,7 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class ChuckNorrisCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     const chuckNorris = await this.services.jokes.getChuckNorrisJoke();
 
     const embed = responseUtils

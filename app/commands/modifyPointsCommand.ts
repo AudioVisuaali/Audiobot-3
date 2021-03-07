@@ -10,7 +10,7 @@ import { responseUtils } from "~/utils/responseUtils";
 
 class ModifyPointsCommand extends AbstractCommand {
   // eslint-disable-next-line max-statements
-  async execute() {
+  public async execute() {
     if (this.message.author.id !== this.message.guild.ownerID) {
       const embed = responseUtils.invalidPermissions({
         discordUser: this.message.author,

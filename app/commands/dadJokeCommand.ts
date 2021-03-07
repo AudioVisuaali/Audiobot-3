@@ -3,14 +3,14 @@ import { Command } from "~/commands/commands";
 import { responseUtils } from "~/utils/responseUtils";
 
 class DadJokeCommand extends AbstractCommand {
-  createEmbed(params: { description: string }) {
+  private createEmbed(params: { description: string }) {
     return responseUtils
       .positive({ discordUser: this.message.author })
       .setTitle(this.formatMessage("commandDadJokeTitle"))
       .setDescription(params.description);
   }
 
-  async execute() {
+  public async execute() {
     const dadJoke = await this.services.jokes.getDadJoke();
 
     const embed = this.createEmbed({

@@ -2,49 +2,76 @@ import Table from "table-layout";
 
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
-import { DataSources } from "~/dataSources/dataSources";
+import { CurrencyHistoryTable } from "~/dataSources/CurrencyHistoryDataSource";
 import { responseUtils } from "~/utils/responseUtils";
 import { tableUtils } from "~/utils/tableUtils";
 
-const getHistoryData = async (opts: {
-  dataSources: DataSources;
-  guildId: string;
-  authorId: string;
-  args: string[];
-}) => {
-  if (opts.args.length === 0) {
-    return await opts.dataSources.currencyHistoryDS.getCurrencyHistories({
-      discordGuildId: opts.guildId,
-      discordUserId: opts.authorId,
-    });
-  }
+class HistoryCommand extends AbstractCommand {
+  private async getCurrencies() {
+    const guildId = this.message.guild.id;
+    const authorId = this.message.author.id;
 
-  if (opts.args.length !== 1) {
+    if (this.args.length === 0) {
+      return await this.dataSources.currencyHistoryDS.getCurrencyHistories({
+        discordGuildId: guildId,
+        discordUserId: authorId,
+      });
+    }
+
+    if (this.args.length !== 1) {
+      return null;
+    }
+
+    switch (this.args[0]) {
+      case "won":
+      case "win":
+        return await this.dataSources.currencyHistoryDS.getCurrencyHistories(
+          { discordGuildId: guildId, discordUserId: authorId },
+          { outcome: "DESC" },
+        );
+
+      case "lose":
+      case "lost":
+      case "defeat":
+        return await this.dataSources.currencyHistoryDS.getCurrencyHistories(
+          { discordGuildId: guildId, discordUserId: authorId },
+          { outcome: "ASC" },
+        );
+    }
+
     return null;
   }
 
-  switch (opts.args[0]) {
-    case "won":
-    case "win":
-      return await opts.dataSources.currencyHistoryDS.getCurrencyHistories(
-        { discordGuildId: opts.guildId, discordUserId: opts.authorId },
-        { outcome: "DESC" },
-      );
+  public async execute() {
+    const histories = await this.getCurrencies();
 
-    case "lose":
-    case "lost":
-    case "defeat":
-      return await opts.dataSources.currencyHistoryDS.getCurrencyHistories(
-        { discordGuildId: opts.guildId, discordUserId: opts.authorId },
-        { outcome: "ASC" },
-      );
+    if (histories === null) {
+      const embed = responseUtils.invalidParameter({
+        discordUser: this.message.author,
+      });
+
+      await this.message.channel.send(embed);
+
+      return null;
+    }
+
+    if (!histories.length) {
+      const embed = responseUtils
+        .neutral({ discordUser: this.message.author })
+        .setTitle("📄 No data found ¯\\_(ツ)_/¯")
+        .setDescription("Start by playing minigames or claiming daily bonuses");
+
+      await this.message.channel.send(embed);
+
+      return null;
+    }
+
+    this.createResponseMessage({ histories });
   }
 
-  return null;
-};
-
-class HistoryCommand extends AbstractCommand {
-  async execute() {
+  private async createResponseMessage(params: {
+    histories: CurrencyHistoryTable[];
+  }) {
     const user = await this.dataSources.userDS.tryGetUser({
       userDiscordId: this.message.author.id,
       guildDiscordId: this.message.guild.id,
@@ -54,33 +81,9 @@ class HistoryCommand extends AbstractCommand {
       guildDiscordId: this.message.guild.id,
     });
 
-    const currencyHistories = await getHistoryData({
-      dataSources: this.dataSources,
-      guildId: this.message.guild.id,
-      authorId: this.message.author.id,
-      args: this.args,
-    });
-
-    if (currencyHistories === null) {
-      const embed = responseUtils.invalidParameter({
-        discordUser: this.message.author,
-      });
-
-      return await this.message.channel.send(embed);
-    }
-
-    if (!currencyHistories.length) {
-      const embed = responseUtils
-        .neutral({ discordUser: this.message.author })
-        .setTitle("📄 No data found ¯\\_(ツ)_/¯")
-        .setDescription("Start by playing minigames or claiming daily bonuses");
-
-      return await this.message.channel.send(embed);
-    }
-
     const displayHistories = await tableUtils.formatHistories({
       guild,
-      histories: currencyHistories,
+      histories: params.histories,
       includeHeader: true,
     });
 

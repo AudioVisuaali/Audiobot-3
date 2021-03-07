@@ -96,7 +96,7 @@ const getStraights = (grid: Grid) => {
 
 class SlotsCommand extends AbstractCommand {
   // eslint-disable-next-line max-statements
-  async execute() {
+  public async execute() {
     if (this.args.length === 0) {
       const valuesMessage = Object.values(fruits)
         .map((fruit) => `${fruit.emoji} ${fruit.multiplier}x`)

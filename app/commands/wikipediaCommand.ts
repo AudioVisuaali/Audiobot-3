@@ -2,7 +2,7 @@ import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 
 class WikipediaCommand extends AbstractCommand {
-  async execute() {
+  public async execute() {
     await this.message.channel.send("Pong");
   }
 }
