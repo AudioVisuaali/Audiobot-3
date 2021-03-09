@@ -4,6 +4,7 @@ import { BPICurrency, BPICurrencyType } from "~/services/currencyService";
 import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
+const btcColor = "#f99e1a";
 const btcLogoUrl =
   "http://icons.iconarchive.com/icons/froyoshark/enkel/256/Bitcoin-icon.png";
 
@@ -13,7 +14,7 @@ class BitcoinCommand extends AbstractCommand {
 
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
-      .setColor("#f99e1a")
+      .setColor(btcColor)
       .setTitle(this.formatMessage("commandBitcoinTitle"))
       .setThumbnail(btcLogoUrl)
       .addFields(...currentPrices);
@@ -31,7 +32,7 @@ class BitcoinCommand extends AbstractCommand {
     }));
   }
 
-  getPrice(bpi: BPICurrency) {
+  private getPrice(bpi: BPICurrency) {
     const rate = bpi.rate_float.toFixed(2);
 
     switch (bpi.code) {

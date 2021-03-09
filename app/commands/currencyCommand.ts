@@ -3,13 +3,20 @@ import { Command } from "~/commands/commands";
 import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
+enum CommandType {
+  Reset = "reset",
+  Set = "set",
+}
+
 class CurrencyCommand extends AbstractCommand {
   private isOwner() {
     return this.message.author.id === this.message.guild.ownerID;
   }
 
   private isValidActionName() {
-    return ["reset", "set"].includes(this.args[0]);
+    return [CommandType.Reset, CommandType.Set].includes(
+      this.args[0] as CommandType,
+    );
   }
 
   private createEmbedTitle() {
@@ -72,11 +79,13 @@ class CurrencyCommand extends AbstractCommand {
     }
 
     switch (this.args[0]) {
-      case "reset":
+      case CommandType.Reset:
         return await this.handleCurrencyReset();
 
-      case "set":
+      case CommandType.Set:
         return await this.handleCurrencySet();
+
+      default:
     }
   }
 }

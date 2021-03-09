@@ -4,6 +4,12 @@ import { validateFormatMessageKey } from "~/translations/formatter";
 import { inputUtils } from "~/utils/inputUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
+enum CommandType {
+  Delete = "delete",
+  Current = "current",
+  Set = "set",
+}
+
 class CasinoCommand extends AbstractCommand {
   private hasPermission() {
     return this.message.author.id === this.message.guild.ownerID;
@@ -23,14 +29,16 @@ class CasinoCommand extends AbstractCommand {
     }
 
     switch (this.args[0]) {
-      case "delete":
+      case CommandType.Delete:
         return this.handleDelete();
 
-      case "current":
+      case CommandType.Current:
         return this.handleCurrent();
 
-      case "set":
+      case CommandType.Set:
         return this.handleSet();
+
+      default:
     }
   }
 

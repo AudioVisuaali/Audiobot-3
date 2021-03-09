@@ -2,6 +2,36 @@ import { Message } from "discord.js";
 
 import { mathUtils } from "~/utils/mathUtil";
 
+const getPercentValue = (params: { input: string }) => {
+  const percent = parseFloat(params.input.slice(0, -1));
+
+  if (isNaN(percent) || percent < 0 || percent > 100) {
+    return null;
+  }
+
+  return Math.floor(percent * (percent / 100));
+};
+
+const getKiloValue = (params: { input: string }) => {
+  const points = parseFloat(params.input.slice(0, -1));
+
+  if (isNaN(points) || points < 0) {
+    return null;
+  }
+
+  return points * 1000;
+};
+
+const getMillionValue = (params: { input: string }) => {
+  const points = parseFloat(params.input.slice(0, -1));
+
+  if (isNaN(points) || points < 0) {
+    return null;
+  }
+
+  return points * 1000000;
+};
+
 class InputUtils {
   public getAmountFromUserInput(opts: {
     input: string;
@@ -19,13 +49,15 @@ class InputUtils {
     }
 
     if (opts.input.endsWith("%")) {
-      const percent = parseFloat(opts.input);
+      return getPercentValue({ input: opts.input });
+    }
 
-      if (isNaN(percent) || percent < 0 || percent > 100) {
-        return null;
-      }
+    if (opts.input.toLowerCase().endsWith("k")) {
+      return getKiloValue({ input: opts.input });
+    }
 
-      return Math.floor(opts.currentPoints * (percent / 100));
+    if (opts.input.toLowerCase().endsWith("m")) {
+      return getMillionValue({ input: opts.input });
     }
 
     return mathUtils.parseStringToNumber(opts.input);

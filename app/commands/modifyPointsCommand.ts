@@ -14,6 +14,9 @@ enum CommandType {
   Remove = "remove",
 }
 
+const MIN_AMOUNT = 1;
+const MAX_AMOUNT = 100000;
+
 class ModifyPointsCommand extends AbstractCommand {
   private hasPermission() {
     return this.message.author.id === this.message.guild.ownerID;
@@ -84,17 +87,17 @@ class ModifyPointsCommand extends AbstractCommand {
 
     const minPonts = responseUtils.formatCurrency({
       guild,
-      amount: 1,
+      amount: MIN_AMOUNT,
       useBold: true,
     });
 
     const maxPonts = responseUtils.formatCurrency({
       guild,
-      amount: 1,
+      amount: MAX_AMOUNT,
       useBold: true,
     });
 
-    if (amount < 1 || amount > 100000) {
+    if (!this.isValidAmount({ amount })) {
       const embed = responseUtils
         .invalidParameter({ discordUser: this.message.author })
         .setDescription(
@@ -156,6 +159,10 @@ class ModifyPointsCommand extends AbstractCommand {
     return [CommandType.Add, CommandType.Remove].includes(
       this.args[0] as CommandType,
     );
+  }
+
+  private isValidAmount(params: { amount: number }) {
+    return params.amount >= MIN_AMOUNT && params.amount <= MAX_AMOUNT;
   }
 }
 
