@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class StockCommand extends AbstractCommand {
@@ -82,13 +83,13 @@ class StockCommand extends AbstractCommand {
 
 export const stockCommand: Command = {
   emoji: "📈",
-  name: "Stock",
+  name: validateFormatMessageKey("commandStockMetaName"),
+  description: validateFormatMessageKey("commandStockMetaDescription"),
   command: "stock",
   aliases: ["retarded"],
   syntax: "<ticker symbol>",
   examples: ["TSLA", "FB"],
   isAdmin: false,
-  description: "Get stock price by ticker symbol",
 
   getCommand(payload) {
     return new StockCommand(payload);

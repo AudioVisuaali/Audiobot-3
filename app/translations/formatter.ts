@@ -23,9 +23,11 @@ const formMessage = (message: string, values: Values) => {
   return modifyMe;
 };
 
+export type TranslationKey = keyof typeof translationsEN;
+
 export const formatMessage = (
   locale: Locales,
-  value: keyof typeof translationsEN,
+  value: TranslationKey,
   values?: Values,
 ) => {
   const message = translations[locale][value];
@@ -43,3 +45,5 @@ export const formatMessageSetLocale = (locale: Locales) => (
 ) => formatMessage(locale, value, values);
 
 export type FormatMessageFunction = ReturnType<typeof formatMessageSetLocale>;
+
+export const validateFormatMessageKey = (key: TranslationKey) => key;

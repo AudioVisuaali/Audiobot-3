@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 const spongebob =
@@ -28,13 +29,13 @@ class SpongeBobCommand extends AbstractCommand {
 
 export const spongebobCommand: Command = {
   emoji: "🧽",
-  name: "Spongebob",
+  name: validateFormatMessageKey("commandSpongebobMetaName"),
+  description: validateFormatMessageKey("commandSpongebobMetaDescription"),
   command: "sponbebob",
   aliases: ["retarded"],
   syntax: "<text>",
   examples: ["anything goes here"],
   isAdmin: false,
-  description: "Spongebob styled text",
 
   getCommand(payload) {
     return new SpongeBobCommand(payload);

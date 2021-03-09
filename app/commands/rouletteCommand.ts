@@ -4,6 +4,7 @@ import {
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,
 } from "~/database/types";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { inputUtils } from "~/utils/inputUtils";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
@@ -198,13 +199,13 @@ class RouletteCommand extends AbstractCommand {
 
 export const rouletteCommand: Command = {
   emoji: "🎮",
-  name: "Roulette",
+  name: validateFormatMessageKey("commandRouletteMetaName"),
+  description: validateFormatMessageKey("commandRouletteMetaDescription"),
   command: "roulette",
   aliases: [],
   syntax: "<amount>",
   examples: ["50", "half", "60%"],
   isAdmin: false,
-  description: "Gamble your money in roulette",
 
   getCommand(payload) {
     return new RouletteCommand(payload);

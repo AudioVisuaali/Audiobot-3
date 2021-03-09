@@ -3,6 +3,7 @@ import Table from "table-layout";
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { CurrencyHistoryTable } from "~/dataSources/CurrencyHistoryDataSource";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 import { tableUtils } from "~/utils/tableUtils";
 
@@ -58,8 +59,8 @@ class HistoryCommand extends AbstractCommand {
     if (!histories.length) {
       const embed = responseUtils
         .neutral({ discordUser: this.message.author })
-        .setTitle("📄 No data found ¯\\_(ツ)_/¯")
-        .setDescription("Start by playing minigames or claiming daily bonuses");
+        .setTitle(this.formatMessage("commandHistoryEmptyTitle"))
+        .setDescription(this.formatMessage("commandHistoryEmptyDescription"));
 
       await this.message.channel.send(embed);
 
@@ -99,23 +100,29 @@ class HistoryCommand extends AbstractCommand {
       useBold: true,
     });
 
-    const title = `📝 ${authorQuote} Your current balance is ${currentBalancePoints}`;
+    const title = this.formatMessage("commandHistoryTitle", {
+      authorQuote,
+      currentBalance: currentBalancePoints,
+    });
 
     await this.message.channel.send(
-      [title, "```", table.toString(), "```"].join("\n"),
+      this.formatMessage("commandHistoryBody", {
+        title,
+        body: table.toString(),
+      }),
     );
   }
 }
 
 export const historyCommand: Command = {
   emoji: "📝",
-  name: "History",
+  name: validateFormatMessageKey("commandHistoryMetaName"),
+  description: validateFormatMessageKey("commandHistoryMetaDescription"),
   command: "history",
   aliases: ["gambling"],
   syntax: "<win | lose>",
   examples: ["", "win", "lose"],
   isAdmin: false,
-  description: "Get your currency history",
 
   getCommand(payload) {
     return new HistoryCommand(payload);

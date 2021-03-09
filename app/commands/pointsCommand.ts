@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class PointsCommand extends AbstractCommand {
@@ -52,13 +53,13 @@ class PointsCommand extends AbstractCommand {
 
 export const pointsCommand: Command = {
   emoji: "💸",
-  name: "Points",
+  name: validateFormatMessageKey("commandPointsMetaName"),
+  description: validateFormatMessageKey("commandPointsMetaDescrition"),
   command: "points",
   aliases: ["memes"],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Your current financial status",
 
   getCommand(payload) {
     return new PointsCommand(payload);

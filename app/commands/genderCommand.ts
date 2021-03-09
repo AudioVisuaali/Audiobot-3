@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class GenderCommand extends AbstractCommand {
@@ -39,13 +40,13 @@ class GenderCommand extends AbstractCommand {
 
 export const genderCommand: Command = {
   emoji: "⚧️",
-  name: "Gender",
+  name: validateFormatMessageKey("commandGenderMetaName"),
+  description: validateFormatMessageKey("commandGenderMetaDescription"),
   command: "gender",
   aliases: [],
   syntax: "<name>",
   examples: ["Alex", "Emma"],
   isAdmin: false,
-  description: "Get persons Gender",
 
   getCommand(payload) {
     return new GenderCommand(payload);

@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 const urbanLogo =
@@ -35,13 +36,13 @@ class UrbanCommand extends AbstractCommand {
 
 export const urbanCommand: Command = {
   emoji: "📚",
-  name: "Urban",
+  name: validateFormatMessageKey("commandUrbanMetaName"),
+  description: validateFormatMessageKey("commandUrbanMetaDescription"),
   command: "urban",
   aliases: ["urbandictionary", "dictionary"],
   syntax: "<query>",
   examples: ["car"],
   isAdmin: false,
-  description: "Search on Urban dictionary",
 
   getCommand(payload) {
     return new UrbanCommand(payload);

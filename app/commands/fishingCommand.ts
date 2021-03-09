@@ -4,6 +4,7 @@ import {
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,
 } from "~/database/types";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 import { timeUtils } from "~/utils/timeUtils";
@@ -89,8 +90,62 @@ const getBaitDiscount = (baitName: string) => {
 };
 
 class FishingCommand extends AbstractCommand {
+  private async showBaits() {
+    const guild = await this.dataSources.guildDS.tryGetGuild({
+      guildDiscordId: this.message.guild.id,
+    });
+
+    const embed = responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle(this.formatMessage("commandFishingTitleBaits"))
+      .setDescription(
+        this.formatMessage("commandFishingDescriptionBaits", {
+          prefix: guild.prefix,
+        }),
+      )
+      .addFields(
+        baits.map((bait) => {
+          const baitPoints = responseUtils.formatCurrency({
+            guild,
+            amount: bait.price,
+            useBold: true,
+          });
+
+          return {
+            name: bait.name,
+            value: `${bait.emoji} ${baitPoints}`,
+          };
+        }),
+      );
+
+    return await this.message.channel.send(embed);
+  }
+
+  private isBaitCommand() {
+    return (
+      this.args.length === 1 &&
+      (this.args[0] === "baits" || this.args[0] === "bait")
+    );
+  }
+
+  private async sendBaitNotFound() {
+    const embed = responseUtils
+      .invalidParameter({ discordUser: this.message.author })
+      .setDescription(
+        this.formatMessage("commandFishingDescriptionBaitNotFound", {
+          name: this.args[0],
+        }),
+      );
+
+    return await this.message.channel.send(embed);
+  }
+
   // eslint-disable-next-line max-statements, complexity
   public async execute() {
+    if (this.isBaitCommand()) {
+      return await this.showBaits();
+    }
+
     const guild = await this.dataSources.guildDS.tryGetGuild({
       guildDiscordId: this.message.guild.id,
     });
@@ -100,49 +155,19 @@ class FishingCommand extends AbstractCommand {
       guildDiscordId: this.message.guild.id,
     });
 
-    if (
-      this.args.length === 1 &&
-      (this.args[0] === "baits" || this.args[0] === "bait")
-    ) {
-      const embed = responseUtils
-        .positive({ discordUser: this.message.author })
-        .setTitle("🎣 Fishing baits")
-        .setDescription(
-          `Use baits to increase your change of getting a valuable drop. To use baits use **${guild.prefix}fishing <baitName>**`,
-        )
-        .addFields(
-          baits.map((bait) => {
-            const baitPoints = responseUtils.formatCurrency({
-              guild,
-              amount: bait.price,
-              useBold: true,
-            });
-
-            return {
-              name: bait.name,
-              value: `${bait.emoji} ${baitPoints}`,
-            };
-          }),
-        );
-
-      return await this.message.channel.send(embed);
-    }
-
     const bait = this.args.length ? getBaitDiscount(this.args[0]) : null;
 
     if (this.args[0] && !bait) {
-      const embed = responseUtils
-        .invalidParameter({ discordUser: this.message.author })
-        .setDescription(`Bait **${this.args[0]}** was not found`);
-
-      return await this.message.channel.send(embed);
+      return await this.sendBaitNotFound();
     }
 
     if (bait) {
       if (user.points < bait.price) {
         const embed = responseUtils
           .insufficientFunds({ discordUser: this.message.author, guild, user })
-          .setDescription("You dont have currency to purchase the bait");
+          .setDescription(
+            this.formatMessage("commandFishingNotEnoughCurrency"),
+          );
 
         return await this.message.channel.send(embed);
       }
@@ -163,11 +188,18 @@ class FishingCommand extends AbstractCommand {
 
     const fishingEmbed = responseUtils
       .neutral({ discordUser: this.message.author })
-      .setTitle(`🎣 ${this.message.author.username} is fishing`)
-      .setDescription("Please wait untill you catch a fish...");
+      .setTitle(
+        this.formatMessage("commandFishingWaitingTitle", {
+          username: this.message.author.username,
+        }),
+      )
+      .setDescription(this.formatMessage("commandFishingWaitingDescription"));
 
     if (bait) {
-      fishingEmbed.addField("Bait", bait.emoji);
+      fishingEmbed.addField(
+        this.formatMessage("commandFishingBait"),
+        bait.emoji,
+      );
     }
 
     const fishingMessage = await this.message.channel.send(fishingEmbed);
@@ -193,7 +225,11 @@ class FishingCommand extends AbstractCommand {
       .setDescription(`Do you want to sell it for ${sellForPoints}`);
 
     if (bait) {
-      sellEmbed.addField("Bait", bait.emoji, true);
+      sellEmbed.addField(
+        this.formatMessage("commandFishingBait"),
+        bait.emoji,
+        true,
+      );
     }
 
     const sellMessage = await this.message.channel.send(sellEmbed);
@@ -247,15 +283,29 @@ class FishingCommand extends AbstractCommand {
       const embed = responseUtils
         .positive({ discordUser: this.message.author })
         .setTitle(
-          `🎣 ${this.message.author.username} sold ${fishingItem.emoji}`,
+          this.formatMessage("commandFishingSoldTitle", {
+            username: this.message.author.username,
+            itemDisplay: fishingItem.emoji,
+          }),
         )
         .setDescription(
-          `You gained ${fishingItemPoints} for selling ${fishingItem.emoji}`,
+          this.formatMessage("commandFishingSoldDescription", {
+            itemWorth: fishingItemPoints,
+            itemDisplay: fishingItem.emoji,
+          }),
         )
-        .addField("Your new total is", userNewTotalPoints, true);
+        .addField(
+          this.formatMessage("commandFishingSoldNewTotal"),
+          userNewTotalPoints,
+          true,
+        );
 
       if (bait) {
-        embed.addField("Bait", bait.emoji, true);
+        embed.addField(
+          this.formatMessage("commandFishingBait"),
+          bait.emoji,
+          true,
+        );
       }
 
       return await this.message.channel.send(embed);
@@ -265,15 +315,28 @@ class FishingCommand extends AbstractCommand {
       const embed = responseUtils
         .neutral({ discordUser: this.message.author })
         .setTitle(
-          `🎣 ${this.message.author.username} found ${fishingItem.emoji}`,
+          this.formatMessage("commandFishingNotSoldTitle", {
+            username: this.message.author.username,
+            itemDisplay: fishingItem.emoji,
+          }),
         )
         .setDescription(
-          `**${this.message.author.username}** decided not to sell found item`,
+          this.formatMessage("commandFishingNotSoldDescription", {
+            username: this.message.author.username,
+          }),
         )
-        .addField("Item value", fishingItemPoints, true);
+        .addField(
+          this.formatMessage("commandFishingNotSoldItemValue"),
+          fishingItemPoints,
+          true,
+        );
 
       if (bait) {
-        embed.addField("Bait", bait.emoji, true);
+        embed.addField(
+          this.formatMessage("commandFishingBait"),
+          bait.emoji,
+          true,
+        );
       }
 
       return await this.message.channel.send(embed);
@@ -282,12 +345,23 @@ class FishingCommand extends AbstractCommand {
     const embed = responseUtils
       .negative({ discordUser: this.message.author })
       .setTitle(
-        `🎣  ${this.message.author.username} missed on item ${fishingItem.emoji}`,
+        this.formatMessage("commandFishingMissedTitle", {
+          username: this.message.author.username,
+          itemDisplay: fishingItem.emoji,
+        }),
       )
-      .addField("Item value", fishingItemPoints, true);
+      .addField(
+        this.formatMessage("commandFishingMissedItemValue"),
+        fishingItemPoints,
+        true,
+      );
 
     if (bait) {
-      embed.addField("Bait", bait.emoji, true);
+      embed.addField(
+        this.formatMessage("commandFishingBait"),
+        bait.emoji,
+        true,
+      );
     }
 
     return await this.message.channel.send(embed);
@@ -296,13 +370,13 @@ class FishingCommand extends AbstractCommand {
 
 export const fishingCommand: Command = {
   emoji: "🎣",
-  name: "Fishing",
+  name: validateFormatMessageKey("commandFishingMetaName"),
+  description: validateFormatMessageKey("commandFishingMetaDescription"),
   command: "fishing",
   aliases: ["fish"],
   syntax: "<?<<baits | bait> | <baitName>>>",
   examples: ["", "baits", baits[0].name.toLowerCase()],
   isAdmin: false,
-  description: "Relaxing fishing",
 
   getCommand(payload) {
     return new FishingCommand(payload);

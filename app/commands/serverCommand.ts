@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class ServerCommand extends AbstractCommand {
@@ -60,13 +61,13 @@ class ServerCommand extends AbstractCommand {
 
 export const serverCommand: Command = {
   emoji: "📝",
-  name: "Server Info",
+  name: validateFormatMessageKey("commandServerMetaName"),
+  description: validateFormatMessageKey("commandServerMetaDesription"),
   command: "serverinfo",
   aliases: ["server"],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Get information about the server",
 
   getCommand(payload) {
     return new ServerCommand(payload);

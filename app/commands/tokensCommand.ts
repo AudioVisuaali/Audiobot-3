@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class TokensCommand extends AbstractCommand {
@@ -21,13 +22,13 @@ class TokensCommand extends AbstractCommand {
 
 export const tokensCommand: Command = {
   emoji: "🏆",
-  name: "Tokens",
+  name: validateFormatMessageKey("commandTokensMetaName"),
+  description: validateFormatMessageKey("commandTokensMetaDescription"),
   command: "tokens",
   aliases: [],
   syntax: "<query>",
   examples: ["book"],
   isAdmin: false,
-  description: "Your tokens currently",
 
   getCommand(payload) {
     return new TokensCommand(payload);

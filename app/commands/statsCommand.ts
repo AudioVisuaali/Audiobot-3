@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 import { timeUtils } from "~/utils/timeUtils";
 
@@ -44,13 +45,13 @@ class StatsCommand extends AbstractCommand {
 
 export const statsCommand: Command = {
   emoji: "🔧",
-  name: "Stats",
+  name: validateFormatMessageKey("commandStatsMetaName"),
+  description: validateFormatMessageKey("commandStatsMetaDescription"),
   command: "stats",
   aliases: [],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Gives the status of the bot",
 
   getCommand(payload) {
     return new StatsCommand(payload);

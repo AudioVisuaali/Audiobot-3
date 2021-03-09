@@ -1,6 +1,7 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { OsuResponse } from "~/services/statsService";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class OsuCommand extends AbstractCommand {
@@ -84,13 +85,13 @@ class OsuCommand extends AbstractCommand {
 
 export const osuCommand: Command = {
   emoji: "🔴",
-  name: "Osu",
+  name: validateFormatMessageKey("commandOsuMetaName"),
+  description: validateFormatMessageKey("commandOsuMetaDescription"),
   command: "osu",
   aliases: [],
   syntax: "<username>",
   examples: ["username"],
   isAdmin: false,
-  description: "Get user information from Osu",
 
   getCommand(payload) {
     return new OsuCommand(payload);

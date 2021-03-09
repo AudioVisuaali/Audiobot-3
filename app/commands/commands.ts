@@ -45,13 +45,14 @@ import { weatherCommand } from "~/commands/weatherCommand";
 import { wikipediaCommand } from "~/commands/wikipediaCommand";
 import { yoMamaCommand } from "~/commands/yoMamaCommand";
 import { CommandPayload } from "~/handlers/onMessage";
+import { TranslationKey } from "~/translations/formatter";
 
 export interface Command {
   emoji: string;
-  name: string;
+  name: TranslationKey;
   command: string;
   aliases: string[];
-  description: string;
+  description: TranslationKey;
   syntax: string;
   examples: string[];
   isAdmin: boolean;
@@ -110,6 +111,12 @@ type SortedModules = {
   commands: Command[];
   adminCommands: Command[];
 };
+
+export const getCommand = (params: { name: string }) =>
+  commands.find(
+    (command) =>
+      command.command === params.name || command.aliases.includes(params.name),
+  );
 
 export const sortedModules = commands.reduce<SortedModules>(
   (prev, curr) => ({

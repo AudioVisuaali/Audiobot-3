@@ -4,6 +4,7 @@ import {
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,
 } from "~/database/types";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { inputUtils } from "~/utils/inputUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -155,13 +156,13 @@ class TransferCommand extends AbstractCommand {
 
 export const transferCommand: Command = {
   emoji: "💵",
-  name: "Transfer",
+  name: validateFormatMessageKey("commandTransferMetaName"),
+  description: validateFormatMessageKey("commandTransferMetaDescription"),
   command: "transfer",
   aliases: ["give"],
   syntax: "<@User> <amount>",
   examples: ["@Bot 500", "@Bot 50%"],
   isAdmin: false,
-  description: "Transfer money for other users",
 
   getCommand(payload) {
     return new TransferCommand(payload);

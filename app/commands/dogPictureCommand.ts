@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class DogPictureCommand extends AbstractCommand {
@@ -31,13 +32,13 @@ class DogPictureCommand extends AbstractCommand {
 
 export const dogPictureCommand: Command = {
   emoji: "🐕",
-  name: "Dog Picture",
+  name: validateFormatMessageKey("commandDogPictureMetaName"),
+  description: validateFormatMessageKey("commandDogPictureMetaDescription"),
   command: "dog",
   aliases: ["dogpicture"],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Get a random dog picture",
 
   getCommand(payload) {
     return new DogPictureCommand(payload);

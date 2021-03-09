@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -14,7 +15,7 @@ class ChooseCommand extends AbstractCommand {
     if (options.length === 0) {
       const embed = responseUtils
         .negative({ discordUser: this.message.author })
-        .setDescription("You need to provide options");
+        .setDescription(this.formatMessage("commandChooseProvideOptions"));
 
       return await this.message.channel.send(embed);
     }
@@ -23,7 +24,11 @@ class ChooseCommand extends AbstractCommand {
 
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
-      .setTitle(`❓ I choose ${options[position]}`);
+      .setTitle(
+        this.formatMessage("commandChooseIChoose", {
+          result: options[position],
+        }),
+      );
 
     await this.message.channel.send(embed);
   }
@@ -31,13 +36,13 @@ class ChooseCommand extends AbstractCommand {
 
 export const chooseCommand: Command = {
   emoji: "❓",
-  name: "Choose Option",
+  name: validateFormatMessageKey("commandChooseMetaName"),
   command: "choose",
   aliases: ["option"],
   syntax: "[<option>]",
   examples: ["car | house | flower"],
   isAdmin: false,
-  description: "Choose a random option",
+  description: validateFormatMessageKey("commandChooseMetaDescription"),
 
   getCommand(payload) {
     return new ChooseCommand(payload);

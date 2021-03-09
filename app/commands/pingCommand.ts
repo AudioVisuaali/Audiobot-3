@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 
 class PingCommand extends AbstractCommand {
   public async execute() {
@@ -9,13 +10,13 @@ class PingCommand extends AbstractCommand {
 
 export const pingCommand: Command = {
   emoji: "🏓",
-  name: "Ping",
+  name: validateFormatMessageKey("commandPingMetaName"),
+  description: validateFormatMessageKey("commandPingMetaDescription"),
   command: "ping",
   aliases: ["pong"],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Ping!",
 
   getCommand(payload) {
     return new PingCommand(payload);

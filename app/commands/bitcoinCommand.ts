@@ -1,6 +1,7 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { BPICurrency, BPICurrencyType } from "~/services/currencyService";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 const btcLogoUrl =
@@ -51,13 +52,13 @@ class BitcoinCommand extends AbstractCommand {
 
 export const bitcoinCommand: Command = {
   emoji: "🪙",
-  name: "Bitcoin",
+  name: validateFormatMessageKey("commandBitcoinMetaName"),
   command: "bitcoin",
   aliases: ["btc"],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Bitcoin's current value",
+  description: validateFormatMessageKey("commandBitcoinMetaDescription"),
 
   getCommand(payload) {
     return new BitcoinCommand(payload);

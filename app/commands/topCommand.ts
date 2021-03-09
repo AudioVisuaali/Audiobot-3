@@ -2,6 +2,7 @@ import Table from "table-layout";
 
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { tableUtils } from "~/utils/tableUtils";
 
 enum CommandType {
@@ -19,6 +20,11 @@ enum CommandType {
   Lost = "lost",
   Defeat = "defeat",
 }
+
+type AcceptedCommandTypes =
+  | CommandType.Newest
+  | CommandType.Win
+  | CommandType.Lost;
 
 class TopCommand extends AbstractCommand {
   private getCommandType() {
@@ -45,6 +51,21 @@ class TopCommand extends AbstractCommand {
     }
   }
 
+  private getTranslationForCommandType(params: {
+    commandType: AcceptedCommandTypes;
+  }) {
+    switch (params.commandType) {
+      case CommandType.Newest:
+        return this.formatMessage("commandTopNewest");
+
+      case CommandType.Lost:
+        return this.formatMessage("commandTopLost");
+
+      case CommandType.Win:
+        return this.formatMessage("commandTopwin");
+    }
+  }
+
   public async execute() {
     const guild = await this.dataSources.guildDS.tryGetGuild({
       guildDiscordId: this.message.guild.id,
@@ -62,16 +83,20 @@ class TopCommand extends AbstractCommand {
     });
 
     const table = new Table(displayHistories);
-    const title = `📝 Stats for __${this.message.guild.name}__ in order **${commandType}**`;
+    const title = this.formatMessage("commandTopHead", {
+      guildName: this.message.guild.name,
+      commandType: this.getTranslationForCommandType({ commandType }),
+    });
 
     await this.message.channel.send(
-      [title, "```", table.toString(), "```"].join("\n"),
+      this.formatMessage("commandTopBody", {
+        title,
+        body: table.toString(),
+      }),
     );
   }
 
-  async getCurrencyHistories(params: {
-    type: CommandType.Newest | CommandType.Win | CommandType.Lost;
-  }) {
+  async getCurrencyHistories(params: { type: AcceptedCommandTypes }) {
     switch (params.type) {
       case CommandType.Newest:
         return await this.dataSources.currencyHistoryDS.getCurrencyHistories({
@@ -95,13 +120,13 @@ class TopCommand extends AbstractCommand {
 
 export const topCommand: Command = {
   emoji: "📊",
-  name: "Top",
+  name: validateFormatMessageKey("commandTopMetaName"),
+  description: validateFormatMessageKey("commandTopMetaDescription"),
   command: "top",
   aliases: [],
   syntax: "<win | lose | latest>",
   examples: ["", "win", "lose", "latest"],
   isAdmin: false,
-  description: "Get history of economy on the server",
 
   getCommand(payload) {
     return new TopCommand(payload);

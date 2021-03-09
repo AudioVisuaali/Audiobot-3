@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class DadJokeCommand extends AbstractCommand {
@@ -23,13 +24,13 @@ class DadJokeCommand extends AbstractCommand {
 
 export const dadJokeCommand: Command = {
   emoji: "👨",
-  name: "Dad Joke",
+  name: validateFormatMessageKey("commandDadJokeMetaName"),
+  description: validateFormatMessageKey("commandDadJokeMetaDescription"),
   command: "dadjoke",
   aliases: ["dad"],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Get a random dad joke",
 
   getCommand(payload) {
     return new DadJokeCommand(payload);

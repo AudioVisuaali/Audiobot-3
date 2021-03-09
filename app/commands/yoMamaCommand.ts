@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class YoMamaCommand extends AbstractCommand {
@@ -16,13 +17,13 @@ class YoMamaCommand extends AbstractCommand {
 
 export const yoMamaCommand: Command = {
   emoji: "👩",
-  name: "Yo mama",
+  name: validateFormatMessageKey("commandYoMamaMetaName"),
+  description: validateFormatMessageKey("commandYoMamaMetaDescription"),
   command: "yomama",
   aliases: ["mama"],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Yo mama so fat",
 
   getCommand(payload) {
     return new YoMamaCommand(payload);

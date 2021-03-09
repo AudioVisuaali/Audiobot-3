@@ -3,6 +3,7 @@ import { DateTime } from "luxon";
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { WeatherResponse } from "~/services/statsService";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -106,13 +107,13 @@ class WeatherCommand extends AbstractCommand {
 
 export const weatherCommand: Command = {
   emoji: "☁️",
-  name: "Weather",
+  name: validateFormatMessageKey("commandWeatherMetaName"),
+  description: validateFormatMessageKey("commandWeatherMetaDescription"),
   command: "weather",
   aliases: [],
   syntax: "<query>",
   examples: ["UK", "US"],
   isAdmin: false,
-  description: "Search places for weather",
 
   getCommand(payload) {
     return new WeatherCommand(payload);

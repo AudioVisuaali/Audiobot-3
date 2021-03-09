@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class CurrencyCommand extends AbstractCommand {
@@ -14,7 +15,7 @@ class CurrencyCommand extends AbstractCommand {
   private createEmbedTitle() {
     return responseUtils
       .positive({ discordUser: this.message.author })
-      .setTitle("💲 You have updated currency name");
+      .setTitle(this.formatMessage("commandCurrencyTitle"));
   }
 
   private async handleCurrencyReset() {
@@ -24,7 +25,7 @@ class CurrencyCommand extends AbstractCommand {
     });
 
     const embed = this.createEmbedTitle().setDescription(
-      "You have reset currency name to **points**",
+      this.formatMessage("commandCurrencyReset"),
     );
 
     return await this.message.channel.send(embed);
@@ -45,7 +46,9 @@ class CurrencyCommand extends AbstractCommand {
     });
 
     const embed = this.createEmbedTitle().setDescription(
-      `You have set the currency name to **${guild.currencyPointsDisplayName}**`,
+      this.formatMessage("commandCurrencySetTo", {
+        currencyName: guild.currencyPointsDisplayName,
+      }),
     );
 
     return await this.message.channel.send(embed);
@@ -80,13 +83,13 @@ class CurrencyCommand extends AbstractCommand {
 
 export const currencyCommand: Command = {
   emoji: "💰",
-  name: "Currency",
+  name: validateFormatMessageKey("commandCurrencyMetaName"),
+  description: validateFormatMessageKey("commandCurrencyMetaDescription"),
   command: "currency",
   aliases: [],
   syntax: "reset | set <currencyName>",
   examples: ["reset", "set memes"],
   isAdmin: true,
-  description: "Change display name on currency",
 
   getCommand(payload) {
     return new CurrencyCommand(payload);

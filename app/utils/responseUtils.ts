@@ -3,6 +3,7 @@ import { DateTime } from "luxon";
 
 import { GuildTable } from "~/dataSources/GuildDataSource";
 import { UserTable } from "~/dataSources/UserDataSource";
+import { FormatMessageFunction } from "~/translations/formatter";
 
 class ResponseUtils {
   private colors = {
@@ -208,6 +209,15 @@ class ResponseUtils {
 
   quoteUser(opts: { user: User }) {
     return `<@${opts.user.id}>`;
+  }
+
+  quoteCasinoChannel(opts: {
+    guild: GuildTable;
+    formatMessage: FormatMessageFunction;
+  }) {
+    return opts.guild.casinoChannelId
+      ? `<#${opts.guild.casinoChannelId}>`
+      : opts.formatMessage("utilsResponseQuoteCasinoNone");
   }
 }
 

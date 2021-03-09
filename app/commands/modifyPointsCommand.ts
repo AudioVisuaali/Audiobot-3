@@ -4,14 +4,24 @@ import {
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,
 } from "~/database/types";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { inputUtils } from "~/utils/inputUtils";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
+enum CommandType {
+  Add = "add",
+  Remove = "remove",
+}
+
 class ModifyPointsCommand extends AbstractCommand {
+  private hasPermission() {
+    return this.message.author.id === this.message.guild.ownerID;
+  }
+
   // eslint-disable-next-line max-statements
   public async execute() {
-    if (this.message.author.id !== this.message.guild.ownerID) {
+    if (!this.hasPermission()) {
       const embed = responseUtils.invalidPermissions({
         discordUser: this.message.author,
       });
@@ -55,12 +65,15 @@ class ModifyPointsCommand extends AbstractCommand {
       guildDiscordId: this.message.guild.id,
     });
 
-    const modifyAmount = this.args[0] === "add" ? amount : amount * -1;
+    const modifyAmount =
+      this.args[0] === CommandType.Add ? amount : amount * -1;
 
     if (user.points + modifyAmount < 0) {
       const embed = responseUtils
         .invalidCurrency({ discordUser: this.message.author })
-        .setDescription("Users new currency cannot be negative");
+        .setDescription(
+          this.formatMessage("commandModifyPointsCannotBeNegative"),
+        );
 
       return await this.message.channel.send(embed);
     }
@@ -84,12 +97,17 @@ class ModifyPointsCommand extends AbstractCommand {
     if (amount < 1 || amount > 100000) {
       const embed = responseUtils
         .invalidParameter({ discordUser: this.message.author })
-        .setDescription(`You can only add from ${minPonts} to ${maxPonts}`);
+        .setDescription(
+          this.formatMessage("commandModifyPointsAddMinMax", {
+            minPonts,
+            maxPonts,
+          }),
+        );
 
       return await this.message.channel.send(embed);
     }
 
-    if (!["add", "remove"].includes(this.args[0])) {
+    if (!this.isValidCommandType()) {
       const embed = responseUtils.invalidParameter({
         discordUser: this.message.author,
       });
@@ -124,23 +142,32 @@ class ModifyPointsCommand extends AbstractCommand {
 
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
-      .setTitle("Modified users balance")
+      .setTitle(this.formatMessage("commandModifyPointsModifiedBalance"))
       .setDescription(responseUtils.quoteUser({ user: mentionedUser }))
-      .addField("New balance", newBalancePoints);
+      .addField(
+        this.formatMessage("commandModifyPointsNewBalance"),
+        newBalancePoints,
+      );
 
     return await this.message.channel.send(embed);
+  }
+
+  private isValidCommandType() {
+    return [CommandType.Add, CommandType.Remove].includes(
+      this.args[0] as CommandType,
+    );
   }
 }
 
 export const modifyPointsCommand: Command = {
   emoji: "💫",
-  name: "Modify Points",
+  name: validateFormatMessageKey("commandModifyPointsMetaName"),
+  description: validateFormatMessageKey("commandModifyPointsMetaDescription"),
   command: "modifyPoints",
   aliases: ["modifyP", "modifypoints"],
   syntax: "<add | remove> <@user> <amount>",
   examples: ["add @user 10000"],
   isAdmin: false,
-  description: "Modify users currency",
 
   getCommand(payload) {
     return new ModifyPointsCommand(payload);

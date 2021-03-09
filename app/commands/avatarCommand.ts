@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class AvatarCommand extends AbstractCommand {
@@ -22,13 +23,13 @@ class AvatarCommand extends AbstractCommand {
 
 export const avatarCommand: Command = {
   emoji: "📷",
-  name: "Avatar",
+  name: validateFormatMessageKey("commandAvatarMetaName"),
+  description: validateFormatMessageKey("commandAvatarMetaDescription"),
   command: "avatar",
   aliases: [],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Shows requesters avatar",
 
   getCommand(payload) {
     return new AvatarCommand(payload);

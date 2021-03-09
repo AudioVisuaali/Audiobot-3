@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class CatFactCommand extends AbstractCommand {
@@ -17,13 +18,13 @@ class CatFactCommand extends AbstractCommand {
 
 export const catFactCommand: Command = {
   emoji: "🐱",
-  name: "Cat Fact",
+  name: validateFormatMessageKey("commandCatFactMetaName"),
   command: "catfact",
   aliases: ["catf"],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Get a random catfact",
+  description: validateFormatMessageKey("commandCatFactMetaDescription"),
 
   getCommand(payload) {
     return new CatFactCommand(payload);

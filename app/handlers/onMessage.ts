@@ -1,6 +1,6 @@
 import { Guild, Message } from "discord.js";
 
-import { commands } from "~/commands/commands";
+import { getCommand } from "~/commands/commands";
 import { Context } from "~/context";
 import {
   FormatMessageFunction,
@@ -34,13 +34,11 @@ const handleMessageWorker = async (opts: {
   message: Message;
   context: Context;
 }) => {
-  // Checks for guild
   const message = opts.message as CustomMessage;
   const { context } = opts;
-  context.logger.info("Regular message received");
 
   if (!message.guild) {
-    return context.logger.info(
+    return context.logger.warn(
       "message without guild",
       formatMessageBody({ message }),
     );
@@ -83,13 +81,10 @@ const handleMessageWorker = async (opts: {
     prefix,
   });
 
-  const commandModule = commands.find(
-    (command) =>
-      command.command === commandName || command.aliases.includes(commandName),
-  );
+  const commandModule = getCommand({ name: commandName });
 
   if (!commandModule) {
-    return context.logger.info(
+    return context.logger.debug(
       "User tried invoked a command with invalid moduleName",
       { ...formatMessageBody({ message }), commandName: commandName },
     );

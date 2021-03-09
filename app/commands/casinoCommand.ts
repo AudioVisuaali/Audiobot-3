@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { inputUtils } from "~/utils/inputUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -33,16 +34,21 @@ class CasinoCommand extends AbstractCommand {
     }
   }
 
+  private createEmbed() {
+    return responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle(this.formatMessage("commandCasinoTitle"));
+  }
+
   private async handleDelete() {
     await this.dataSources.guildDS.modifyGuild({
       guildDiscordId: this.message.guild.id,
       newCasinoChannelId: null,
     });
 
-    const embed = responseUtils
-      .positive({ discordUser: this.message.author })
-      .setTitle("Admin / Casino")
-      .setDescription("Casino room has ben succesfully removed");
+    const embed = this.createEmbed().setDescription(
+      this.formatMessage("commandCasinoRoomRemoved"),
+    );
 
     return await this.message.channel.send(embed);
   }
@@ -52,13 +58,15 @@ class CasinoCommand extends AbstractCommand {
       guildDiscordId: this.message.guild.id,
     });
 
-    const embed = responseUtils
-      .positive({ discordUser: this.message.author })
-      .setTitle("Admin / Casino")
-      .addField(
-        "Current casino channel",
-        guild.casinoChannelId ? `<#${guild.casinoChannelId}>` : "_None_",
-      );
+    const channelQuote = responseUtils.quoteCasinoChannel({
+      guild,
+      formatMessage: this.formatMessage,
+    });
+
+    const embed = this.createEmbed().addField(
+      this.formatMessage("commandCasinoCurrentChannel"),
+      channelQuote,
+    );
 
     return await this.message.channel.send(embed);
   }
@@ -98,15 +106,16 @@ class CasinoCommand extends AbstractCommand {
       newCasinoChannelId: channelMention.id,
     });
 
-    const embed = responseUtils
-      .positive({ discordUser: this.message.author })
-      .setTitle("Admin / Casino")
-      .setDescription("Casino channel updated for server")
+    const channelQuote = responseUtils.quoteCasinoChannel({
+      guild: modifiedGuild,
+      formatMessage: this.formatMessage,
+    });
+
+    const embed = this.createEmbed()
+      .setDescription(this.formatMessage("commandCasinoChannelUpdated"))
       .addField(
-        "Current casino channel",
-        modifiedGuild.casinoChannelId
-          ? `<#${modifiedGuild.casinoChannelId}>`
-          : modifiedGuild.casinoChannelId,
+        this.formatMessage("commandCasinoCurrentChannel"),
+        channelQuote,
       );
 
     return await this.message.channel.send(embed);
@@ -115,13 +124,13 @@ class CasinoCommand extends AbstractCommand {
 
 export const casinoCommand: Command = {
   emoji: "🎰",
-  name: "Casino",
+  name: validateFormatMessageKey("commandCasinoMetaName"),
+  description: validateFormatMessageKey("commandCasinoMetaDescription"),
   command: "casino",
   aliases: [],
   syntax: "delete | current | <set> <#channel>",
   examples: [],
   isAdmin: true,
-  description: "Admin tool for settings casino",
 
   getCommand(payload) {
     return new CasinoCommand(payload);

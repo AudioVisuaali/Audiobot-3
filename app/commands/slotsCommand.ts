@@ -4,6 +4,7 @@ import {
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,
 } from "~/database/types";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { inputUtils } from "~/utils/inputUtils";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
@@ -104,8 +105,11 @@ class SlotsCommand extends AbstractCommand {
 
       const embed = responseUtils
         .positive({ discordUser: this.message.author })
-        .setTitle("🎰 Slotmachine")
-        .addField("Multipliers", valuesMessage);
+        .setTitle(this.formatMessage("commandSlotMachineTitle"))
+        .addField(
+          this.formatMessage("commandSlotMachineMultipliers"),
+          valuesMessage,
+        );
 
       return await this.message.channel.send(embed);
     }
@@ -164,11 +168,11 @@ class SlotsCommand extends AbstractCommand {
 
     const msg1 = responseUtils
       .neutral({ discordUser: this.message.author })
-      .setTitle("=== SLOTS ===")
+      .setTitle(this.formatMessage("commandSlotMachineHeadLetter"))
       .setDescription(createEmbedBody(gridv1));
     const msg2 = responseUtils
       .neutral({ discordUser: this.message.author })
-      .setTitle("=== SLOTS ===")
+      .setTitle(this.formatMessage("commandSlotMachineHeadLetter"))
       .setDescription(createEmbedBody(gridv2));
 
     const matches = getStraights(gridv3);
@@ -200,7 +204,7 @@ class SlotsCommand extends AbstractCommand {
       : responseUtils.negative({ discordUser: this.message.author });
 
     const msg3 = msg3Base
-      .setTitle("=== SLOTS ===")
+      .setTitle(this.formatMessage("commandSlotMachineHeadLetter"))
       .setDescription(createEmbedBody(gridv3));
 
     if (hasWon) {
@@ -216,18 +220,33 @@ class SlotsCommand extends AbstractCommand {
         useBold: true,
       });
 
+      const outcomeAmountPoints = responseUtils.formatCurrency({
+        guild,
+        amount: outcomeAmount,
+      });
+
       msg3.addField(
-        `+ ${outcomeAmount} points`,
-        `Your new total is ${newTotalPoints}`,
+        this.formatMessage("commandSlotMachineOutcomeAmount", {
+          outcome: outcomeAmountPoints,
+        }),
+        this.formatMessage("commandSlotMachineNewTotal", {
+          totalPoints: newTotalPoints,
+        }),
       );
-      msg3.addField("Stake", gamblingAmountPoints);
+      msg3.addField(
+        this.formatMessage("commandSlotMachineStake"),
+        gamblingAmountPoints,
+      );
 
       const matchesAll = isInCasinoChannel
         ? [...matches, casinoBonus]
         : matches;
 
       const mappedMultipliers = matchesAll.map(formatMultiplier);
-      msg3.addField("Multiplier", mappedMultipliers.join("\n"));
+      msg3.addField(
+        this.formatMessage("commandSlotMachineMultiplier"),
+        mappedMultipliers.join("\n"),
+      );
       await this.dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
@@ -266,7 +285,12 @@ class SlotsCommand extends AbstractCommand {
         useBold: true,
       });
 
-      msg3.addField(outcomeAmountPoints, `Your new total is ${newTotalPoints}`);
+      msg3.addField(
+        outcomeAmountPoints,
+        this.formatMessage("commandSlotMachineNewTotal", {
+          totalPoints: newTotalPoints,
+        }),
+      );
     }
 
     await timeUtils.sleep(500);
@@ -276,13 +300,13 @@ class SlotsCommand extends AbstractCommand {
 
 export const slotsCommand: Command = {
   emoji: "🎰",
-  name: "Slots",
+  name: validateFormatMessageKey("commandSlotMachineMetaName"),
+  description: validateFormatMessageKey("commandSlotMachineMetaDescription"),
   command: "slotmachine",
   aliases: ["slots"],
   syntax: "<amount>",
   examples: ["50", "third", "35%"],
   isAdmin: false,
-  description: "Gamble your money with slots",
 
   getCommand(payload) {
     return new SlotsCommand(payload);

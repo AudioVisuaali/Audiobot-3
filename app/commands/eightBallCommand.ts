@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { eightBallUtils } from "~/utils/eightBallUtils";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
@@ -37,13 +38,13 @@ class EightBallCommand extends AbstractCommand {
 
 export const eightBallCommand: Command = {
   emoji: "🎱",
-  name: "8 Ball",
+  name: validateFormatMessageKey("command8BallMetaName"),
+  description: validateFormatMessageKey("command8BallMetaDescription"),
   command: "eightball",
   aliases: ["8ball"],
   syntax: "<question>",
   examples: ["Am I going to succeed"],
   isAdmin: false,
-  description: "8 ball responses your question",
 
   getCommand(payload) {
     return new EightBallCommand(payload);

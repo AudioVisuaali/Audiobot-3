@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { networkUtils } from "~/utils/networkUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -8,11 +9,31 @@ class IpCommand extends AbstractCommand {
     const ipData = await this.services.ip.getIpData({ ip: params.ip });
 
     return [
-      { name: "City", value: ipData.city, inline: true },
-      { name: "Region", value: ipData.region, inline: true },
-      { name: "Country", value: ipData.country, inline: true },
-      { name: "Location", value: ipData.loc, inline: true },
-      { name: "IP", value: ipData.ip, inline: true },
+      {
+        name: this.formatMessage("commandIpCity"),
+        value: ipData.city,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandIpRegion"),
+        value: ipData.region,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandIpCountry"),
+        value: ipData.country,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandIpLocation"),
+        value: ipData.loc,
+        inline: true,
+      },
+      {
+        name: this.formatMessage("commandIpIP"),
+        value: ipData.ip,
+        inline: true,
+      },
     ];
   }
 
@@ -33,7 +54,7 @@ class IpCommand extends AbstractCommand {
 
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
-      .setTitle(`🌐 Information for ${this.args[0]}`)
+      .setTitle(this.formatMessage("commandIp", { address: this.args[0] }))
       .addFields(...fields);
 
     await this.message.channel.send(embed);
@@ -42,13 +63,13 @@ class IpCommand extends AbstractCommand {
 
 export const ipCommand: Command = {
   emoji: "📶",
-  name: "IP info",
+  name: validateFormatMessageKey("commandIpMetaName"),
+  description: validateFormatMessageKey("commandIpMetaDescription"),
   command: "ip",
   aliases: ["domain"],
   syntax: "<ip | domain>",
   examples: ["8.8.8.8"],
   isAdmin: false,
-  description: "Ip related information",
 
   getCommand(payload) {
     return new IpCommand(payload);

@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { fingerporiUtils } from "~/utils/fingerporiUtils";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -17,13 +18,13 @@ class FingerporiCommand extends AbstractCommand {
 
 export const fingerporiCommand: Command = {
   emoji: "🤔",
-  name: "Fingerpori",
+  name: validateFormatMessageKey("commandFingerporiMetaName"),
+  description: validateFormatMessageKey("commandFingerporiMetaDescription"),
   command: "fingerpori",
   aliases: [],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Get a random fingerpori",
 
   getCommand(payload) {
     return new FingerporiCommand(payload);

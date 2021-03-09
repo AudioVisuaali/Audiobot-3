@@ -4,6 +4,7 @@ import {
   sortedModules,
   commands as allCommands,
 } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -39,8 +40,16 @@ class HelpCommand extends AbstractCommand {
     if (!command) {
       const embed = responseUtils
         .negative({ discordUser: this.message.author })
-        .setTitle(`📖 Help => ${params.commandName}`)
-        .setDescription(`Could not find module: ${this.args[0]}`);
+        .setTitle(
+          this.formatMessage("commandHelpTitleCommand", {
+            commandName: params.commandName,
+          }),
+        )
+        .setDescription(
+          this.formatMessage("commandHelpCoudNotFindModule", {
+            moduleName: this.args[0],
+          }),
+        );
 
       return await this.message.channel.send(embed);
     }
@@ -53,16 +62,19 @@ class HelpCommand extends AbstractCommand {
 
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
-      .setTitle(`📖 Help => ${command.name}`)
-      .setDescription(command.description)
+      .setTitle(`📖 Help => ${this.formatMessage(command.name)}`)
+      .setDescription(this.formatMessage(command.description))
       .addField(
-        "Syntax",
+        this.formatMessage("commandHelpSyntax"),
         `${params.prefix}${command.command} ${command.syntax}`,
       )
-      .addField("Examples", examples);
+      .addField(this.formatMessage("commandHelpExamples"), examples);
 
     if (command.aliases.length) {
-      embed.addField("Aliases", command.aliases.join("\n"));
+      embed.addField(
+        this.formatMessage("commandHelpAliases"),
+        command.aliases.join("\n"),
+      );
     }
 
     await this.message.channel.send(embed);
@@ -101,7 +113,7 @@ class HelpCommand extends AbstractCommand {
       if (pageIndex < 1 || pageIndex > lastPageIndex) {
         const embed = responseUtils
           .invalidParameter({ discordUser: this.message.author })
-          .setDescription("Invalid page index");
+          .setDescription(this.formatMessage("commandHelpInvalidPageIndex"));
 
         return await this.message.channel.send(embed);
       }
@@ -113,15 +125,22 @@ class HelpCommand extends AbstractCommand {
 
       const embed = responseUtils
         .positive({ discordUser: this.message.author })
-        .setTitle(`📖 Help > Page ${pageIndex}`)
+        .setTitle(
+          this.formatMessage("commandHelpTitlePage", {
+            pageIndex,
+          }),
+        )
         .setDescription(
-          `You can get more info by doing ${prefix}help <command>`,
+          this.formatMessage("commandHelpGetMoreInfo", { prefix }),
         );
 
       if (isPrevPage) {
         embed.addField(
-          "Previous page",
-          `⏪ ${prefix}help ${pageIndex - 1}`,
+          this.formatMessage("commandHelpPreviousPage"),
+          this.formatMessage("commandHelpPreviousPageWithIndex", {
+            prefix,
+            pageIndex: pageIndex - 1,
+          }),
           false,
         );
       }
@@ -129,15 +148,31 @@ class HelpCommand extends AbstractCommand {
       embed.addFields(
         menuCommands.map((command) => ({
           name: command.isAdmin
-            ? `${command.emoji} ADMIN: ${command.name}`
-            : `${command.emoji} ${command.name}`,
-          value: `${prefix}help ${command.command}`,
+            ? this.formatMessage("commandHelpCommandTitleAdmin", {
+                emoji: command.emoji,
+                commandName: this.formatMessage(command.name),
+              })
+            : this.formatMessage("commandHelpCommandTitle", {
+                emoji: command.emoji,
+                commandName: this.formatMessage(command.name),
+              }),
+          value: this.formatMessage("commandHelpCommandSpecificHelp", {
+            prefix,
+            command: command.command,
+          }),
           inline: true,
         })),
       );
 
       if (isNextPage) {
-        embed.addField("Next page", `⏩ ${prefix}help ${pageIndex + 1}`, false);
+        embed.addField(
+          this.formatMessage("commandHelpNextPage"),
+          this.formatMessage("commandHelpNextPageWithIndex", {
+            prefix,
+            pageIndex: pageIndex + 1,
+          }),
+          false,
+        );
       }
 
       return await this.message.channel.send(embed);
@@ -147,13 +182,13 @@ class HelpCommand extends AbstractCommand {
 
 export const helpCommand: Command = {
   emoji: "📖",
-  name: "Help",
+  name: validateFormatMessageKey("commandHelpMetaName"),
+  description: validateFormatMessageKey("commandHelpMetaDescription"),
   command: "help",
   aliases: ["heelp", "commands"],
   syntax: "<command?>",
   examples: ["", "help"],
   isAdmin: false,
-  description: "Help menu",
 
   getCommand(payload) {
     return new HelpCommand(payload);

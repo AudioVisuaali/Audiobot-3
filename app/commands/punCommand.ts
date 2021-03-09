@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class PunCommand extends AbstractCommand {
@@ -16,13 +17,13 @@ class PunCommand extends AbstractCommand {
 
 export const punCommand: Command = {
   emoji: "✊",
-  name: "Puns",
+  name: validateFormatMessageKey("commandPunMetaName"),
+  description: validateFormatMessageKey("commandPunMetaDescription"),
   command: "pun",
   aliases: [],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Get a random pun",
 
   getCommand(payload) {
     return new PunCommand(payload);

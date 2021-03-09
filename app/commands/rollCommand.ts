@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { mathUtils } from "~/utils/mathUtil";
 
 class RollCommand extends AbstractCommand {
@@ -40,13 +41,13 @@ class RollCommand extends AbstractCommand {
 
 export const rollCommand: Command = {
   emoji: "🎲",
-  name: "Roll",
+  name: validateFormatMessageKey("commandRollMetaName"),
+  description: validateFormatMessageKey("commandRollMetaDescription"),
   command: "roll",
   aliases: [],
   syntax: "<numberMax> | <numberMin> <numberMax>",
   examples: ["42", "44 880"],
   isAdmin: false,
-  description: "Roll a random number",
 
   getCommand(payload) {
     return new RollCommand(payload);

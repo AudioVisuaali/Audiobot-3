@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { mathUtils } from "~/utils/mathUtil";
 import { responseUtils } from "~/utils/responseUtils";
 
@@ -32,13 +33,13 @@ class NumberFactCommand extends AbstractCommand {
 
 export const numberfactCommand: Command = {
   emoji: "🔢",
-  name: "NumberFact",
+  name: validateFormatMessageKey("commandNumberFactMetaName"),
+  description: validateFormatMessageKey("commandNumberFactMetaDescription"),
   command: "numberfact",
   aliases: ["number"],
   syntax: "<number>",
   examples: ["69"],
   isAdmin: false,
-  description: "Get facts for numbers",
 
   getCommand(payload) {
     return new NumberFactCommand(payload);

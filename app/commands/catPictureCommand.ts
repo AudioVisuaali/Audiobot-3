@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class CatPictureCommand extends AbstractCommand {
@@ -17,13 +18,13 @@ class CatPictureCommand extends AbstractCommand {
 
 export const catPictureCommand: Command = {
   emoji: "🐈",
-  name: "Cat Picture",
+  name: validateFormatMessageKey("commandCatPictureMetaName"),
+  description: validateFormatMessageKey("commandCatPictureMetaDescription"),
   command: "cat",
   aliases: ["catpicture"],
   syntax: "",
   examples: [],
   isAdmin: false,
-  description: "Get a random cat picture",
 
   getCommand(payload) {
     return new CatPictureCommand(payload);

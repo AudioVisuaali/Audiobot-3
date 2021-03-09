@@ -1,5 +1,6 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 const PREFIX_MAX_LENGTH = 15;
@@ -17,8 +18,13 @@ class PrefixCommand extends AbstractCommand {
     if (this.args.length === 0) {
       const embed = responseUtils
         .positive({ discordUser: this.message.author })
-        .setTitle("Prefix")
-        .addField("Change your prefix by", `${prefix}prefix <value>`);
+        .setTitle(this.formatMessage("commandPrefixTitle"))
+        .addField(
+          this.formatMessage("commandPrefixDescription"),
+          this.formatMessage("commandPrefixExampleWithValue", {
+            prefix,
+          }),
+        );
 
       return await this.message.channel.send(embed);
     }
@@ -28,11 +34,9 @@ class PrefixCommand extends AbstractCommand {
     if (newPrefix.length > PREFIX_MAX_LENGTH) {
       const embed = responseUtils
         .negative({ discordUser: this.message.author })
-        .setTitle("Prefix error")
-        .setDescription(
-          `Maximum length for the prefix is ${PREFIX_MAX_LENGTH} cahracters`,
-        )
-        .addField("Your prefix is too long", newPrefix);
+        .setTitle(this.formatMessage("commandPrefixTitleError"))
+        .setDescription(this.formatMessage("commandPrefixDescriptionTooLong"))
+        .addField(this.formatMessage("commandPrefixfieldTooLong"), newPrefix);
 
       return await this.message.channel.send(embed);
     }
@@ -44,9 +48,14 @@ class PrefixCommand extends AbstractCommand {
 
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
-      .setTitle("Prefix updated")
-      .addField("Your new prefix", newPrefix)
-      .addField("Example usage", `${newPrefix}prefix`);
+      .setTitle(this.formatMessage("commandPrefixTitleUpdated"))
+      .addField(this.formatMessage("commandPrefixNewPrefix"), newPrefix)
+      .addField(
+        this.formatMessage("commandPrefixExampleUsage"),
+        this.formatMessage("commandPrefixExample", {
+          prefix: newPrefix,
+        }),
+      );
 
     await this.message.channel.send(embed);
   }
@@ -54,13 +63,13 @@ class PrefixCommand extends AbstractCommand {
 
 export const prefixCommand: Command = {
   emoji: "⚛️",
-  name: "Prefix",
+  name: validateFormatMessageKey("commandPrefixMetaName"),
+  description: validateFormatMessageKey("commandPrefixMetaDescription"),
   command: "prefix",
   aliases: [],
   syntax: "<value>",
   examples: ["#"],
   isAdmin: true,
-  description: "Chang the prefix of your server",
 
   getCommand(payload) {
     return new PrefixCommand(payload);

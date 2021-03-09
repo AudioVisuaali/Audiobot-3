@@ -3,6 +3,7 @@ import { DateTime } from "luxon";
 
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
+import { validateFormatMessageKey } from "~/translations/formatter";
 import { inputUtils } from "~/utils/inputUtils";
 import { responseUtils } from "~/utils/responseUtils";
 import { timeUtils } from "~/utils/timeUtils";
@@ -16,9 +17,6 @@ enum ValidCommand {
   Withdraw = "withdraw",
   Remove = "remove",
 }
-
-const description =
-  "Invest your money to get a weekly 1% payback. For your money to get compounded you need to keep your money invested for a week.";
 
 class InvestCommand extends AbstractCommand {
   private async getUserAndGuild() {
@@ -85,14 +83,18 @@ class InvestCommand extends AbstractCommand {
 
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
-      .setTitle("💰 Investment")
-      .setDescription(`You invested ${transferAmountPoints}`)
+      .setTitle(this.formatMessage("commandInvestTitle"))
+      .setDescription(
+        this.formatMessage("commandInvestInvested", {
+          amount: transferAmountPoints,
+        }),
+      )
       .addField(
-        "New balance",
-        [
-          `:purse: ${updatedUserPoints}`,
-          `:moneybag: ${updatedUserStockPoints}`,
-        ].join("\n"),
+        this.formatMessage("commandInvestBalance"),
+        this.formatMessage("commandInvestTotal", {
+          userPoints: updatedUserPoints,
+          bankPoints: updatedUserStockPoints,
+        }),
       );
 
     return await this.message.channel.send(embed);
@@ -157,19 +159,27 @@ class InvestCommand extends AbstractCommand {
       amount: updatedUser.stock,
     });
 
-    const embed = responseUtils
-      .positive({ discordUser: this.message.author })
-      .setTitle("💰 Investment")
-      .setDescription(`You withdrawed ${transferAmountPoints}`)
+    const embed = this.createEmbed()
+      .setDescription(
+        this.formatMessage("commandInvestWithdrawed", {
+          withdrawedAmount: transferAmountPoints,
+        }),
+      )
       .addField(
-        "New balance",
-        [
-          `:purse: ${updatedUserPoints}`,
-          `:moneybag: ${updatedUserStockPoints}`,
-        ].join("\n"),
+        this.formatMessage("commandInvestBalance"),
+        this.formatMessage("commandInvestTotal", {
+          userPoints: updatedUserPoints,
+          bankPoints: updatedUserStockPoints,
+        }),
       );
 
     return await this.message.channel.send(embed);
+  }
+
+  private createEmbed() {
+    return responseUtils
+      .positive({ discordUser: this.message.author })
+      .setTitle(this.formatMessage("commandInvestTitle"));
   }
 
   private async sendInformation() {
@@ -192,13 +202,22 @@ class InvestCommand extends AbstractCommand {
       amount: Math.floor(user.stockMinCompoundAmount * 0.01),
     });
 
-    const embed = responseUtils
-      .positive({ discordUser: this.message.author })
-      .setTitle("💰 Invest")
-      .setDescription(description)
-      .addField("Next compound", timeUtils.durationObjectToString(nextCompound))
-      .addField("Invested", userInvestedPoints, true)
-      .addField("Next compound worth", nextCompoundPoints, true);
+    const embed = this.createEmbed()
+      .setDescription(this.formatMessage("commandInvestDescription"))
+      .addField(
+        this.formatMessage("commandInvestFieldNextCompound"),
+        timeUtils.durationObjectToString(nextCompound),
+      )
+      .addField(
+        this.formatMessage("commandInvestFieldInvested"),
+        userInvestedPoints,
+        true,
+      )
+      .addField(
+        this.formatMessage("commandInvestFieldNextCompoundWorth"),
+        nextCompoundPoints,
+        true,
+      );
 
     return await this.message.channel.send(embed);
   }
@@ -223,9 +242,7 @@ class InvestCommand extends AbstractCommand {
     if (!this.isValidCommand()) {
       const embed = responseUtils
         .invalidParameter({ discordUser: this.message.author })
-        .setDescription(
-          "Invalid action name. You can only **remove** or **add*",
-        );
+        .setDescription(this.formatMessage("commandInvestInvalidCommand"));
 
       return await this.message.channel.send(embed);
     }
@@ -246,13 +263,13 @@ class InvestCommand extends AbstractCommand {
 
 export const investCommand: Command = {
   emoji: "💰",
-  name: "Invest",
+  name: validateFormatMessageKey("commandInvestMetaName"),
+  description: validateFormatMessageKey("commandInvestMetaDescription"),
   command: "invest",
   aliases: ["bank"],
   syntax: "<<add|put|deposit> | <take|withdraw|remove>> <amount>",
   examples: ["", "add 500", "deposit 50%", "take 200", "remove half"],
   isAdmin: false,
-  description,
 
   getCommand(payload) {
     return new InvestCommand(payload);
