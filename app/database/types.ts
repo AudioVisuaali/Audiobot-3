@@ -1,5 +1,7 @@
 import { Snowflake } from "discord.js";
 
+import { Language } from "~/translations/formatter";
+
 export enum Table {
   USERS = "users",
   GUILDS = "guilds",
@@ -32,6 +34,7 @@ export type GuildTableRaw = Readonly<{
   id: number;
   uuid: string;
   prefix: string;
+  language: Language | null;
   discordId: Snowflake;
   casinoChannelId: Snowflake | null;
   currencyPointsDisplayName: string | null;

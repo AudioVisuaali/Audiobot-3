@@ -6,10 +6,10 @@ export const createLogger = (opts: { config: Config }) =>
   bunyan.createLogger({
     name: "discord-bot",
     streams: [
-      ...(opts.config.stdoutLogging
+      ...(opts.config.env.stdoutLogging
         ? [{ level: "info" as const, stream: process.stdout }]
         : []),
-      ...(opts.config.isFileLogging
+      ...(opts.config.env.isFileLogging
         ? [{ level: "warn" as const, path: "./logs/logs.json" }]
         : []),
     ],

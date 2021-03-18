@@ -79,6 +79,7 @@ export const translationsEN = {
   commandHelpInvalidPageIndex: "Invalid page index",
   commandHelpMetaDescription: "Help menu",
 
+  commandReverseProvideMessage: "Provide a message",
   commandReverseMetaName: "Reverse",
   commandReverseMetaDescription: "Reverse anything",
 

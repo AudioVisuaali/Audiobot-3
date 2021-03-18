@@ -189,7 +189,7 @@ export class StatsService extends ServiceWithContext {
     this.numberFactApi = axios.create({ baseURL: "http://numbersapi.com/" });
     this.osuApi = axios.create({
       baseURL: "https://osu.ppy.sh/api/",
-      params: { k: opts.config.osuApiKey },
+      params: { k: opts.config.apiKeys.osu },
     });
     this.urbanApi = axios.create({
       baseURL: "http://api.urbandictionary.com/",

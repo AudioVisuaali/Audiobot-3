@@ -46,24 +46,36 @@ const requireBoolean = (env: string): boolean => {
   );
 };
 
+export const getDatabaseConfigFromEnv = () => ({
+  type: requireEnv("DATABASE_TYPE"),
+  host: requireEnv("DATABASE_HOST"),
+  user: requireEnv("DATABASE_USER"),
+  port: requireIntEnv("DATABASE_PORT"),
+  password: requireEnv("DATABASE_PASSWORD"),
+  name: requireEnv("DATABASE_DATABASE_NAME"),
+});
+
+export type ConfigDatabase = ReturnType<typeof getDatabaseConfigFromEnv>;
+
 export const getConfigFromEnv = () => ({
-  stdoutLogging: requireBoolean("STDOUT_LOGGING"),
-  isFileLogging: requireBoolean("FILE_LOGGING"),
-  isProduction: requireBoolean("PRODUCTION"),
+  env: {
+    stdoutLogging: requireBoolean("STDOUT_LOGGING"),
+    isFileLogging: requireBoolean("FILE_LOGGING"),
+    isProduction: requireBoolean("PRODUCTION"),
+  },
 
-  discordAPIKey: requireEnv("DISCORD_API_KEY"),
-  discordCommandPrefixDefault: requireEnv("DISCORD_COMMAND_PREFIX_DEFAULT"),
+  bot: {
+    discordAPIKey: requireEnv("DISCORD_API_KEY"),
+    commandPrefixDefault: requireEnv("DISCORD_COMMAND_PREFIX_DEFAULT"),
+  },
 
-  googleAPIKey: requireEnv("GOOGLE_API_KEY"),
-  osuApiKey: requireEnv("OSU_API_KEY"),
-  weatherAPI: requireEnv("WEATHER_API"),
+  apiKeys: {
+    google: requireEnv("GOOGLE_API_KEY"),
+    osu: requireEnv("OSU_API_KEY"),
+    weather: requireEnv("WEATHER_API"),
+  },
 
-  databaseType: requireEnv("DATABASE_TYPE"),
-  databaseHost: requireEnv("DATABASE_HOST"),
-  databaseUser: requireEnv("DATABASE_USER"),
-  databasePort: requireIntEnv("DATABASE_PORT"),
-  databasePassword: requireEnv("DATABASE_PASSWORD"),
-  databaseDatabaseName: requireEnv("DATABASE_DATABASE_NAME"),
+  database: getDatabaseConfigFromEnv(),
 });
 
 export type Config = ReturnType<typeof getConfigFromEnv>;

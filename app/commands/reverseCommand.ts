@@ -7,11 +7,17 @@ class ReverseCommand extends AbstractCommand {
   public async execute() {
     const letter = this.args.join(" ").split("").reverse().join("");
 
+    if (letter.length === 0) {
+      return await this.message.channel.send(
+        this.formatMessage("commandReverseProvideMessage"),
+      );
+    }
+
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
       .setDescription(letter);
 
-    await this.message.channel.send(embed);
+    return await this.message.channel.send(embed);
   }
 }
 

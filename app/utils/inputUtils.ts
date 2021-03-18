@@ -2,8 +2,16 @@ import { Message } from "discord.js";
 
 import { mathUtils } from "~/utils/mathUtil";
 
+const isNumber = (value: string) => /^\d+$/.test(value);
+
 const getPercentValue = (params: { input: string }) => {
-  const percent = parseFloat(params.input.slice(0, -1));
+  const value = params.input.slice(0, -1);
+
+  if (!isNumber(value)) {
+    return null;
+  }
+
+  const percent = parseInt(value, 10);
 
   if (isNaN(percent) || percent < 0 || percent > 100) {
     return null;
@@ -13,7 +21,13 @@ const getPercentValue = (params: { input: string }) => {
 };
 
 const getKiloValue = (params: { input: string }) => {
-  const points = parseFloat(params.input.slice(0, -1));
+  const value = params.input.slice(0, -1);
+
+  if (!isNumber(value)) {
+    return null;
+  }
+
+  const points = parseInt(value, 10);
 
   if (isNaN(points) || points < 0) {
     return null;
@@ -23,7 +37,13 @@ const getKiloValue = (params: { input: string }) => {
 };
 
 const getMillionValue = (params: { input: string }) => {
-  const points = parseFloat(params.input.slice(0, -1));
+  const value = params.input.slice(0, -1);
+
+  if (!isNumber(value)) {
+    return null;
+  }
+
+  const points = parseInt(value, 10);
 
   if (isNaN(points) || points < 0) {
     return null;

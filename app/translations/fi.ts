@@ -79,6 +79,7 @@ export const translationsFI = {
   commandHelpInvalidPageIndex: "Invalid page index",
   commandHelpMetaDescription: "Help menu",
 
+  commandReverseProvideMessage: "Provide a message",
   commandReverseMetaName: "Reverse",
   commandReverseMetaDescription: "Reverse anything",
 

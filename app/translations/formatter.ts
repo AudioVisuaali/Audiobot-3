@@ -1,10 +1,12 @@
 import { translationsEN } from "./en";
 import { translationsFI } from "./fi";
 
-export enum Locales {
+export enum Language {
   En = "en",
   Fi = "fi",
 }
+
+export const defaultLanguage = Language.En;
 
 const translations: { [key: string]: typeof translationsEN } = {
   en: translationsEN,
@@ -26,7 +28,7 @@ const formMessage = (message: string, values: Values) => {
 export type TranslationKey = keyof typeof translationsEN;
 
 export const formatMessage = (
-  locale: Locales,
+  locale: Language,
   value: TranslationKey,
   values?: Values,
 ) => {
@@ -39,7 +41,7 @@ export const formatMessage = (
   return formMessage(message, values);
 };
 
-export const formatMessageSetLocale = (locale: Locales) => (
+export const formatMessageSetLocale = (locale: Language) => (
   value: keyof typeof translationsEN,
   values?: Values,
 ) => formatMessage(locale, value, values);

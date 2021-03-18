@@ -4,7 +4,7 @@ import { validateFormatMessageKey } from "~/translations/formatter";
 
 class WikipediaCommand extends AbstractCommand {
   public async execute() {
-    await this.message.channel.send("Pong");
+    await this.message.channel.send("Not ready :)");
   }
 }
 

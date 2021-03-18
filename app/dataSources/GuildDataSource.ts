@@ -8,6 +8,7 @@ import {
   DataSourceWithContext,
 } from "~/dataSources/DataSourceWithContext";
 import { Table, GuildTableRaw } from "~/database/types";
+import { Language } from "~/translations/formatter";
 import { timeUtils } from "~/utils/timeUtils";
 
 export type GuildTable = {
@@ -15,6 +16,7 @@ export type GuildTable = {
   uuid: string;
   discordId: Snowflake;
   prefix: string;
+  language: Language | null;
   casinoChannelId: Snowflake | null;
   currencyPointsDisplayName: string | null;
   createdAt: DateTime;
@@ -54,6 +56,7 @@ export class GuildDataSource extends DataSourceWithContext {
       uuid: row.uuid,
       discordId: row.discordId,
       prefix: row.prefix,
+      language: row.language,
       casinoChannelId: row.casinoChannelId,
       currencyPointsDisplayName: row.currencyPointsDisplayName,
       createdAt: DateTime.fromJSDate(row.createdAt),
@@ -70,7 +73,7 @@ export class GuildDataSource extends DataSourceWithContext {
       .insert({
         uuid: uuidv4(),
         discordId: opts.guildDiscordId,
-        prefix: this.config.discordCommandPrefixDefault,
+        prefix: this.config.bot.commandPrefixDefault,
       })
       .returning("*");
 
@@ -114,6 +117,7 @@ export class GuildDataSource extends DataSourceWithContext {
     guildDiscordId: Snowflake;
     newPrefix?: string;
     newCasinoChannelId?: Snowflake | null;
+    newLanguage?: Language | null;
     modifyCurrencyPointsDisplayName?: string | null;
   }) {
     const updatedGuilds = await this.knex<GuildTableRaw>(Table.GUILDS)
@@ -126,6 +130,10 @@ export class GuildDataSource extends DataSourceWithContext {
           : {}),
         ...(opts.modifyCurrencyPointsDisplayName !== undefined
           ? { currencyPointsDisplayName: opts.modifyCurrencyPointsDisplayName }
+          : {}),
+
+        ...(opts.newLanguage !== undefined
+          ? { language: opts.newLanguage }
           : {}),
       })
       .returning("*");

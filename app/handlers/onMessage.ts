@@ -3,9 +3,9 @@ import { Guild, Message } from "discord.js";
 import { getCommand } from "~/commands/commands";
 import { Context } from "~/context";
 import {
+  defaultLanguage,
   FormatMessageFunction,
   formatMessageSetLocale,
-  Locales,
 } from "~/translations/formatter";
 import { inputUtils } from "~/utils/inputUtils";
 
@@ -63,7 +63,7 @@ const handleMessageWorker = async (opts: {
     return;
   }
 
-  const { prefix } = await context.dataSources.guildDS.verifyGuild({
+  const { prefix, language } = await context.dataSources.guildDS.verifyGuild({
     guildDiscordId: message.guild.id,
   });
 
@@ -90,18 +90,17 @@ const handleMessageWorker = async (opts: {
     );
   }
 
-  context.logger.info("User invoked a command", {
+  context.logger.info("Command invoked", {
     ...formatMessageBody({ message }),
     module: commandModule.name,
   });
 
+  const formatMessage = formatMessageSetLocale(language ?? defaultLanguage);
+
   const commandClass = commandModule.getCommand({
     message,
     args,
-    context: {
-      ...context,
-      formatMessage: formatMessageSetLocale(Locales.En),
-    },
+    context: { ...context, formatMessage },
   });
 
   await commandClass.execute();

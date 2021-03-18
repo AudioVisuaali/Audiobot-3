@@ -24,7 +24,7 @@ class EightBallCommand extends AbstractCommand {
   }
 
   public async execute() {
-    if (this.isValidQuestion()) {
+    if (!this.isValidQuestion()) {
       return;
     }
 

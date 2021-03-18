@@ -7,6 +7,10 @@ class DogFactCommand extends AbstractCommand {
   public async execute() {
     const dogfact = await this.services.animal.getDogFact();
 
+    if (!dogfact.facts.length) {
+      return;
+    }
+
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
       .setTitle(this.formatMessage("commandDogFactTitle"))

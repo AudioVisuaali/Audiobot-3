@@ -3,4 +3,4 @@ import { createServer } from "~/server";
 
 const config = getConfigFromEnv();
 
-createServer({ config }).login(config.discordAPIKey);
+createServer({ config }).login(config.bot.discordAPIKey);

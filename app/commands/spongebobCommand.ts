@@ -31,7 +31,7 @@ export const spongebobCommand: Command = {
   emoji: "🧽",
   name: validateFormatMessageKey("commandSpongebobMetaName"),
   description: validateFormatMessageKey("commandSpongebobMetaDescription"),
-  command: "sponbebob",
+  command: "spongebob",
   aliases: ["retarded"],
   syntax: "<text>",
   examples: ["anything goes here"],
