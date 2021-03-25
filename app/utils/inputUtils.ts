@@ -4,7 +4,7 @@ import { mathUtils } from "~/utils/mathUtil";
 
 const isNumber = (value: string) => /^\d+$/.test(value);
 
-const getPercentValue = (params: { input: string }) => {
+const getPercentValue = (params: { input: string; currentPoints: number }) => {
   const value = params.input.slice(0, -1);
 
   if (!isNumber(value)) {
@@ -17,7 +17,7 @@ const getPercentValue = (params: { input: string }) => {
     return null;
   }
 
-  return Math.floor(percent * (percent / 100));
+  return Math.floor(params.currentPoints * (percent / 100));
 };
 
 const getKiloValue = (params: { input: string }) => {
@@ -69,7 +69,10 @@ class InputUtils {
     }
 
     if (opts.input.endsWith("%")) {
-      return getPercentValue({ input: opts.input });
+      return getPercentValue({
+        input: opts.input,
+        currentPoints: opts.currentPoints,
+      });
     }
 
     if (opts.input.toLowerCase().endsWith("k")) {
