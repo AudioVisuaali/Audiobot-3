@@ -1,20 +1,18 @@
 import { mathUtils } from "./mathUtil";
 
-class FingerPoriUtils {
-  private fingerPoriPrelink = "http://comics.wata.fi/fingerpori/";
+const fingerPoriPrelink = "http://comics.wata.fi/fingerpori/";
 
-  private getFingerporiFile() {
+export const fingerporiUtils = {
+  getFingerporiFile() {
     const index = mathUtils.getRandomArbitrary(0, fingerporis.length - 1);
 
     return fingerporis[index];
-  }
+  },
 
-  public getRandomFingerPori() {
-    return [this.fingerPoriPrelink, this.getFingerporiFile()].join("");
-  }
-}
-
-export const fingerporiUtils = new FingerPoriUtils();
+  getRandomFingerPori() {
+    return [fingerPoriPrelink, fingerporiUtils.getFingerporiFile()].join("");
+  },
+};
 
 const fingerporis = [
   "fingerpori-01-02-2008.gif",

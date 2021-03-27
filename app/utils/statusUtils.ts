@@ -10,8 +10,8 @@ const statuses = [
   "If you're too open-minded; your brains will fall out.",
 ];
 
-class StatusUtils {
-  public getTotalServersAndUsers(opts: { client: Client }) {
+export const statusUtils = {
+  getTotalServersAndUsers(opts: { client: Client }) {
     let serversCount = 0;
     let usersCount = 0;
 
@@ -21,11 +21,9 @@ class StatusUtils {
     });
 
     return { serversCount, usersCount };
-  }
+  },
 
-  public getRandomStatus() {
+  getRandomStatus() {
     return statuses[Math.floor(Math.random() * statuses.length)];
-  }
-}
-
-export const statusUtils = new StatusUtils();
+  },
+};
