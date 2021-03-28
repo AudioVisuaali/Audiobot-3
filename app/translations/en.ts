@@ -306,5 +306,19 @@ export const translationsEN = {
   commandTopwin: "win",
   commandTopBody: `{{title}}\n${"```"}\n{{body}}\n${"```"}`,
 
+  commandBoredMetaName: "Bored",
+  commandBoredMetaDescription: "Random things to do",
+  commandBoredMetaTitle: "Consider doing the following",
+
+  commandHolidayMetaName: "Holiday",
+  commandHolidayMetaDescription: "Get holidays",
+  commandHolidayTitle: "📅 Available holidays",
+  commandHolidayInvalidCountry: "📅 Invalid country",
+
+  commandAgifyMetaName: "Agify",
+  commandAgifyMetaDescription: "Get the most likely age for a name",
+  commandAgifyProvideName: "Provide a name",
+  commandAgifyTitle: "Age for {{name}} is {{age}}",
+
   utilsResponseQuoteCasinoNone: "_None_",
 };

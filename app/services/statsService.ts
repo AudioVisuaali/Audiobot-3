@@ -174,6 +174,36 @@ export type WeatherResponse = {
   wind: { speed: number; deg: number };
 };
 
+export type BoredActivityResponse = {
+  activity: string;
+  type: string;
+  participants: number;
+  price: number;
+  link: string;
+  key: string;
+  accessibility: number;
+};
+
+export type Holiday = {
+  date: string;
+  localName: string;
+  name: string;
+  countryCode: string;
+  fixed: boolean;
+  global: boolean;
+  counties: null | string[];
+  launchYear: null;
+  type: string;
+};
+
+export type HolidayResponse = Holiday[];
+
+export type AgifyResponse = {
+  name: string;
+  age: number | null;
+  count: number;
+};
+
 export class StatsService extends ServiceWithContext {
   protected genderApi: AxiosInstance;
   protected numberFactApi: AxiosInstance;
@@ -182,6 +212,9 @@ export class StatsService extends ServiceWithContext {
   protected wikipediaApi: AxiosInstance;
   protected stockAPI: AxiosInstance;
   protected weatherAPI: AxiosInstance;
+  protected boredApi: AxiosInstance;
+  protected holidaysApi: AxiosInstance;
+  protected agifyApi: AxiosInstance;
 
   constructor(opts: CreateServiceOptions) {
     super(opts);
@@ -207,6 +240,15 @@ export class StatsService extends ServiceWithContext {
     this.weatherAPI = axios.create({
       baseURL: "http://api.openweathermap.org/data/2.5/weather/",
       params: { appid: "1d81882a1995f3f7516f9a9619c33e9c" },
+    });
+    this.boredApi = axios.create({
+      baseURL: "https://www.boredapi.com/api/activity",
+    });
+    this.holidaysApi = axios.create({
+      baseURL: "https://date.nager.at/api/v2/publicholidays/",
+    });
+    this.agifyApi = axios.create({
+      baseURL: "https://api.agify.io/",
     });
   }
 
@@ -266,6 +308,33 @@ export class StatsService extends ServiceWithContext {
   public async getWeather(opts: { query: string }) {
     const { data } = await this.weatherAPI.get<WeatherResponse>("/", {
       params: { q: opts.query },
+    });
+
+    return data;
+  }
+
+  public async getBoredActivity() {
+    const { data } = await this.boredApi.get<BoredActivityResponse>("/");
+
+    return data;
+  }
+
+  public async getHolidays(params: { countryISO: string }) {
+    const currentYear = new Date().getUTCFullYear();
+    try {
+      const { data } = await this.holidaysApi.get<HolidayResponse>(
+        `/${currentYear}/${params.countryISO}`,
+      );
+
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  public async getNameAgify(params: { name: string }) {
+    const { data } = await this.agifyApi.get<AgifyResponse>("/", {
+      params: { name: params.name },
     });
 
     return data;

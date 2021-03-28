@@ -1,3 +1,5 @@
+import { GamesService } from "./gamesService";
+
 import { CreateServiceOptions } from "~/services/ServiceWithContext";
 import { AnimalService } from "~/services/animalService";
 import { CurrencyService } from "~/services/currencyService";
@@ -8,6 +10,7 @@ import { TimeoutService } from "~/services/timeoutServices";
 
 export type Services = {
   timeout: TimeoutService;
+  games: GamesService;
   jokes: JokesService;
   currency: CurrencyService;
   animal: AnimalService;
@@ -17,6 +20,7 @@ export type Services = {
 
 export const createServices = (opts: CreateServiceOptions): Services => ({
   timeout: new TimeoutService(),
+  games: new GamesService(opts),
   jokes: new JokesService(opts),
   currency: new CurrencyService(opts),
   animal: new AnimalService(opts),

@@ -1,6 +1,9 @@
 import { AbstractCommand } from "./AbstractCommand";
+import { agifyCommand } from "./agifyCommand";
+import { boredCommand } from "./boredCommand";
 import { currencyCommand } from "./currencyCommand";
 import { fishingCommand } from "./fishingCommand";
+import { holidayCommand } from "./holidayCommand";
 import { modifyPointsCommand } from "./modifyPointsCommand";
 import { topCommand } from "./topCommand";
 
@@ -76,11 +79,14 @@ export const commands: Command[] = [
   ipCommand,
   numberfactCommand,
   punCommand,
+  boredCommand,
   reverseCommand,
   spongebobCommand,
   urbanCommand,
+  holidayCommand,
   lennyfaceCommand,
   rollCommand,
+  agifyCommand,
   dailyCommand,
   rouletteCommand,
   pointsCommand,

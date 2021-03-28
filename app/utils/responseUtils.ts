@@ -219,6 +219,10 @@ class ResponseUtils {
       ? `<#${opts.guild.casinoChannelId}>`
       : opts.formatMessage("utilsResponseQuoteCasinoNone");
   }
+
+  capitalizeFirstLetter(params: { name: string }) {
+    return params.name.charAt(0).toUpperCase() + params.name.slice(1);
+  }
 }
 
 export const responseUtils = new ResponseUtils();
