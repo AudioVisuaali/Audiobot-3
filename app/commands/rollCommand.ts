@@ -4,10 +4,29 @@ import { validateFormatMessageKey } from "~/translations/formatter";
 import { mathUtils } from "~/utils/mathUtil";
 
 class RollCommand extends AbstractCommand {
-  private async sendRandomArbitary(params: { min?: number; max?: number }) {
-    this.formatMessage("commandRollReply", {
+  private getRandomArbitaryMessage(params: { min?: number; max?: number }) {
+    return this.formatMessage("commandRollReply", {
       number: mathUtils.getRandomArbitrary(params.min ?? 0, params.max ?? 99),
     });
+  }
+
+  private getMessage(numbers: number[]) {
+    switch (numbers.length) {
+      case 0:
+        return this.getRandomArbitaryMessage({ min: 0, max: 99 });
+
+      case 1:
+        return this.getRandomArbitaryMessage({ min: 0, max: numbers[0] });
+
+      case 2:
+        return this.getRandomArbitaryMessage({
+          min: numbers[0],
+          max: numbers[1],
+        });
+
+      default:
+        return null;
+    }
   }
 
   public async execute() {
@@ -21,21 +40,13 @@ class RollCommand extends AbstractCommand {
       return number;
     });
 
-    switch (numbers.length) {
-      case 0:
-        return await this.sendRandomArbitary({ min: 0, max: 99 });
+    const message = this.getMessage(numbers);
 
-      case 1:
-        return await this.sendRandomArbitary({ min: 0, max: numbers[0] });
-
-      case 2:
-        return await this.sendRandomArbitary({
-          min: numbers[0],
-          max: numbers[1],
-        });
-
-      default:
+    if (!message) {
+      return;
     }
+
+    this.message.channel.send(message);
   }
 }
 

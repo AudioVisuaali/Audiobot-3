@@ -321,4 +321,8 @@ export const translationsFI = {
   commandAgifyTitle: "Age for {{name}} is {{age}}",
 
   utilsResponseQuoteCasinoNone: "_None_",
-};
+
+  commandJoinVoiceAFKMetaName: "Join voice AFK",
+  commandJoinVoiceAFKMetaDescription:
+    "Bot joins a voice channel you are currently in ",
+} as const;

@@ -4,6 +4,7 @@ import { boredCommand } from "./boredCommand";
 import { currencyCommand } from "./currencyCommand";
 import { fishingCommand } from "./fishingCommand";
 import { holidayCommand } from "./holidayCommand";
+import { joinVoiceCommand } from "./joinVoiceAFKCommand";
 import { modifyPointsCommand } from "./modifyPointsCommand";
 import { topCommand } from "./topCommand";
 
@@ -111,6 +112,7 @@ export const commands: Command[] = [
   topCommand,
   modifyPointsCommand,
   pingCommand,
+  joinVoiceCommand,
 ];
 
 type SortedModules = {
