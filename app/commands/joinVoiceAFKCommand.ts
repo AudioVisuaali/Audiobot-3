@@ -1,6 +1,7 @@
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { validateFormatMessageKey } from "~/translations/formatter";
+import { responseUtils } from "~/utils/responseUtils";
 
 class JoinVoiceAFKCommand extends AbstractCommand {
   private getMessageOwnerVoiceChannel() {
@@ -32,8 +33,16 @@ class JoinVoiceAFKCommand extends AbstractCommand {
     }
 
     try {
-      voiceChannel.join();
-    } catch (e) {}
+      await voiceChannel.join();
+    } catch (e) {
+      const embed = responseUtils
+        .negative({ discordUser: this.message.author })
+        .setTitle(
+          this.formatMessage("commandJoinVoiceAFKNoPermissionToJoinVoice"),
+        );
+
+      await this.message.channel.send(embed);
+    }
   }
 }
 
@@ -42,7 +51,7 @@ export const joinVoiceCommand: Command = {
   name: validateFormatMessageKey("commandJoinVoiceAFKMetaName"),
   description: validateFormatMessageKey("commandJoinVoiceAFKMetaDescription"),
   command: "joinVoiceAFK",
-  aliases: [""],
+  aliases: ["joinvoiceafk"],
   syntax: "",
   examples: [],
   isAdmin: true,

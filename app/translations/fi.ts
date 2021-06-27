@@ -325,4 +325,5 @@ export const translationsFI = {
   commandJoinVoiceAFKMetaName: "Join voice AFK",
   commandJoinVoiceAFKMetaDescription:
     "Bot joins a voice channel you are currently in ",
+  commandJoinVoiceAFKNoPermissionToJoinVoice: "No permission to join voice",
 } as const;
