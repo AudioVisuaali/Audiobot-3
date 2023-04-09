@@ -9,6 +9,23 @@ StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=motion-fm
 Environment=PATH=/usr/bin:/usr/local/bin
+Environment=STDOUT_LOGGING=TRUE
+Environment=FILE_LOGGING=TRUE
+Environment=PRODUCTION=TRUE
+
+Environment=DATABASE_TYPE=pg
+Environment=DATABASE_HOST=localhost
+Environment=DATABASE_USER=discord-bot
+Environment=DATABASE_PORT=5432
+Environment=DATABASE_PASSWORD=discord-bot
+Environment=DATABASE_DATABASE_NAME=discord-bot
+
+Environment=DISCORD_API_KEY=
+Environment=DISCORD_COMMAND_PREFIX_DEFAULT=!
+
+Environment=GOOGLE_API_KEY=
+Environment=OSU_API_KEY=
+Environment=WEATHER_API=
 
 [Install]
 WantedBy=multi-user.target
