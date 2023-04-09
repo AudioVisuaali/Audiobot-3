@@ -1,5 +1,5 @@
 [Unit]
-Description=Motion FM
+Description=Discord AudioBot 3
 [Service]
 ExecStart=node ./dist/index.js
 WorkingDirectory=/home/discord-audiobot/Audiobot-3
