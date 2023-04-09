@@ -21,7 +21,16 @@ export const createServer = ({ config }: { config: Config }) => {
     dataSources,
   });
 
-  const client = new Discord.Client({ intents: [GatewayIntentBits.Guilds] });
+  const client = new Discord.Client({
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.MessageContent,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.GuildMembers,
+      GatewayIntentBits.GuildMessageReactions,
+      GatewayIntentBits.DirectMessages,
+    ],
+  });
 
   client.on("ready", handleOnReady({ client, context }));
   client.on("message", handleMessage({ context }));
