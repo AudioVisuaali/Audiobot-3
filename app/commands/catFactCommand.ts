@@ -12,7 +12,7 @@ class CatFactCommand extends AbstractCommand {
       .setTitle(this.formatMessage("commandCatFactTitle"))
       .setDescription(catfact.fact);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

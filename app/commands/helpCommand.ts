@@ -51,7 +51,7 @@ class HelpCommand extends AbstractCommand {
           }),
         );
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const examples = command.examples.length
@@ -64,24 +64,29 @@ class HelpCommand extends AbstractCommand {
       .positive({ discordUser: this.message.author })
       .setTitle(`📖 Help => ${this.formatMessage(command.name)}`)
       .setDescription(this.formatMessage(command.description))
-      .addField(
-        this.formatMessage("commandHelpSyntax"),
-        `${params.prefix}${command.command} ${command.syntax}`,
-      )
-      .addField(this.formatMessage("commandHelpExamples"), examples);
+      .addFields([
+        {
+          name: this.formatMessage("commandHelpSyntax"),
+          value: `${params.prefix}${command.command} ${command.syntax}`,
+        },
+        {
+          name: this.formatMessage("commandHelpExamples"),
+          value: examples,
+        },
+      ]);
 
     if (command.aliases.length) {
-      embed.addField(
-        this.formatMessage("commandHelpAliases"),
-        command.aliases.join("\n"),
-      );
+      embed.addFields({
+        name: this.formatMessage("commandHelpAliases"),
+        value: command.aliases.join("\n"),
+      });
     }
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 
   private isServerOwner() {
-    return this.message.guild.ownerID === this.message.author.id;
+    return this.message.guild.ownerId === this.message.author.id;
   }
 
   public async execute() {
@@ -115,7 +120,7 @@ class HelpCommand extends AbstractCommand {
           .invalidParameter({ discordUser: this.message.author })
           .setDescription(this.formatMessage("commandHelpInvalidPageIndex"));
 
-        return await this.message.channel.send(embed);
+        return await this.message.channel.send({ embeds: [embed] });
       }
 
       const startIndex = (pageIndex - 1) * COMMAND_AMOUNT_PER_PAGE;
@@ -135,14 +140,14 @@ class HelpCommand extends AbstractCommand {
         );
 
       if (isPrevPage) {
-        embed.addField(
-          this.formatMessage("commandHelpPreviousPage"),
-          this.formatMessage("commandHelpPreviousPageWithIndex", {
+        embed.addFields({
+          name: this.formatMessage("commandHelpPreviousPage"),
+          value: this.formatMessage("commandHelpPreviousPageWithIndex", {
             prefix,
             pageIndex: pageIndex - 1,
           }),
-          false,
-        );
+          inline: false,
+        });
       }
 
       embed.addFields(
@@ -165,17 +170,17 @@ class HelpCommand extends AbstractCommand {
       );
 
       if (isNextPage) {
-        embed.addField(
-          this.formatMessage("commandHelpNextPage"),
-          this.formatMessage("commandHelpNextPageWithIndex", {
+        embed.addFields({
+          name: this.formatMessage("commandHelpNextPage"),
+          value: this.formatMessage("commandHelpNextPageWithIndex", {
             prefix,
             pageIndex: pageIndex + 1,
           }),
-          false,
-        );
+          inline: false,
+        });
       }
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
   }
 }

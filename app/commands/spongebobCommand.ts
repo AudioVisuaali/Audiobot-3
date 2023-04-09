@@ -23,7 +23,7 @@ class SpongeBobCommand extends AbstractCommand {
       .setThumbnail(spongebob)
       .setDescription(letter);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

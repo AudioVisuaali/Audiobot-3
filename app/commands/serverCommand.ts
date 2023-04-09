@@ -7,47 +7,43 @@ class ServerCommand extends AbstractCommand {
   public async execute() {
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
-      .setAuthor(
-        this.message.guild.name,
-        this.message.guild.iconURL() ?? undefined,
-      )
-      .addField(
-        this.formatMessage("commandServerVerificationLeve"),
-        this.message.guild.verificationLevel,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandServerRegion"),
-        this.message.guild.region,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandServerUsers"),
-        this.message.guild.memberCount,
-        true,
-      )
-      // .addField("Channels -> categories,text,voice")
-      .addField(
-        this.formatMessage("commandServerLargeServer"),
-        this.message.guild.large,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandServerPartnered"),
-        this.message.guild.partnered ? "True" : "False",
-        true,
-      )
-      // .addField("Emojis", message.guild.emojis, true) // Count
-      .addField(
-        this.formatMessage("commandServerOwner"),
-        this.message.guild?.owner?.nickname ?? "Unknown",
-        true,
-      )
-      .addField(
-        this.formatMessage("commandServerCreatedAt"),
-        this.message.guild.createdAt,
-        true,
-      );
+      .setAuthor({
+        name: this.message.guild.name,
+        iconURL: this.message.guild.iconURL() ?? undefined,
+      })
+      .addFields([
+        {
+          name: this.formatMessage("commandServerVerificationLeve"),
+          value: this.message.guild.verificationLevel.toString(),
+          inline: true,
+        },
+        {
+          name: this.formatMessage("commandServerUsers"),
+          value: this.message.guild.memberCount.toString(),
+          inline: true,
+        },
+        {
+          name: this.formatMessage("commandServerLargeServer"),
+          value: this.message.guild.large ? "True" : "False",
+          inline: true,
+        },
+        {
+          name: this.formatMessage("commandServerPartnered"),
+          value: this.message.guild.partnered ? "True" : "False",
+          inline: true,
+        },
+        {
+          name: this.formatMessage("commandServerCreatedAt"),
+          value: this.message.guild.createdAt.toISOString(),
+          inline: true,
+        },
+      ]);
+    // .addField("Emojis", message.guild.emojis, true) // Count
+    // .addField(
+    //   this.formatMessage("commandServerOwner"),
+    //   this.message.guild?.fetchOwner()?.nickname ?? "Unknown",
+    //   true,
+    // )
     // .addField("Roles", message.guild.roles, true);
 
     const serverUrl = this.message.guild.iconURL();
@@ -55,7 +51,7 @@ class ServerCommand extends AbstractCommand {
       embed.setThumbnail(serverUrl);
     }
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

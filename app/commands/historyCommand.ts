@@ -51,7 +51,7 @@ class HistoryCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      await this.message.channel.send(embed);
+      await this.message.channel.send({ embeds: [embed] });
 
       return null;
     }
@@ -62,7 +62,7 @@ class HistoryCommand extends AbstractCommand {
         .setTitle(this.formatMessage("commandHistoryEmptyTitle"))
         .setDescription(this.formatMessage("commandHistoryEmptyDescription"));
 
-      await this.message.channel.send(embed);
+      await this.message.channel.send({ embeds: [embed] });
 
       return null;
     }

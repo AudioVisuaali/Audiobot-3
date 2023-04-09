@@ -118,7 +118,7 @@ class FishingCommand extends AbstractCommand {
         }),
       );
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   private isBaitCommand() {
@@ -137,7 +137,7 @@ class FishingCommand extends AbstractCommand {
         }),
       );
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   // eslint-disable-next-line max-statements, complexity
@@ -169,7 +169,7 @@ class FishingCommand extends AbstractCommand {
             this.formatMessage("commandFishingNotEnoughCurrency"),
           );
 
-        return await this.message.channel.send(embed);
+        return await this.message.channel.send({ embeds: [embed] });
       }
 
       await this.dataSources.currencyHistoryDS.addCurrencyHistory({
@@ -196,13 +196,15 @@ class FishingCommand extends AbstractCommand {
       .setDescription(this.formatMessage("commandFishingWaitingDescription"));
 
     if (bait) {
-      fishingEmbed.addField(
-        this.formatMessage("commandFishingBait"),
-        bait.emoji,
-      );
+      fishingEmbed.addFields({
+        name: this.formatMessage("commandFishingBait"),
+        value: bait.emoji,
+      });
     }
 
-    const fishingMessage = await this.message.channel.send(fishingEmbed);
+    const fishingMessage = await this.message.channel.send({
+      embeds: [fishingEmbed],
+    });
 
     const fishingDurationMS = mathUtils.getRandomArbitrary(100000, 30000);
     await timeUtils.sleep(fishingDurationMS);
@@ -225,24 +227,29 @@ class FishingCommand extends AbstractCommand {
       .setDescription(`Do you want to sell it for ${sellForPoints}`);
 
     if (bait) {
-      sellEmbed.addField(
-        this.formatMessage("commandFishingBait"),
-        bait.emoji,
-        true,
-      );
+      sellEmbed.addFields({
+        name: this.formatMessage("commandFishingBait"),
+        value: bait.emoji,
+        inline: true,
+      });
     }
 
-    const sellMessage = await this.message.channel.send(sellEmbed);
+    const sellMessage = await this.message.channel.send({
+      embeds: [sellEmbed],
+    });
 
     await sellMessage.react(ReactType.Success);
     await sellMessage.react(ReactType.Failure);
 
-    const reactionCollection = await sellMessage.awaitReactions(
-      (reaction) =>
-        reaction.users.cache.get(this.message.author.id) &&
-        [ReactType.Success, ReactType.Failure].includes(reaction.emoji.name),
-      { max: 1, time: 15000 },
-    );
+    const reactionCollection = await sellMessage.awaitReactions({
+      max: 1,
+      time: 15000,
+      filter: (reaction) =>
+        reaction.emoji.name !== "" &&
+        [ReactType.Success, ReactType.Failure].includes(
+          reaction.emoji.name as ReactType,
+        ),
+    });
 
     await sellMessage.delete();
 
@@ -294,21 +301,21 @@ class FishingCommand extends AbstractCommand {
             itemDisplay: fishingItem.emoji,
           }),
         )
-        .addField(
-          this.formatMessage("commandFishingSoldNewTotal"),
-          userNewTotalPoints,
-          true,
-        );
+        .addFields({
+          name: this.formatMessage("commandFishingSoldNewTotal"),
+          value: userNewTotalPoints,
+          inline: true,
+        });
 
       if (bait) {
-        embed.addField(
-          this.formatMessage("commandFishingBait"),
-          bait.emoji,
-          true,
-        );
+        embed.addFields({
+          name: this.formatMessage("commandFishingBait"),
+          value: bait.emoji,
+          inline: true,
+        });
       }
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     if (reactionCollection.get(ReactType.Failure)) {
@@ -325,21 +332,21 @@ class FishingCommand extends AbstractCommand {
             username: this.message.author.username,
           }),
         )
-        .addField(
-          this.formatMessage("commandFishingNotSoldItemValue"),
-          fishingItemPoints,
-          true,
-        );
+        .addFields({
+          name: this.formatMessage("commandFishingNotSoldItemValue"),
+          value: fishingItemPoints,
+          inline: true,
+        });
 
       if (bait) {
-        embed.addField(
-          this.formatMessage("commandFishingBait"),
-          bait.emoji,
-          true,
-        );
+        embed.addFields({
+          name: this.formatMessage("commandFishingBait"),
+          value: bait.emoji,
+          inline: true,
+        });
       }
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const embed = responseUtils
@@ -350,21 +357,21 @@ class FishingCommand extends AbstractCommand {
           itemDisplay: fishingItem.emoji,
         }),
       )
-      .addField(
-        this.formatMessage("commandFishingMissedItemValue"),
-        fishingItemPoints,
-        true,
-      );
+      .addFields({
+        name: this.formatMessage("commandFishingMissedItemValue"),
+        value: fishingItemPoints,
+        inline: true,
+      });
 
     if (bait) {
-      embed.addField(
-        this.formatMessage("commandFishingBait"),
-        bait.emoji,
-        true,
-      );
+      embed.addFields({
+        name: this.formatMessage("commandFishingBait"),
+        value: bait.emoji,
+        inline: true,
+      });
     }
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 }
 

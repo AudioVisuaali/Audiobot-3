@@ -1,21 +1,16 @@
-version: "3.8"
+version: '3.8'
 services:
-  dev-db:
-    image: postgres:12-alpine
+  database:
+    image: postgres:14.1-alpine
     restart: always
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_PASSWORD: discord-bot
       POSTGRES_USER: discord-bot
       POSTGRES_DB: discord-bot
-
-  temp-db:
-    image: postgres:12-alpine
-    restart: always
     ports:
-      - 54321:5433
-    environment:
-      POSTGRES_PASSWORD: KEKW
-      POSTGRES_USER: KEKW
-      POSTGRES_DB: KEKW
+      - '5432:5432'
+    volumes: 
+      - ./postgresql:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local

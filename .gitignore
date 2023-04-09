@@ -7,3 +7,5 @@ dist/*
 .bin
 .env
 logs/*
+.yarn
+postgresql

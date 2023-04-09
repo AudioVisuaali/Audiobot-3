@@ -1,4 +1,4 @@
-import { Guild, Message } from "discord.js";
+import { ChannelType, Guild, Message } from "discord.js";
 
 import { getCommand } from "~/commands/commands";
 import { Context } from "~/context";
@@ -48,7 +48,7 @@ const handleMessageWorker = async (opts: {
     return context.logger.warn("Bot messaged", formatMessageBody({ message }));
   }
 
-  if (message.channel.type === "dm") {
+  if (message.channel.type === ChannelType.DM) {
     return context.logger.warn(
       "User tried to send a dm message",
       formatMessageBody({ message }),

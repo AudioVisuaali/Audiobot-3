@@ -17,7 +17,7 @@ class AvatarCommand extends AbstractCommand {
           this.message.author.defaultAvatarURL,
       );
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

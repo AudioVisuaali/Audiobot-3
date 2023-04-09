@@ -57,7 +57,7 @@ class IpCommand extends AbstractCommand {
       .setTitle(this.formatMessage("commandIp", { address: this.args[0] }))
       .addFields(...fields);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

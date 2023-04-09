@@ -2,6 +2,16 @@ name: CI
 on: [push]
 
 jobs:
+  docker: 
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image 
+      run: docker build -t title .
+
   ci:
     runs-on: ubuntu-latest
     container: node:15
@@ -13,7 +23,10 @@ jobs:
       run: yarn install --frozen-lockfile
     
     - name: Typecheck
-      run: yarn tsc --noEmit
+      run: yarn typescript-check
     
     - name: Lint
       run: yarn lint
+
+    - name: Check for non generated files
+      run: git diff --exit-code

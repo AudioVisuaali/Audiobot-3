@@ -23,7 +23,7 @@ class WeatherCommand extends AbstractCommand {
       )
       .addFields(...this.generatePrivateFields({ weather }));
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 
   private generatePrivateFields(params: { weather: WeatherResponse }) {

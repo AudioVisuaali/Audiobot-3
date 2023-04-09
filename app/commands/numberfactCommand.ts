@@ -27,7 +27,7 @@ class NumberFactCommand extends AbstractCommand {
       .setTitle(this.formatMessage("commandNumberFactTitle", { number }))
       .setDescription(fact);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

@@ -19,7 +19,7 @@ const MAX_AMOUNT = 100000;
 
 class ModifyPointsCommand extends AbstractCommand {
   private hasPermission() {
-    return this.message.author.id === this.message.guild.ownerID;
+    return this.message.author.id === this.message.guild.ownerId;
   }
 
   // eslint-disable-next-line max-statements
@@ -29,7 +29,7 @@ class ModifyPointsCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     if (this.args.length !== 3) {
@@ -37,7 +37,7 @@ class ModifyPointsCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const mentionedUser = inputUtils.getUserMention({
@@ -50,7 +50,7 @@ class ModifyPointsCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const amount = mathUtils.parseStringToNumber(this.args[2]);
@@ -60,7 +60,7 @@ class ModifyPointsCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const user = await this.dataSources.userDS.tryGetUser({
@@ -78,7 +78,7 @@ class ModifyPointsCommand extends AbstractCommand {
           this.formatMessage("commandModifyPointsCannotBeNegative"),
         );
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const guild = await this.dataSources.guildDS.tryGetGuild({
@@ -107,7 +107,7 @@ class ModifyPointsCommand extends AbstractCommand {
           }),
         );
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     if (!this.isValidCommandType()) {
@@ -115,7 +115,7 @@ class ModifyPointsCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const modifiedUser = await this.dataSources.userDS.tryModifyCurrency({
@@ -147,12 +147,12 @@ class ModifyPointsCommand extends AbstractCommand {
       .positive({ discordUser: this.message.author })
       .setTitle(this.formatMessage("commandModifyPointsModifiedBalance"))
       .setDescription(responseUtils.quoteUser({ user: mentionedUser }))
-      .addField(
-        this.formatMessage("commandModifyPointsNewBalance"),
-        newBalancePoints,
-      );
+      .addFields({
+        name: this.formatMessage("commandModifyPointsNewBalance"),
+        value: newBalancePoints,
+      });
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   private isValidCommandType() {

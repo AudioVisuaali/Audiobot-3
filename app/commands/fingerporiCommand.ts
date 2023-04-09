@@ -12,7 +12,7 @@ class FingerporiCommand extends AbstractCommand {
       .positive({ discordUser: this.message.author })
       .setImage(fingerporiURL);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

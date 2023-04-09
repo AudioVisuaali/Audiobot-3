@@ -12,6 +12,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "strict": true,
+    "isolatedModules": false,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
@@ -19,6 +20,6 @@
       "~/*": ["app/*"]
     }
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["**/*.ts"]
+  "exclude": ["./node_modules", "dist", "*.d.ts"],
+  "include": ["app/**/*.ts"]
 }

@@ -11,7 +11,7 @@ class PunCommand extends AbstractCommand {
       .positive({ discordUser: this.message.author })
       .setDescription(pun.Pun);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

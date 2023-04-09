@@ -17,7 +17,7 @@ class ChooseCommand extends AbstractCommand {
         .negative({ discordUser: this.message.author })
         .setDescription(this.formatMessage("commandChooseProvideOptions"));
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const position = mathUtils.getRandomArbitrary(0, options.length - 1);
@@ -30,7 +30,7 @@ class ChooseCommand extends AbstractCommand {
         }),
       );
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

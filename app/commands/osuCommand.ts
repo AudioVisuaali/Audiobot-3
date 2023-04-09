@@ -70,7 +70,7 @@ class OsuCommand extends AbstractCommand {
           this.formatMessage("errorOsuUserNotFound", { username }),
         );
 
-      return this.message.channel.send(embed);
+      return this.message.channel.send({ embeds: [embed] });
     }
 
     const embed = responseUtils
@@ -79,7 +79,7 @@ class OsuCommand extends AbstractCommand {
       .setDescription(this.formatMessage("commandOsuDescription", { username }))
       .addFields(...this.getUserFields({ osuUser: user }));
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

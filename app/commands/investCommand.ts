@@ -45,7 +45,7 @@ class InvestCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     if (transferAmount > user.points) {
@@ -55,7 +55,7 @@ class InvestCommand extends AbstractCommand {
         guild,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const updatedUser = await this.dataSources.userDS.tryModifyCurrency({
@@ -89,15 +89,15 @@ class InvestCommand extends AbstractCommand {
           amount: transferAmountPoints,
         }),
       )
-      .addField(
-        this.formatMessage("commandInvestBalance"),
-        this.formatMessage("commandInvestTotal", {
+      .addFields({
+        name: this.formatMessage("commandInvestBalance"),
+        value: this.formatMessage("commandInvestTotal", {
           userPoints: updatedUserPoints,
           bankPoints: updatedUserStockPoints,
         }),
-      );
+      });
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   private async handleWithdraw() {
@@ -113,7 +113,7 @@ class InvestCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     if (transferAmount > user.stock) {
@@ -123,7 +123,7 @@ class InvestCommand extends AbstractCommand {
         guild,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const minCompoundChanges =
@@ -165,15 +165,15 @@ class InvestCommand extends AbstractCommand {
           withdrawedAmount: transferAmountPoints,
         }),
       )
-      .addField(
-        this.formatMessage("commandInvestBalance"),
-        this.formatMessage("commandInvestTotal", {
+      .addFields({
+        name: this.formatMessage("commandInvestBalance"),
+        value: this.formatMessage("commandInvestTotal", {
           userPoints: updatedUserPoints,
           bankPoints: updatedUserStockPoints,
         }),
-      );
+      });
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   private createEmbed() {
@@ -204,22 +204,24 @@ class InvestCommand extends AbstractCommand {
 
     const embed = this.createEmbed()
       .setDescription(this.formatMessage("commandInvestDescription"))
-      .addField(
-        this.formatMessage("commandInvestFieldNextCompound"),
-        timeUtils.durationObjectToString(nextCompound),
-      )
-      .addField(
-        this.formatMessage("commandInvestFieldInvested"),
-        userInvestedPoints,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandInvestFieldNextCompoundWorth"),
-        nextCompoundPoints,
-        true,
-      );
+      .addFields([
+        {
+          name: this.formatMessage("commandInvestFieldNextCompound"),
+          value: timeUtils.durationObjectToString(nextCompound),
+        },
+        {
+          name: this.formatMessage("commandInvestFieldInvested"),
+          value: userInvestedPoints,
+          inline: true,
+        },
+        {
+          name: this.formatMessage("commandInvestFieldNextCompoundWorth"),
+          value: nextCompoundPoints,
+          inline: true,
+        },
+      ]);
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   private isValidCommand() {
@@ -236,7 +238,7 @@ class InvestCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     if (!this.isValidCommand()) {
@@ -244,7 +246,7 @@ class InvestCommand extends AbstractCommand {
         .invalidParameter({ discordUser: this.message.author })
         .setDescription(this.formatMessage("commandInvestInvalidCommand"));
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     switch (this.args[0]) {

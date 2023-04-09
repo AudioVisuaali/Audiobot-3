@@ -85,7 +85,7 @@ class DailyCommand extends AbstractCommand {
         availableAt: dailyAvailable.availableAt,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const { user, guild } = await this.getUserAndGuild();
@@ -125,7 +125,7 @@ class DailyCommand extends AbstractCommand {
       }),
     );
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   private createEmbed(params: { guild: GuildTable; dailyTotal: number }) {

@@ -18,7 +18,7 @@ class DadJokeCommand extends AbstractCommand {
       description: dadJoke.attachments[0].text,
     });
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

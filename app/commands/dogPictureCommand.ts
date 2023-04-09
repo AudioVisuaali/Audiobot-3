@@ -26,7 +26,7 @@ class DogPictureCommand extends AbstractCommand {
       .setTitle(this.formatMessage("commandDogPictureTitle"))
       .setImage(dogPicture.url);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

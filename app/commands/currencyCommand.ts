@@ -10,7 +10,7 @@ enum CommandType {
 
 class CurrencyCommand extends AbstractCommand {
   private isOwner() {
-    return this.message.author.id === this.message.guild.ownerID;
+    return this.message.author.id === this.message.guild.ownerId;
   }
 
   private isValidActionName() {
@@ -35,7 +35,7 @@ class CurrencyCommand extends AbstractCommand {
       this.formatMessage("commandCurrencyReset"),
     );
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   private async handleCurrencySet() {
@@ -58,7 +58,7 @@ class CurrencyCommand extends AbstractCommand {
       }),
     );
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   public async execute() {
@@ -75,7 +75,7 @@ class CurrencyCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     switch (this.args[0]) {

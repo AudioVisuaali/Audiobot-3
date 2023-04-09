@@ -16,7 +16,7 @@ class DogFactCommand extends AbstractCommand {
       .setTitle(this.formatMessage("commandDogFactTitle"))
       .setDescription(dogfact.facts[0]);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

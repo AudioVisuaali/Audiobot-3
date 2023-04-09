@@ -11,7 +11,7 @@ class BoredCommand extends AbstractCommand {
       .setTitle(this.formatMessage("commandBoredMetaTitle"))
       .setDescription(activity.activity);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

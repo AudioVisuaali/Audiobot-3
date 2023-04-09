@@ -32,7 +32,7 @@ class EightBallCommand extends AbstractCommand {
       .positive({ discordUser: this.message.author })
       .setDescription(`🎱 ${this.getRandomEightBall()}`);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

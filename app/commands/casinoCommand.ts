@@ -1,3 +1,5 @@
+import { ChannelType } from "discord.js";
+
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { validateFormatMessageKey } from "~/translations/formatter";
@@ -12,7 +14,7 @@ enum CommandType {
 
 class CasinoCommand extends AbstractCommand {
   private hasPermission() {
-    return this.message.author.id === this.message.guild.ownerID;
+    return this.message.author.id === this.message.guild.ownerId;
   }
 
   public async execute() {
@@ -21,7 +23,7 @@ class CasinoCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     if (this.args.length < 1) {
@@ -58,7 +60,7 @@ class CasinoCommand extends AbstractCommand {
       this.formatMessage("commandCasinoRoomRemoved"),
     );
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   private async handleCurrent() {
@@ -71,12 +73,12 @@ class CasinoCommand extends AbstractCommand {
       formatMessage: this.formatMessage,
     });
 
-    const embed = this.createEmbed().addField(
-      this.formatMessage("commandCasinoCurrentChannel"),
-      channelQuote,
-    );
+    const embed = this.createEmbed().addFields({
+      name: this.formatMessage("commandCasinoCurrentChannel"),
+      value: channelQuote,
+    });
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 
   private async handleSet() {
@@ -85,7 +87,7 @@ class CasinoCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const channelMention = inputUtils.getChannelMention({
@@ -98,15 +100,20 @@ class CasinoCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
-    if (channelMention.guild.id !== this.message.guild.id) {
+    const mention = await channelMention.fetch();
+
+    if (mention.type !== ChannelType.GuildText) {
+      return;
+    }
+    if (mention.guild.id !== this.message.guild.id) {
       const embed = responseUtils.invalidReferenceChannel({
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const modifiedGuild = await this.dataSources.guildDS.modifyGuild({
@@ -121,12 +128,12 @@ class CasinoCommand extends AbstractCommand {
 
     const embed = this.createEmbed()
       .setDescription(this.formatMessage("commandCasinoChannelUpdated"))
-      .addField(
-        this.formatMessage("commandCasinoCurrentChannel"),
-        channelQuote,
-      );
+      .addFields({
+        name: this.formatMessage("commandCasinoCurrentChannel"),
+        value: channelQuote,
+      });
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 }
 

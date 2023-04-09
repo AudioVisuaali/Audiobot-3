@@ -19,7 +19,7 @@ class BitcoinCommand extends AbstractCommand {
       .setThumbnail(btcLogoUrl)
       .addFields(...currentPrices);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 
   private async getCurrentPrices() {

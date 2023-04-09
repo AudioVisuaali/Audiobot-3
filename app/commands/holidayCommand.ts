@@ -13,7 +13,7 @@ class HolidayCommand extends AbstractCommand {
         .positive({ discordUser: this.message.author })
         .setTitle(this.formatMessage("commandHolidayInvalidCountry"));
 
-      await this.message.channel.send(embed);
+      await this.message.channel.send({ embeds: [embed] });
 
       return;
     }
@@ -29,7 +29,7 @@ class HolidayCommand extends AbstractCommand {
         })),
       );
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

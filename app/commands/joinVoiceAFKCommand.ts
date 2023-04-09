@@ -1,10 +1,13 @@
+import { joinVoiceChannel } from "@discordjs/voice";
+import { VoiceBasedChannel } from "discord.js";
+
 import { AbstractCommand } from "~/commands/AbstractCommand";
 import { Command } from "~/commands/commands";
 import { validateFormatMessageKey } from "~/translations/formatter";
 import { responseUtils } from "~/utils/responseUtils";
 
 class JoinVoiceAFKCommand extends AbstractCommand {
-  private getMessageOwnerVoiceChannel() {
+  private getMessageOwnerVoiceChannel(): VoiceBasedChannel | null {
     if (!this.message.member) {
       return null;
     }
@@ -18,7 +21,7 @@ class JoinVoiceAFKCommand extends AbstractCommand {
       return false;
     }
 
-    return this.message.guild.ownerID === this.message.member.id;
+    return this.message.guild.ownerId === this.message.member.id;
   }
 
   public async execute() {
@@ -32,16 +35,22 @@ class JoinVoiceAFKCommand extends AbstractCommand {
       return;
     }
 
-    try {
-      await voiceChannel.join();
-    } catch (e) {
-      const embed = responseUtils
-        .negative({ discordUser: this.message.author })
-        .setTitle(
-          this.formatMessage("commandJoinVoiceAFKNoPermissionToJoinVoice"),
-        );
+    if (this.message.channel.type) {
+      try {
+        joinVoiceChannel({
+          channelId: voiceChannel.id,
+          guildId: voiceChannel.guild.id,
+          adapterCreator: voiceChannel.guild.voiceAdapterCreator,
+        });
+      } catch (e) {
+        const embed = responseUtils
+          .negative({ discordUser: this.message.author })
+          .setTitle(
+            this.formatMessage("commandJoinVoiceAFKNoPermissionToJoinVoice"),
+          );
 
-      await this.message.channel.send(embed);
+        await this.message.channel.send({ embeds: [embed] });
+      }
     }
   }
 }

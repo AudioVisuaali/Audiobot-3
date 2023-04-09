@@ -25,7 +25,7 @@ class TransferCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return this.message.channel.send(embed);
+      return this.message.channel.send({ embeds: [embed] });
     }
 
     const userMentioned = inputUtils.getUserMention({
@@ -38,7 +38,7 @@ class TransferCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return this.message.channel.send(embed);
+      return this.message.channel.send({ embeds: [embed] });
     }
 
     if (userMentioned.id === this.message.author.id) {
@@ -46,7 +46,7 @@ class TransferCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return this.message.channel.send(embed);
+      return this.message.channel.send({ embeds: [embed] });
     }
 
     const transferrableAmount = inputUtils.getAmountFromUserInput({
@@ -59,7 +59,7 @@ class TransferCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return this.message.channel.send(embed);
+      return this.message.channel.send({ embeds: [embed] });
     }
 
     if (transferrableAmount > user.points) {
@@ -69,7 +69,7 @@ class TransferCommand extends AbstractCommand {
         guild,
       });
 
-      return this.message.channel.send(embed);
+      return this.message.channel.send({ embeds: [embed] });
     }
 
     const receivingUser = await this.dataSources.userDS.verifyUser({
@@ -145,12 +145,12 @@ class TransferCommand extends AbstractCommand {
           receiver: toUserQuote,
         }),
       )
-      .addField(
-        "New balance",
-        [`${fromUserQuote} ${fromUserNewBalancePoints}`].join("\n"),
-      );
+      .addFields({
+        name: "New balance",
+        value: [`${fromUserQuote} ${fromUserNewBalancePoints}`].join("\n"),
+      });
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

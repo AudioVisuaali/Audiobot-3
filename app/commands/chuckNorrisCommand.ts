@@ -11,7 +11,7 @@ class ChuckNorrisCommand extends AbstractCommand {
       .positive({ discordUser: this.message.author })
       .setDescription(chuckNorris.value.joke);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

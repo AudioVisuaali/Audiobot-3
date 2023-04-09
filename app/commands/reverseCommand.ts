@@ -17,7 +17,7 @@ class ReverseCommand extends AbstractCommand {
       .positive({ discordUser: this.message.author })
       .setDescription(letter);
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 }
 

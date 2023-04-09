@@ -19,18 +19,32 @@ class UrbanCommand extends AbstractCommand {
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
       .setTitle(query)
-      .setAuthor(query, urbanLogo, first.permalink)
+      .setAuthor({
+        name: query,
+        iconURL: urbanLogo,
+        url: first.permalink,
+      })
       .setDescription(first.definition)
       .setThumbnail(urbanLogo)
-      .addField(
-        this.formatMessage("commandUrbanFieldExample"),
-        first.example,
-        true,
-      )
-      .addField(":thumbsup:", first.thumbs_up, true)
-      .addField(":thumbsdown:", first.thumbs_down, true);
+      .addFields([
+        {
+          name: this.formatMessage("commandUrbanFieldExample"),
+          value: first.example,
+          inline: true,
+        },
+        {
+          name: ":thumbsup:",
+          value: first.thumbs_up.toString(),
+          inline: true,
+        },
+        {
+          name: ":thumbsdown:",
+          value: first.thumbs_down.toString(),
+          inline: true,
+        },
+      ]);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

@@ -34,7 +34,7 @@ class GenderCommand extends AbstractCommand {
         }),
       );
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 }
 

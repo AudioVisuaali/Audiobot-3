@@ -47,7 +47,7 @@ class PointsCommand extends AbstractCommand {
         }),
       );
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

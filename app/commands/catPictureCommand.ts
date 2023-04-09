@@ -12,7 +12,7 @@ class CatPictureCommand extends AbstractCommand {
       .setTitle(this.formatMessage("commandCatPictureTitle"))
       .setImage(catpicture.file);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

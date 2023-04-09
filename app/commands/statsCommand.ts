@@ -34,12 +34,12 @@ class StatsCommand extends AbstractCommand {
       .setDescription(
         this.formatMessage("commandStatsDescription", { uptime: uptimeString }),
       )
-      .addField(
-        this.formatMessage("commandStatsFieldRestartCount"),
-        data ? data.restarts : 0,
-      );
+      .addFields({
+        name: this.formatMessage("commandStatsFieldRestartCount"),
+        value: `${data ? data.restarts : 0}`,
+      });
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

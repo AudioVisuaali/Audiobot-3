@@ -1,4 +1,4 @@
-import { User, MessageEmbed } from "discord.js";
+import { User, EmbedBuilder, HexColorString } from "discord.js";
 import { DateTime } from "luxon";
 
 import { GuildTable } from "~/dataSources/GuildDataSource";
@@ -6,7 +6,7 @@ import { UserTable } from "~/dataSources/UserDataSource";
 import { FormatMessageFunction } from "~/translations/formatter";
 
 class ResponseUtils {
-  private colors = {
+  private colors: Record<string, HexColorString> = {
     error: "#ff0000",
     warning: "#ff9100",
     success: "#00e676",
@@ -15,18 +15,20 @@ class ResponseUtils {
   };
 
   private createFooter(opts: { user: User }) {
-    const embed = new MessageEmbed();
+    const embed = new EmbedBuilder();
 
     if (opts.user.avatar) {
-      return new MessageEmbed()
-        .setFooter(
-          `Requested by ${opts.user.username}`,
-          opts.user.avatarURL() ?? opts.user.defaultAvatarURL,
-        )
+      return new EmbedBuilder()
+        .setFooter({
+          text: `Requested by ${opts.user.username}`,
+          iconURL: opts.user.avatarURL() ?? opts.user.defaultAvatarURL,
+        })
         .setTimestamp();
     }
 
-    return embed.setFooter(`Requested by ${opts.user.username}`).setTimestamp();
+    return embed
+      .setFooter({ text: `Requested by ${opts.user.username}` })
+      .setTimestamp();
   }
 
   invalidPermissions(opts: { discordUser: User }) {

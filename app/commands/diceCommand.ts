@@ -19,7 +19,7 @@ class DiceCommand extends AbstractCommand {
           this.formatMessage("commandDiceTitle", { number: rolled }),
         );
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const maxValue = mathUtils.parseStringToNumber(this.args[0]);
@@ -36,7 +36,7 @@ class DiceCommand extends AbstractCommand {
       .positive({ discordUser: this.message.author })
       .setDescription(this.formatMessage("commandDiceTitle", { number }));
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 }
 

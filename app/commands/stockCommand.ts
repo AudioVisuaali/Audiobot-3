@@ -13,7 +13,7 @@ class StockCommand extends AbstractCommand {
           this.formatMessage("commandStockDescriptionInvalidSymbol"),
         );
 
-      return this.message.channel.send(embed);
+      return this.message.channel.send({ embeds: [embed] });
     }
 
     if (this.args[0].length > 10) {
@@ -24,7 +24,7 @@ class StockCommand extends AbstractCommand {
           this.formatMessage("commandStockDescriptionSymbolTooLong"),
         );
 
-      return this.message.channel.send(embed);
+      return this.message.channel.send({ embeds: [embed] });
     }
 
     const stock = await this.services.stats.getStock({
@@ -41,7 +41,7 @@ class StockCommand extends AbstractCommand {
           }),
         );
 
-      return this.message.channel.send(embed);
+      return this.message.channel.send({ embeds: [embed] });
     }
 
     const { primaryData, keyStats } = stock;
@@ -51,33 +51,35 @@ class StockCommand extends AbstractCommand {
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
       .setTitle(`${stock.symbol} - ${lastSalePrice}`)
-      .addField(
-        this.formatMessage("commandStockFieldPriceChange"),
-        `${netChange} (${percentageChange})`,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandStockFieldPreviousClose"),
-        PreviousClose.value,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandStockFieldCompany"),
-        stock.companyName,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandStockFieldVolume"),
-        Volume.value,
-        true,
-      )
-      .addField(
-        this.formatMessage("commandStockFieldMarketCap"),
-        MarketCap.value,
-        true,
-      );
+      .addFields([
+        {
+          name: this.formatMessage("commandStockFieldPriceChange"),
+          value: `${netChange} (${percentageChange})`,
+          inline: true,
+        },
+        {
+          name: this.formatMessage("commandStockFieldPreviousClose"),
+          value: PreviousClose.value,
+          inline: true,
+        },
+        {
+          name: this.formatMessage("commandStockFieldCompany"),
+          value: stock.companyName,
+          inline: true,
+        },
+        {
+          name: this.formatMessage("commandStockFieldVolume"),
+          value: Volume.value,
+          inline: true,
+        },
+        {
+          name: this.formatMessage("commandStockFieldMarketCap"),
+          value: MarketCap.value,
+          inline: true,
+        },
+      ]);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

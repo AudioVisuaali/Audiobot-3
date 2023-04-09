@@ -24,7 +24,7 @@ class RouletteCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const guild = await this.dataSources.guildDS.tryGetGuild({
@@ -46,7 +46,7 @@ class RouletteCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     // VALUE TOO LOW
@@ -55,7 +55,7 @@ class RouletteCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     // NOT ENOUGH MONEY
@@ -66,7 +66,7 @@ class RouletteCommand extends AbstractCommand {
         guild,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     // Rigged
@@ -123,7 +123,7 @@ class RouletteCommand extends AbstractCommand {
         hasProfited: false,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const { percent, bonusCurrent } = mathUtils.getBonusCount({
@@ -167,10 +167,10 @@ class RouletteCommand extends AbstractCommand {
         amount: bonusCurrent,
       });
 
-      embed.addField(
-        this.formatMessage("commandRouletteWinCasinoAddition"),
-        `+ ${bonusPoints} / ${percent}%`,
-      );
+      embed.addFields({
+        name: this.formatMessage("commandRouletteWinCasinoAddition"),
+        value: `+ ${bonusPoints} / ${percent}%`,
+      });
     }
 
     const bonusCurrentPoints = responseUtils.formatCurrency({
@@ -193,7 +193,7 @@ class RouletteCommand extends AbstractCommand {
       hasProfited: true,
     });
 
-    return await this.message.channel.send(embed);
+    return await this.message.channel.send({ embeds: [embed] });
   }
 }
 

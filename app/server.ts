@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import Discord, { GatewayIntentBits } from "discord.js";
 
 import { Config } from "~/config";
 import { createContext } from "~/context";
@@ -21,7 +21,7 @@ export const createServer = ({ config }: { config: Config }) => {
     dataSources,
   });
 
-  const client = new Discord.Client();
+  const client = new Discord.Client({ intents: [GatewayIntentBits.Guilds] });
 
   client.on("ready", handleOnReady({ client, context }));
   client.on("message", handleMessage({ context }));

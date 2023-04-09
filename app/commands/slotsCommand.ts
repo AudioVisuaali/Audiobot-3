@@ -106,12 +106,12 @@ class SlotsCommand extends AbstractCommand {
       const embed = responseUtils
         .positive({ discordUser: this.message.author })
         .setTitle(this.formatMessage("commandSlotMachineTitle"))
-        .addField(
-          this.formatMessage("commandSlotMachineMultipliers"),
-          valuesMessage,
-        );
+        .addFields({
+          name: this.formatMessage("commandSlotMachineMultipliers"),
+          value: valuesMessage,
+        });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const user = await this.dataSources.userDS.tryGetUser({
@@ -133,7 +133,7 @@ class SlotsCommand extends AbstractCommand {
         discordUser: this.message.author,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     // VALUE TOO LOW
@@ -144,7 +144,7 @@ class SlotsCommand extends AbstractCommand {
         guild,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     // NOT ENOUGH MONEY
@@ -155,7 +155,7 @@ class SlotsCommand extends AbstractCommand {
         guild,
       });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const isInCasinoChannel = guild.casinoChannelId
@@ -194,10 +194,10 @@ class SlotsCommand extends AbstractCommand {
       modifyPoints: hasWon ? outcomeAmount : outcomeAmount * -1,
     });
 
-    const sentMessage = await this.message.channel.send(msg1);
+    const sentMessage = await this.message.channel.send({ embeds: [msg1] });
 
     await timeUtils.sleep(500);
-    await sentMessage.edit({ embed: msg2 });
+    await sentMessage.edit({ embeds: [msg2] });
 
     const msg3Base = hasWon
       ? responseUtils.positive({ discordUser: this.message.author })
@@ -225,28 +225,30 @@ class SlotsCommand extends AbstractCommand {
         amount: outcomeAmount,
       });
 
-      msg3.addField(
-        this.formatMessage("commandSlotMachineOutcomeAmount", {
-          outcome: outcomeAmountPoints,
-        }),
-        this.formatMessage("commandSlotMachineNewTotal", {
-          totalPoints: newTotalPoints,
-        }),
-      );
-      msg3.addField(
-        this.formatMessage("commandSlotMachineStake"),
-        gamblingAmountPoints,
-      );
+      msg3.addFields([
+        {
+          name: this.formatMessage("commandSlotMachineOutcomeAmount", {
+            outcome: outcomeAmountPoints,
+          }),
+          value: this.formatMessage("commandSlotMachineNewTotal", {
+            totalPoints: newTotalPoints,
+          }),
+        },
+        {
+          name: this.formatMessage("commandSlotMachineStake"),
+          value: gamblingAmountPoints,
+        },
+      ]);
 
       const matchesAll = isInCasinoChannel
         ? [...matches, casinoBonus]
         : matches;
 
       const mappedMultipliers = matchesAll.map(formatMultiplier);
-      msg3.addField(
-        this.formatMessage("commandSlotMachineMultiplier"),
-        mappedMultipliers.join("\n"),
-      );
+      msg3.addFields({
+        name: this.formatMessage("commandSlotMachineMultiplier"),
+        value: mappedMultipliers.join("\n"),
+      });
       await this.dataSources.currencyHistoryDS.addCurrencyHistory({
         userId: user.id,
         guildId: guild.id,
@@ -285,16 +287,16 @@ class SlotsCommand extends AbstractCommand {
         useBold: true,
       });
 
-      msg3.addField(
-        outcomeAmountPoints,
-        this.formatMessage("commandSlotMachineNewTotal", {
+      msg3.addFields({
+        name: outcomeAmountPoints,
+        value: this.formatMessage("commandSlotMachineNewTotal", {
           totalPoints: newTotalPoints,
         }),
-      );
+      });
     }
 
     await timeUtils.sleep(500);
-    await sentMessage.edit({ embed: msg3 });
+    await sentMessage.edit({ embeds: [msg3] });
   }
 }
 

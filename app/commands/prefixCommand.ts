@@ -7,7 +7,7 @@ const PREFIX_MAX_LENGTH = 15;
 
 class PrefixCommand extends AbstractCommand {
   public async execute() {
-    if (this.message.guild.ownerID !== this.message.author.id) {
+    if (this.message.guild.ownerId !== this.message.author.id) {
       return;
     }
 
@@ -19,14 +19,14 @@ class PrefixCommand extends AbstractCommand {
       const embed = responseUtils
         .positive({ discordUser: this.message.author })
         .setTitle(this.formatMessage("commandPrefixTitle"))
-        .addField(
-          this.formatMessage("commandPrefixDescription"),
-          this.formatMessage("commandPrefixExampleWithValue", {
+        .addFields({
+          name: this.formatMessage("commandPrefixDescription"),
+          value: this.formatMessage("commandPrefixExampleWithValue", {
             prefix,
           }),
-        );
+        });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     const newPrefix = this.args.join(" ");
@@ -36,9 +36,12 @@ class PrefixCommand extends AbstractCommand {
         .negative({ discordUser: this.message.author })
         .setTitle(this.formatMessage("commandPrefixTitleError"))
         .setDescription(this.formatMessage("commandPrefixDescriptionTooLong"))
-        .addField(this.formatMessage("commandPrefixfieldTooLong"), newPrefix);
+        .addFields({
+          name: this.formatMessage("commandPrefixfieldTooLong"),
+          value: newPrefix,
+        });
 
-      return await this.message.channel.send(embed);
+      return await this.message.channel.send({ embeds: [embed] });
     }
 
     await this.dataSources.guildDS.modifyGuild({
@@ -49,15 +52,20 @@ class PrefixCommand extends AbstractCommand {
     const embed = responseUtils
       .positive({ discordUser: this.message.author })
       .setTitle(this.formatMessage("commandPrefixTitleUpdated"))
-      .addField(this.formatMessage("commandPrefixNewPrefix"), newPrefix)
-      .addField(
-        this.formatMessage("commandPrefixExampleUsage"),
-        this.formatMessage("commandPrefixExample", {
-          prefix: newPrefix,
-        }),
-      );
+      .addFields([
+        {
+          name: this.formatMessage("commandPrefixNewPrefix"),
+          value: newPrefix,
+        },
+        {
+          name: this.formatMessage("commandPrefixExampleUsage"),
+          value: this.formatMessage("commandPrefixExample", {
+            prefix: newPrefix,
+          }),
+        },
+      ]);
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 

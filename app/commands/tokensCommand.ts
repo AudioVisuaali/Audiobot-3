@@ -16,7 +16,7 @@ class TokensCommand extends AbstractCommand {
         this.formatMessage("commandTokensTitle", { tokens: user.tokens }),
       );
 
-    await this.message.channel.send(embed);
+    await this.message.channel.send({ embeds: [embed] });
   }
 }
 
