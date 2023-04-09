@@ -4,9 +4,6 @@
   "author": "Audiovisuaali",
   "license": "UNLICENSED",
   "private": true,
-  "engines": {
-    "node": "15.x"
-  },
   "scripts": {
     "dev": "nodemon --ignore './logs/' --ext ts,json --exec babel-node --extensions '.ts' -r dotenv/config app/index.ts | ./node_modules/.bin/bunyan",
     "dev:debug": "DEBUG=knex:query nodemon --ext ts,json --exec babel-node --extensions '.ts' -r dotenv/config app/index.ts | ./node_modules/.bin/bunyan",
