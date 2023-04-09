@@ -1,0 +1,14 @@
+[Unit]
+Description=Motion FM
+[Service]
+ExecStart=node ./dist/index.js
+WorkingDirectory=/home/discord-audiobot/Audiobot-3
+RestartSec=10
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=motion-fm
+Environment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target
