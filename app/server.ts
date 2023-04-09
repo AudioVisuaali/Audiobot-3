@@ -33,7 +33,7 @@ export const createServer = ({ config }: { config: Config }) => {
   });
 
   client.on("ready", handleOnReady({ client, context }));
-  client.on("message", handleMessage({ context }));
+  client.on("messageCreate", handleMessage({ context }));
   client.on("error", handleError({ logger }));
 
   return {
