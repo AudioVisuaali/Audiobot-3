@@ -1,15 +1,16 @@
 import { DateTime } from "luxon";
 
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { GuildTable } from "~/dataSources/GuildDataSource";
+import { GuildTable } from "../dataSources/GuildDataSource";
 import {
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,
-} from "~/database/types";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { mathUtils } from "~/utils/mathUtil";
-import { responseUtils } from "~/utils/responseUtils";
+} from "../database/types";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { mathUtils } from "../utils/mathUtil";
+import { responseUtils } from "../utils/responseUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 type DailyRetrievedTrue = { available: true; availableAt: null };
 type DailyRetrievedFalse = { available: false; availableAt: DateTime };

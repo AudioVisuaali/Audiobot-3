@@ -1,7 +1,8 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { responseUtils } from "~/utils/responseUtils";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { responseUtils } from "../utils/responseUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 class PointsCommand extends AbstractCommand {
   private async getUserAndGuild() {

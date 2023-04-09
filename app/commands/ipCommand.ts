@@ -1,8 +1,9 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { networkUtils } from "~/utils/networkUtils";
-import { responseUtils } from "~/utils/responseUtils";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { networkUtils } from "../utils/networkUtils";
+import { responseUtils } from "../utils/responseUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 class IpCommand extends AbstractCommand {
   private async createFields(params: { ip: string }) {

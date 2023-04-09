@@ -1,8 +1,8 @@
 import { Client } from "discord.js";
 import { DateTime } from "luxon";
 
-import { Context } from "~/context";
-import { timeUtils } from "~/utils/timeUtils";
+import { Context } from "../context";
+import { timeUtils } from "../utils/timeUtils";
 
 const sleep = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time));

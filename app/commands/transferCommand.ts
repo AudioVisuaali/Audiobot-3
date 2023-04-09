@@ -1,12 +1,13 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
 import {
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,
-} from "~/database/types";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { inputUtils } from "~/utils/inputUtils";
-import { responseUtils } from "~/utils/responseUtils";
+} from "../database/types";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { inputUtils } from "../utils/inputUtils";
+import { responseUtils } from "../utils/responseUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 class TransferCommand extends AbstractCommand {
   // eslint-disable-next-line max-statements

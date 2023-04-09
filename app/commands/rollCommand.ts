@@ -1,7 +1,8 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { mathUtils } from "~/utils/mathUtil";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { mathUtils } from "../utils/mathUtil";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 class RollCommand extends AbstractCommand {
   private getRandomArbitaryMessage(params: { min?: number; max?: number }) {

@@ -1,13 +1,13 @@
 import { GuildMemberManager } from "discord.js";
 
-import { responseUtils } from "./responseUtils";
-
-import { CurrencyHistoryTable } from "~/dataSources/CurrencyHistoryDataSource";
-import { GuildTable } from "~/dataSources/GuildDataSource";
+import { CurrencyHistoryTable } from "../dataSources/CurrencyHistoryDataSource";
+import { GuildTable } from "../dataSources/GuildDataSource";
 import {
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,
-} from "~/database/types";
+} from "../database/types";
+
+import { responseUtils } from "./responseUtils";
 
 class TableUtils {
   private tableHeader(opts?: { withName: boolean }) {

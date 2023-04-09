@@ -1,9 +1,10 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { eightBallUtils } from "~/utils/eightBallUtils";
-import { mathUtils } from "~/utils/mathUtil";
-import { responseUtils } from "~/utils/responseUtils";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { eightBallUtils } from "../utils/eightBallUtils";
+import { mathUtils } from "../utils/mathUtil";
+import { responseUtils } from "../utils/responseUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 class EightBallCommand extends AbstractCommand {
   private getQuestion() {

@@ -1,14 +1,15 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
 import {
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,
-} from "~/database/types";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { inputUtils } from "~/utils/inputUtils";
-import { mathUtils } from "~/utils/mathUtil";
-import { responseUtils } from "~/utils/responseUtils";
-import { timeUtils } from "~/utils/timeUtils";
+} from "../database/types";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { inputUtils } from "../utils/inputUtils";
+import { mathUtils } from "../utils/mathUtil";
+import { responseUtils } from "../utils/responseUtils";
+import { timeUtils } from "../utils/timeUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 export const SLOTS_MIN_AMOUNT = 10;
 

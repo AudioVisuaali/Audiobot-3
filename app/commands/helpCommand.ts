@@ -1,12 +1,9 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import {
-  Command,
-  sortedModules,
-  commands as allCommands,
-} from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { mathUtils } from "~/utils/mathUtil";
-import { responseUtils } from "~/utils/responseUtils";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { mathUtils } from "../utils/mathUtil";
+import { responseUtils } from "../utils/responseUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command, commands, sortedModules } from "./commands";
 
 const COMMAND_AMOUNT_PER_PAGE = 12;
 
@@ -31,7 +28,7 @@ class HelpCommand extends AbstractCommand {
     commandName: string;
     prefix: string;
   }) {
-    const command = allCommands.find(
+    const command = commands.find(
       (command) =>
         command.command === params.commandName ||
         command.aliases.find((alias) => alias === params.commandName),

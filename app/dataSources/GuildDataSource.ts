@@ -3,13 +3,14 @@ import { Snowflake } from "discord.js";
 import { DateTime } from "luxon";
 import { v4 as uuidv4 } from "uuid";
 
+import { GuildTableRaw, Table } from "../database/types";
+import { Language } from "../translations/formatter";
+import { timeUtils } from "../utils/timeUtils";
+
 import {
   CreateDataSourceOptions,
   DataSourceWithContext,
-} from "~/dataSources/DataSourceWithContext";
-import { Table, GuildTableRaw } from "~/database/types";
-import { Language } from "~/translations/formatter";
-import { timeUtils } from "~/utils/timeUtils";
+} from "./DataSourceWithContext";
 
 export type GuildTable = {
   id: number;

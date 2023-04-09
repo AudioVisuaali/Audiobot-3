@@ -1,6 +1,6 @@
 import Logger from "bunyan";
 
-import { Config } from "~/config";
+import { Config } from "../config";
 
 export interface CreateServiceOptions {
   config: Config;

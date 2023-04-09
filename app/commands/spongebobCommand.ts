@@ -1,7 +1,8 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { responseUtils } from "~/utils/responseUtils";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { responseUtils } from "../utils/responseUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 const spongebob =
   "https://en.meming.world/images/en/thumb/e/e0/Mocking_SpongeBob.jpg/300px-Mocking_SpongeBob.jpg";

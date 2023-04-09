@@ -1,6 +1,6 @@
 import knex from "knex";
 
-import { Config } from "~/config";
+import { Config } from "../config";
 
 export const createKnex = (opts: { config: Config }) =>
   knex(getConnection({ config: opts.config }));

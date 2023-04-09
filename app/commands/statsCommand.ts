@@ -1,8 +1,9 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { responseUtils } from "~/utils/responseUtils";
-import { timeUtils } from "~/utils/timeUtils";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { responseUtils } from "../utils/responseUtils";
+import { timeUtils } from "../utils/timeUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 class StatsCommand extends AbstractCommand {
   private getUptimeString() {

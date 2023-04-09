@@ -1,9 +1,9 @@
 import Logger from "bunyan";
 
-import { DataSources } from "~/dataSources/dataSources";
-import { CommandPayload, CustomMessage } from "~/handlers/onMessage";
-import { Services } from "~/services/services";
-import { FormatMessageFunction } from "~/translations/formatter";
+import { DataSources } from "../dataSources/dataSources";
+import { CommandPayload, CustomMessage } from "../handlers/onMessage";
+import { Services } from "../services/services";
+import { FormatMessageFunction } from "../translations/formatter";
 
 export abstract class AbstractCommand {
   message: CustomMessage;

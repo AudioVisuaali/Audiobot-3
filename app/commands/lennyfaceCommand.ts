@@ -1,8 +1,9 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { lennyFacesUtils } from "~/utils/lennyFaceUtils";
-import { mathUtils } from "~/utils/mathUtil";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { lennyFacesUtils } from "../utils/lennyFaceUtils";
+import { mathUtils } from "../utils/mathUtil";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 class LennyfaceCommand extends AbstractCommand {
   private getRandomLennyFace() {

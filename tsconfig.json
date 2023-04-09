@@ -14,11 +14,7 @@
     "strict": true,
     "isolatedModules": false,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
-    "paths": {
-      "~/*": ["app/*"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
   "exclude": ["./node_modules", "dist", "*.d.ts"],
   "include": ["app/**/*.ts"]

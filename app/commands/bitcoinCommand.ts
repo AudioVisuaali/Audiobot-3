@@ -1,8 +1,9 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { BPICurrency, BPICurrencyType } from "~/services/currencyService";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { responseUtils } from "~/utils/responseUtils";
+import { BPICurrency, BPICurrencyType } from "../services/currencyService";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { responseUtils } from "../utils/responseUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 const btcColor = "#f99e1a";
 const btcLogoUrl =

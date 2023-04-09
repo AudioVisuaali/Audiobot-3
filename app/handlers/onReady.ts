@@ -1,9 +1,9 @@
 import { Client } from "discord.js";
 
-import { Context } from "~/context";
-import { statusUtils } from "~/utils/statusUtils";
-import { investWorker } from "~/workers/investWorker";
-import { statusWorker } from "~/workers/statusWorker";
+import { Context } from "../context";
+import { statusUtils } from "../utils/statusUtils";
+import { investWorker } from "../workers/investWorker";
+import { statusWorker } from "../workers/statusWorker";
 
 export const handleOnReady = (opts: {
   client: Client;

@@ -1,9 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 
-import {
-  CreateServiceOptions,
-  ServiceWithContext,
-} from "~/services/ServiceWithContext";
+import { CreateServiceOptions, ServiceWithContext } from "./ServiceWithContext";
 
 type YoMamaApiResponse = {
   joke: string;

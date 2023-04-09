@@ -1,9 +1,10 @@
 import Table from "table-layout";
 
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { tableUtils } from "~/utils/tableUtils";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { tableUtils } from "../utils/tableUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 enum CommandType {
   Latest = "latest",

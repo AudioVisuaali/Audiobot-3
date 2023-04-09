@@ -1,13 +1,13 @@
 import { ChannelType, Guild, Message } from "discord.js";
 
-import { getCommand } from "~/commands/commands";
-import { Context } from "~/context";
+import { getCommand } from "../commands/commands";
+import { Context } from "../context";
 import {
-  defaultLanguage,
   FormatMessageFunction,
+  defaultLanguage,
   formatMessageSetLocale,
-} from "~/translations/formatter";
-import { inputUtils } from "~/utils/inputUtils";
+} from "../translations/formatter";
+import { inputUtils } from "../utils/inputUtils";
 
 const formatMessageBody = (opts: { message: Message }) => ({
   authorId: opts.message.author.id,

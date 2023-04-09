@@ -1,14 +1,14 @@
 import Discord, { GatewayIntentBits } from "discord.js";
 
-import { Config } from "~/config";
-import { createContext } from "~/context";
-import { createDataSources } from "~/dataSources/dataSources";
-import { createKnex } from "~/database/connection";
-import { handleError } from "~/handlers/onError";
-import { handleMessage } from "~/handlers/onMessage";
-import { handleOnReady } from "~/handlers/onReady";
-import { createLogger } from "~/logger";
-import { createServices } from "~/services/services";
+import { Config } from "./config";
+import { createContext } from "./context";
+import { createDataSources } from "./dataSources/dataSources";
+import { createKnex } from "./database/connection";
+import { handleError } from "./handlers/onError";
+import { handleMessage } from "./handlers/onMessage";
+import { handleOnReady } from "./handlers/onReady";
+import { createLogger } from "./logger";
+import { createServices } from "./services/services";
 
 export const createServer = ({ config }: { config: Config }) => {
   const logger = createLogger({ config });

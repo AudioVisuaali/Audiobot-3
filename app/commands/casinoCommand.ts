@@ -1,10 +1,11 @@
 import { ChannelType } from "discord.js";
 
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { inputUtils } from "~/utils/inputUtils";
-import { responseUtils } from "~/utils/responseUtils";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { inputUtils } from "../utils/inputUtils";
+import { responseUtils } from "../utils/responseUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 enum CommandType {
   Delete = "delete",

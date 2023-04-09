@@ -1,9 +1,9 @@
 import { User, EmbedBuilder, HexColorString } from "discord.js";
 import { DateTime } from "luxon";
 
-import { GuildTable } from "~/dataSources/GuildDataSource";
-import { UserTable } from "~/dataSources/UserDataSource";
-import { FormatMessageFunction } from "~/translations/formatter";
+import { GuildTable } from "../dataSources/GuildDataSource";
+import { UserTable } from "../dataSources/UserDataSource";
+import { FormatMessageFunction } from "../translations/formatter";
 
 class ResponseUtils {
   private colors: Record<string, HexColorString> = {

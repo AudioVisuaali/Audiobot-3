@@ -1,11 +1,12 @@
 import Table from "table-layout";
 
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { CurrencyHistoryTable } from "~/dataSources/CurrencyHistoryDataSource";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { responseUtils } from "~/utils/responseUtils";
-import { tableUtils } from "~/utils/tableUtils";
+import { CurrencyHistoryTable } from "../dataSources/CurrencyHistoryDataSource";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { responseUtils } from "../utils/responseUtils";
+import { tableUtils } from "../utils/tableUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 class HistoryCommand extends AbstractCommand {
   private async getCurrencies() {

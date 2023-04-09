@@ -1,6 +1,6 @@
 import bunyan from "bunyan";
 
-import { Config } from "~/config";
+import { Config } from "./config";
 
 export const createLogger = (opts: { config: Config }) =>
   bunyan.createLogger({

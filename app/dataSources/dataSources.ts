@@ -1,8 +1,8 @@
-import { BotInfoDataSource } from "~/dataSources/BotInfoDataSource";
-import { CurrencyHistoryDataSource } from "~/dataSources/CurrencyHistoryDataSource";
-import { CreateDataSourceOptions } from "~/dataSources/DataSourceWithContext";
-import { GuildDataSource } from "~/dataSources/GuildDataSource";
-import { UserDataSource } from "~/dataSources/UserDataSource";
+import { BotInfoDataSource } from "./BotInfoDataSource";
+import { CurrencyHistoryDataSource } from "./CurrencyHistoryDataSource";
+import { CreateDataSourceOptions } from "./DataSourceWithContext";
+import { GuildDataSource } from "./GuildDataSource";
+import { UserDataSource } from "./UserDataSource";
 
 export type DataSources = {
   userDS: UserDataSource;

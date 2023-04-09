@@ -1,7 +1,7 @@
 import Logger from "bunyan";
 import { Knex } from "knex";
 
-import { Config } from "~/config";
+import { Config } from "../config";
 
 export interface CreateDataSourceOptions {
   config: Config;

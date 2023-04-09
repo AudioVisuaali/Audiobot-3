@@ -1,6 +1,7 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { validateFormatMessageKey } from "~/translations/formatter";
+import { validateFormatMessageKey } from "../translations/formatter";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 class WikipediaCommand extends AbstractCommand {
   public async execute() {

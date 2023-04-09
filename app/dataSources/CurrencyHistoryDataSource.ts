@@ -2,14 +2,15 @@ import { Snowflake } from "discord.js";
 import { DateTime } from "luxon";
 import { v4 as uuidv4 } from "uuid";
 
-import { DataSourceWithContext } from "~/dataSources/DataSourceWithContext";
 import {
-  CurrencyHistoryTableRaw,
   CurrencyHistoryActionType,
   CurrencyHistoryCurrencyType,
+  CurrencyHistoryTableRaw,
   Table,
-} from "~/database/types";
-import { timeUtils } from "~/utils/timeUtils";
+} from "../database/types";
+import { timeUtils } from "../utils/timeUtils";
+
+import { DataSourceWithContext } from "./DataSourceWithContext";
 
 export type CurrencyHistoryTable = {
   id: number;

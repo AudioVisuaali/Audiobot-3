@@ -2,9 +2,10 @@ import { Snowflake } from "discord.js";
 import { DateTime } from "luxon";
 import { v4 as uuidv4 } from "uuid";
 
-import { DataSourceWithContext } from "~/dataSources/DataSourceWithContext";
-import { Table, UserTableRaw } from "~/database/types";
-import { timeUtils } from "~/utils/timeUtils";
+import { Table, UserTableRaw } from "../database/types";
+import { timeUtils } from "../utils/timeUtils";
+
+import { DataSourceWithContext } from "./DataSourceWithContext";
 
 export type UserTable = {
   id: number;

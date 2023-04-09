@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 
-import { mathUtils } from "~/utils/mathUtil";
+import { mathUtils } from "./mathUtil";
 
 const isNumber = (value: string) => /^\d+$/.test(value);
 

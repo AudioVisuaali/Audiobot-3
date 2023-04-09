@@ -1,8 +1,9 @@
-import { AbstractCommand } from "~/commands/AbstractCommand";
-import { Command } from "~/commands/commands";
-import { OsuResponse } from "~/services/statsService";
-import { validateFormatMessageKey } from "~/translations/formatter";
-import { responseUtils } from "~/utils/responseUtils";
+import { OsuResponse } from "../services/statsService";
+import { validateFormatMessageKey } from "../translations/formatter";
+import { responseUtils } from "../utils/responseUtils";
+
+import { AbstractCommand } from "./AbstractCommand";
+import { Command } from "./commands";
 
 class OsuCommand extends AbstractCommand {
   private getUserFields(params: { osuUser: OsuResponse }) {

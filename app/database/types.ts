@@ -1,6 +1,6 @@
 import { Snowflake } from "discord.js";
 
-import { Language } from "~/translations/formatter";
+import { Language } from "../translations/formatter";
 
 export enum Table {
   USERS = "users",
